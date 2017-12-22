@@ -1,2 +1,0 @@
-import recursos_humanos
-import prenomina_cmg

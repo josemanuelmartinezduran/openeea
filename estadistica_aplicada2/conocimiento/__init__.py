@@ -1,2 +1,0 @@
-import conocimiento
-import cuestionarios

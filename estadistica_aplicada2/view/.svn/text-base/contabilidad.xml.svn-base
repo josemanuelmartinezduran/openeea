@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-	<!-- Menu Contabilidad, cambiando secuencia -->
-	<menuitem id="account.menu_finance" name="Contabilidad" parent="" action="" sequence="7"/>
-
-    </data>
-</openerp>

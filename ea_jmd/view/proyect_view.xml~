@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<openerp>
-	<data>
-		<menuitem id="sbmn_arr_arranques" name="Crear Proyecto" parent="estadistica_aplicada2.mn_estudios_proyectos" sequence="0"/>
-		<menuitem id="sbmn_arr_proyectos" name="Proyectos" parent="mn_estudios_arranques" action="project.open_view_project_proyectos" sequence="1"/>
-	</data>
-</openerp>

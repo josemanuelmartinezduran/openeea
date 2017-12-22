@@ -1,7 +1,0 @@
-from osv import osv, fields
-
-class envios(osv.Model):
-    _name="hd.envios"
-    _columns={
-        "name":fields.char(string="Nombre", size=40)
-    }
