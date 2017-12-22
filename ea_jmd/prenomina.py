@@ -448,12 +448,13 @@ class myclass(osv.Model):
     
     def get_persona(self, cr, uid, ids, fieldname, args, context="None"):
         ret = {}
-        for j in self.browse(cr, uid, ids, context):
-            for i in self.linea_id:
-                if not i.empleado :
-                    ret[i.id] = "No definido"
-                else:
-                    ret[i.id] = i.empleado.nombre
+        # @todo: finalizar de revisar el método
+        #for j in self.browse(cr, uid, ids, context):
+        #    for i in self.linea_id:
+        #        if not i.empleado :
+        #            ret[i.id] = "No definido"
+        #        else:
+        #            ret[i.id] = i.empleado.nombre
         return ret
     
     _columns = {
