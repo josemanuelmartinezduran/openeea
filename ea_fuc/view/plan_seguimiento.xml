@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	<!-- 05/06/2014 (fuc) Creacion vista para visualizar tareas de ejecutivos
+		(+) Vistas de arbol
+	-->
+
+	<record id="view_seguimiento_tree_1" model="ir.ui.view">
+		<field name="name">view.seguimiento.tree.1</field>
+		<field name="model">project.arranques</field>
+		<field eval="1" name="priority"/>
+		<field name="arch" type="xml">
+			<tree string="Plan de seguimiento interno">
+				<field name="name_arranques" string="Nombre del proyecto"/>
+				<field name="tarea_responsable_id" string="Nombre del ejecutivo"/>
+				<field name="tarea_descripcion" string="Tarea"/>
+				<field name="fecha_entrega" string="Fecha planeada"/>
+				<field name="tarea_fecha_fin" string="Fecha de finalización"/>
+				<field name="tarea_estatus" string="Estado"/>
+			</tree>
+		</field>
+	</record>
+
+	<record id="act_plan_seguimiento" model="ir.actions.act_window">
+		<field name="name">Plan de seguimiento interno</field>
+		<field name="view_id" ref="view_seguimiento_tree_1"/>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">project.arranques</field>
+		<field name="view_type">tree</field>
+		<field name="view_mode">tree</field>
+		<field name="help" type="html">
+			<!--<p class="oe_view_nocontent_create">-->
+			<h4>Sin registro de proyectos.</h4>
+			<!--</p>-->
+		</field>
+	</record>
+
+    </data>
+</openerp>

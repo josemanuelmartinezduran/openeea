@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <!--VISTA FORM-->
+
+    <record model="ir.ui.view" id="ea_presupuesto_jmos_form">
+        <field name="name">ea_presupuesto_jmos.form</field>
+        <field name="model">ea.presupuesto</field>
+        <field name="inherit_id" ref="ea_jmd.ea_presupuesto_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='plaza']" position="replace">
+                <field name="plaza_id" />
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="presupuesto_linea_jmos_form">
+        <field name="name">presupuesto_linea_jmos.form</field>
+        <field name="model">ea.presupuesto_linea</field>
+        <field name="inherit_id" ref="ea_jmd.presupuesto_linea_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='plaza']" position="replace">
+                <field name="plaza_id" placeholder="Plaza" domain="[('nombre_estudio_id.id', '=', idproyecto)]" />
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="plaza_view_jmos_form">
+        <field name="name">plaza_view_jmos.form</field>
+        <field name="model">plaza</field>
+        <field name="priority" eval="2"/>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Plazas" version="7.0">
+                <sheet>
+                    <div class="oe_title">
+                       <h1>
+                           <h4><label for="name" string="Nombre de la Plaza/Ruta"/></h4>
+                           <field name="name" required="1" placeholder="Nombre de la Plaza/Ruta"/>
+                       </h1>
+                        </div>
+                        <group>
+                            <group string="Estudio">
+                                <field name="nombre_estudio_id" domain="[('etapa', '=', 'proyecto')]"/>
+                            </group>
+                            <group string="Tipo">
+                                <field name="tipo" />
+                            </group>
+                        </group>
+                       
+                      <notebook>
+                      	<page string="Ciudad">
+                      		<field name="ciudad_id">
+                      			<tree editable="bottom">
+                      				<field name="name" />
+                      				<field name="code" />
+                      				<field name="state_id" />
+                      			</tree>
+                      		</field>
+                      	</page>
+                      </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--VISTA TREE-->
+
+    <record model="ir.ui.view" id="presupuesto_linea_jmos_tree">
+        <field name="name">presupuesto_linea_jmos.tree</field>
+        <field name="model">ea.presupuesto_linea</field>
+        <field name="inherit_id" ref="ea_jmd.presupuesto_linea_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='plaza']" position="replace">
+                <field name="plaza_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="plaza_view_jmos_tree">
+        <field name="name">plaza_view_jmos.tree</field>
+        <field name="model">plaza</field>
+        <field name="type">tree</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree string="Plazas">
+                <field name="name"/>
+                <field name="nombre_estudio_id"/>
+                <field name="ciudad_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--VISTA SEARCH-->
+    <record model="ir.ui.view" id="plaza_view_jmos_search">
+        <field name="name">plaza_view_jmos.search</field>
+        <field name="model">plaza</field>
+        <field name="priority" eval="3"/>
+        <field name="arch" type="xml">
+            <search string="Plazas">
+                <field name="name"/>
+                <field name="nombre_estudio_id"/>
+                <field name="ciudad_id"/>
+                <group expand="0" string="Agrupado por...">
+                    <filter string="Plaza" name="por_plaza" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'name'}"/>
+                    <filter string="Proyecto" name="por_proyecto" icon="terp-accessories-archiver" domain="[]" context="{'group_by': 'nombre_estudio_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    </data>
+</openerp>

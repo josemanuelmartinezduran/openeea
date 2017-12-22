@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Accion del wizard generador de cruces -->
+		<record model="ir.actions.act_window" id="wizard_cruces">
+			<field name="name">Generador de Cruces</field>
+			<field name="res_model">ea.wizard_cruces</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="context">{'current_plaza_id': active_id}</field>
+			<field name="target">new</field>
+		</record>
+
+
+		
+		<!-- Control de cuotas formulario -->
+		<record id="cuotas_form_inherit_jmd" model="ir.ui.view">
+			<field name="name">cuotas.form.inherit.jmd</field>
+			<field name="model">control_encuestas</field>
+			<field name="inherit_id" ref="estadistica_aplicada2.view_control_encuestas_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//form[@string='Editor de Encuestas']" position="replace">
+					<form string="Control de Cuotas" version="7.0">	
+						<header>
+                		<button string="Autorizar" type="workflow" states="nuevo" name="signal_autorizar" />	
+                		<field name="state" widget="statusbar" nolabel="1" />
+                		<button name="limpia" string="Limpar" type="object" />
+                		<button name="limpia_todo" string="Limpiar Todos" type="object" />
+					 </header>
+					 
+						<sheet>
+							<h1>
+								<label string="Proyecto" />
+								<field name="name" placeholder="Nombre Corto" required="True"/>
+							</h1>
+							<group>
+								<group string="Datos Generales">
+									<field name="project_id" domain="[('etapa','=','proyecto')]" />
+									<field name="nombre_corto" readonly="True" />
+									<field name="responsible_id" string="Ejecutivo de Cuenta" />
+									<field name="numero_variables" />
+
+								</group>
+								<group string="Proyecto">
+									<field name="cotizacion_id" on_change="on_change_setname(cotizacion_id)" />
+									<field name="odt_id" />
+								</group>
+							</group>
+							<notebook>
+								<page string="Entrevistas">
+									<field name="tiraje">
+										<tree editable="bottom">
+											<field name="name" />
+											<field name="plaza" domain="[('nombre_estudio_id.id', '=', idproyecto)]"/>
+											<field name="cuestionario_id" domain="[('proyecto.id', '=', idproyecto)]"/>
+											<field name="cantidad" sum="Total de Entrevistas"/>
+											<field name="realizadas" />
+											<field name="idproyecto" string="Id Proyecto" invisible="False" />
+										</tree>
+									</field>
+								</page>
+								<page string="Cuotas">
+									<field name="encuesta">
+										<tree>
+											<field name="plaza_id" />
+											<field name="encuesta" />
+											<field name="cant" string="Total de Cuotas" sum="Total de Cuotas"/>
+											<field name="realizadas"  sum="Realizadas" />
+											<field name="idproyecto" string="Id Proyecto" invisible="True" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+						</sheet>
+						<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers" />
+							<field name="message_ids" widget="mail_thread" />
+						</div>							
+					</form>
+				</xpath>
+			</field>
+		</record>
+			
+			<!-- <field name="view_id" ref="cuotas_form_inherit_jmd"/> -->
+		
+		<!-- Formulario de Cuotas x Plaza -->
+		<record id="cuotas_plaza_form_inherit_jmd" model="ir.ui.view">
+			<field name="name">cuotas.plaza.form.inherit.jmd</field>
+			<field name="model">editor_encuestas</field>
+			<field name="inherit_id" ref="estadistica_aplicada2.view_editor_encuestas_formq"/>
+			<field name="arch" type="xml">
+					<xpath expr="//form" position="replace">
+						<form string="Cuotas por Plaza" version="7.0">
+							<header>
+								<button name='%(wizard_cruces)d' string="Generar Cruces" type="action"/>
+								<button name='duplica_cuota' string="Duplicar" type="object"/>
+							</header>
+							<sheet>
+							<h1>
+								<label string="Estudio-Plaza-Cuestionario" />
+								<field name="name" placeholder="Estudio-Plaza"/>
+							</h1>
+							<group>
+								<group string="Datos de la Plaza">
+									<field name='plaza_id' on_change="on_change_setname(encuesta, plaza_id)" domain="[('nombre_estudio_id.id', '=', idproyecto)]"/>
+									<field name='encuesta' string="Cuestionario" on_change="on_change_setname(encuesta, plaza_id)" domain="[('proyecto.id', '=', idproyecto)]" />
+								</group>
+								<group string="Avance del Estudio">
+									<field name='cant' readonly="True" string="Total de Cuotas" sum="Suma" />
+									<field name="realizadas" sum="Total" />
+									<field name="idproyecto"/>
+									<field name="id_encuesta" string="Relación" invisible="True"/>
+								</group>
+							</group>
+							<notebook>
+								<page string="Cuotas">	
+									<field name='cuotas'>
+										<tree editable="bottom">
+											<field name="id" invisible="True" />
+											<field name="name" />
+											<field name="cantidad" string="Cantidad"/>
+											<field name="proyecto" string="Proyecto" invisible="False" />
+											<field name="idcuestionario" string="Cuestionario" invisible="False" />
+											<field name="idplaza" invisible="False" />
+											<field name="avance_ids" invisible="True" />
+											<field name="count_avances" readonly="True" />
+										</tree>
+									</field>
+								</page>
+							</notebook>
+							</sheet>	
+							<div class="oe_chatter">
+								<field name="message_follower_ids" widget="mail_followers" />
+								<field name="message_ids" widget="mail_thread" />
+							</div>	
+						</form>
+					</xpath>	
+			</field>
+		</record>
+		
+		<!-- Vista arbol de control de cuotas -->
+		<record id="control_encuestas_inherit_jmd_3" model="ir.ui.view">
+			<field name="name">control.encuestas.inherit.jmd.3</field>
+			<field name="model">control_encuestas</field>
+			<field name="inherit_id" ref="estadistica_aplicada2.view_control_encuestas_tree"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='responsable']" position="before">
+					<field name="name" string="Clave"/>
+					<field name="nombre_corto" />
+				</xpath>
+				<xpath expr="//field[@name='responsable']" position="replace">
+					<field name="responsible_id" />
+				</xpath>
+			</field>
+		</record>
+		
+		<!--  Busqueda -->
+		<record model="ir.ui.view" id="detalle_coutas_search">
+			<field name="name">detalle.coutas.search</field>
+			<field name="model">ea.cuota</field>
+			<field name="type">search</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<field name="ncproyecto" />
+					<field name="nproyecto" />
+					<field name="name" string="Cuota"/>
+					<field name="nplaza" />
+					<group expand="0" string="Group By...">
+						<filter string="Proyecto" icon="terp-partner" domain="[]" context="{'group_by':'nproyecto'}"/>
+						<filter string="Cuota" icon="terp-partner" domain="[]" context="{'group_by':'name'}"/>
+						<filter string="Plaza" icon="terp-partner" domain="[]" context="{'group_by':'nplaza'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<!-- Accion Detalle de Cuotas-->
+		<record model="ir.actions.act_window" id="detalle_coutas_actn">
+			<field name="name">Detalle de Cuotas</field>
+			<field name="res_model">ea.cuota</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="detalle_coutas_view"/>
+			<field name="search_view_id" ref="detalle_coutas_search"/>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						No hay registros para mostrar
+					</p>
+			</field>
+		</record>
+			
+		<!-- Menu Detalle de Cuotas -->
+		<menuitem id="detalle_couta_menu" parent="ea_jmd.campo_report_menu" name="Detalle de Cuotas" action="detalle_coutas_actn" /> 
+		
+		
+		<!--  Lista Detalle de Cuotas -->
+		<record model="ir.ui.view" id="detalle_coutas_view">
+			<field name="name">detalle.coutas.view</field>
+			<field name="model">ea.cuota</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="X">
+					<field name="ncproyecto" />
+					<field name="nproyecto" />
+					<field name="name" string="Cuota"/>
+					<field name="nplaza" />
+					<field name="cantidad" string="Cuotas Planeadas" sum="Suma"/>
+					<field name="count_avances" string="Cuotas Realizadas" />
+				</tree>
+			</field>
+		</record>
+		
+	</data>
+</openerp>

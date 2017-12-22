@@ -1,0 +1,26 @@
+{
+    "name" : "JMD",
+    "version" : "1.0",
+    "author" : "Jose",
+    "category" : "Tools",
+    "description" : """
+    Commentarios module
+    """,
+    "website" : "",
+    "license" : "AGPL-3",
+    "depends" : [
+         'base',
+         'stock',
+    ],
+    "demo" : [],
+    "data" : [
+    "warehouse_view.xml",
+    ],
+    'js': [],
+    'qweb' : [],
+    'css':[],
+    'test': [],
+    "installable" : True,
+    "active" : False,
+}
+

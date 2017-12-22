@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Se agrega a horas el widget de Float_time para las horas-->
+        <record id="hr_asistencias_cmg" model="ir.ui.view">
+            <field name="name">hr.asistencias.cmg</field>
+            <field name="model">hr.asistencias</field>
+            <field name="inherit_id" ref="ea_jmd.rh_asistencias_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='horas']" position="replace">
+                    <field name="horas"  widget="float_time"/>
+            </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

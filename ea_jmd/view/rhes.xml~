@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Accion -->
+		<record model="ir.actions.act_window" id="accion_rhes">
+			<field name="name">Entradas y Salidas</field>
+			<field name="res_model">hr.es</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="search_view_id"/>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro
+					</p>
+			</field>
+		</record>
+			
+		<!-- Menu -->
+		<menuitem id="" parent="" name="" action="" groups="" sequence="" />
+		
+		<!--  Formulario -->
+		<record model="ir.ui.view" id="">
+			<field name="name"></field>
+			<field name="model"></field>
+			<field name="type"></field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="" version="7.0">
+					<header>
+					</header>
+					<sheet>
+						<h1>
+						</h1>
+						<group>
+							<group>
+							</group>
+							<group>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!--  Lista -->
+		<record model="ir.ui.view" id="">
+			<field name="name"></field>
+			<field name="model"></field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="" toolbar="1" colors="">
+				</tree>
+			</field>
+		</record>
+	</data>
+</openerp>

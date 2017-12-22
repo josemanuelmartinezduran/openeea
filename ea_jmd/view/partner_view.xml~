@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Campos adicionales al partner -->
+		<record id="view_partner_form_jmd_2" model="ir.ui.view">
+			<field name="name">view.partner.form.jmd.2</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//page[@string='Internal Notes']" position="after">
+					<page string="Dirección Adicional">
+						<group colspan="2">
+							<field name="aditional_address_type" />
+							<field name="aditional_address" />
+						</group>
+					</page>
+					<page string="Evaluaciones" attrs="{'invisible': [('supplier','=', False)]}">
+						<field name="evaluaciones" />
+					</page>
+					<page string="Datos Fiscales">
+						<group>
+							<group>
+								<field name="razon_social" />
+								<field name="calle" />
+								<field name="exterior" />
+								<field name="interior" />
+								<field name="colonia" />
+								<field name="codigo_postal" />
+							</group>
+						</group>
+						<group>
+							<group>
+								<field name="pais" />
+								<field name="estado" />
+								<field name="municipio" />
+								<field name="localidad" />
+								<field name="tarjeta" />
+								<field name="forma" />
+							</group>
+						</group>
+					</page>
+				</xpath>
+				
+				<xpath expr="//field[@name='email']" position="replace">
+					<field name="correo_e" />
+					<field name="encuesta_preeliminar" />
+					<field name="es_gea" />
+					<field name="es_sea" attrs="{'invisible': [('supplier','=', False)]}" />
+				</xpath>
+				<xpath expr="//field[@name='phone']" position="after">
+					<field name="extension" />
+				</xpath>
+			</field>
+		</record>
+		
+		<!-- Modificaciones a la vista:	 -->
+		<record id="chatter_jmd" model="ir.ui.view">
+			<field name="name">chatter_jmd</field>
+			<field name="model">mail.wizard.invite</field>
+			<field name="inherit_id" ref="mail.mail_wizard_invite_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='partner_ids']" position="attributes">
+					<attribute name="domain">[('customer', '=', False)]</attribute>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

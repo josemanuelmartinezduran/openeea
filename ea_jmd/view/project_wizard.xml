@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Accion ODT  -->
+		<record model="ir.actions.act_window" id="odt_actn">
+			<field name="name">Orden de Trabajo</field>
+			<field name="res_model">ea.project_wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<!-- <field name="search_view_id" ref="search_view_id"/> -->
+			<field name="help" type="html">
+1					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro
+					</p>
+			</field>
+		</record>
+		
+		<!-- Orden de Trabajo Ejecutivos de Cuenta-->
+		<menuitem id="ea_odt_ec" parent="ea_jmd.menu_ejecutivos_encuestas" name="Orden de Trabajo" action="odt_actn" sequence="3" />
+		
+		<!--  -->
+
+		<menuitem id="ea_odt_es" parent="ea_jmd.menu_estudios_proyectos" name="Orden de Trabajo" action="odt_actn" sequence="3" />
+
+
+		<!--  Ventana de creación de proyectos antes wizard -->
+		<record model="ir.ui.view" id="wiz_project_jmd">
+			<field name="name">wiz.project.jmd</field>
+			<field name="model">ea.project_wizard</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Alta de proyecto" version="7.0">
+					 <sheet>
+						<h1>
+							<label for="name" string="Clave">Clave</label>
+							<field name="name" placeholder="Clave del proyecto" required="True"/>
+							<label for="nombre_corto">Nombre Corto</label>
+							<field name="nombre_corto" placeholder="Nombre Corto" required="True" />
+							<label for="executive_id">Ejecutivo</label>
+							<field name="executive_id" placeholder="Nombre del ejecutivo" required="True"/>
+							<label for="cotizacion_id" string="Cotización">Cotización/Planeación</label>							
+							<field name="cotizacion_id" on_change="on_change_cotizacion(cotizacion_id)"/>
+						</h1>
+						
+						<group>
+							<group string="Datos Generales">
+								<field name="date_start" required="True"/>
+								<field name="date_end" required="True"/>
+								<field name="fecha_capacitacion" />
+								<field name="planeacion"/>
+								<field name="cuotas" required="True" />
+								<field name="fecha_tabulacion" required="True" />
+								<field name="fecha_analisis" required="True" />
+							</group>
+							<group string="Kick Off">
+								<field name="arranques_date_start" />
+								<field name="arranques_date_end" />
+								<field name="arranques_responsible_id" />
+							</group>
+						</group>
+						<group>
+							<group string="Campo">
+								<field name="campo_date_start" />
+								<field name="campo_date_end" />
+								<field name="campo_responsible_id" />
+								<field name="no_campo" />
+							</group>
+							<group string="Procesos Intermedios">
+								<field name="pi_date_start" />
+								<field name="pi_date_end" />
+								<field name="pi_responsible_id" />
+								<field name="no_pi" />
+							</group>
+						</group>
+						<group>
+							<group string="Procesamiento">
+								<field name="procesamiento_date_start" />
+								<field name="procesamiento_date_end" />
+								<field name="procesamiento_responsible_id" />
+								<field name="no_procesamiento" />
+							</group>
+							<group string="Análisis">
+								<field name="analisis_date_start" />
+								<field name="analisis_date_end" />
+								<field name="analisis_responsible_id" />
+								<field name="no_analisis" />
+							</group>
+						</group>
+						<group>
+							<group string="Entrega">
+								<field name="entrega_date_start" required="True"/>
+								<field name="entrega_date_end" required="True"/>
+								<field name="entrega_responsible_id" required="True"/>
+							</group>
+							<group string="Flash">
+								<field name="has_flash" />
+								<field name="flash_date" />
+							</group> 
+						</group>
+						<notebook>
+							<page string="Metodología">
+								<field name="metodologia" widget="html"/>
+							</page>
+							<page string="Objetivo">
+								<field name="objetivo" />
+							</page>
+							<page string="Manejo de Producto">
+								<field name="manejo" />
+							</page>
+							<page string="Observaciones">
+								<field name="observaciones" widget="html"/>
+							</page>
+						</notebook>
+					</sheet>
+					<footer>
+                        <button name="create_project" string="Crear Proyecto" type="object" class="oe_highlight"/>
+                        o
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+               </footer>
+				</form>
+			</field>
+		</record>	
+	</data>
+</openerp>

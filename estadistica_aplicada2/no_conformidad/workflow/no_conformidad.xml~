@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+    <data>
+
+		<!-- definicion del workflow -->
+		<record id="wkf_no_conformidad" model="workflow">
+			<field name="name">Workflow.Auditoria</field>
+			<field name="osv">no_conformidad</field>
+			<field name="on_create">True</field>
+		</record>
+		 
+		<!-- Estados del workflow correspondidos con el campo estado-->		
+		<record id="no_conformidad_generada" model="workflow.activity">
+			<field name="kind">function</field>
+			<field name="name">st_planeacion</field>
+			<field name="wkf_id" ref="wkf_no_conformidad"/>
+			<field name="flow_start">True</field>
+			<field name="action">action_generada()</field>
+		</record>
+				
+		<record id="no_conformidad_validada" model="workflow.activity">
+			<field name="kind">function</field>
+			<field name="name">st_ejecucion</field>
+			<field name="wkf_id" ref="wkf_no_conformidad"/> 
+			<field name="action">action_validada()</field>
+		</record>
+	
+		<record id="no_conformidad_resuelta" model="workflow.activity">
+			<field name="kind">function</field>
+			<field name="name">Cierre</field>
+			<field name="wkf_id" ref="wkf_no_conformidad"/>
+			<field name="flow_stop">True</field>
+			<field name="action">action_resuelta()</field>
+		</record>	
+
+		<!-- transiciones del workflow -->
+		<record id="trans_no_conformidad_generada" model="workflow.transition">
+			<field name="act_from" ref="no_conformidad_generada" />
+			<field name="act_to" ref="no_conformidad_validada" />
+			<field name="signal">signal_validar</field>
+		</record>
+
+		<record id="trans_no_conformidad_validada" model="workflow.transition">
+			<field name="act_from" ref="no_conformidad_validada" />
+			<field name="act_to" ref="no_conformidad_resuelta" />
+			<field name="signal">signal_cerrar</field>
+		</record>
+
+		
+	
+	</data>
+	
+</openerp>

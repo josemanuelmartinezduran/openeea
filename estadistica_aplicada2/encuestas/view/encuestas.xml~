@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Vista Árbol para editor_variables-->
+        <record model='ir.ui.view' id='view_editor_variables_tree'>
+            <field name='name'>cuotas.tree</field>
+            <field name='model'>editor_variables</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Editor de Variables'>
+					<field name='nombre_variable'/>
+                    <field name='comparador'/>
+                    <field name='valor'/>
+                </tree>
+            </field>
+        </record>        
+        
+        <!-- Vista Form para editor_variables-->
+        <record model='ir.ui.view' id='view_editor_variables_form'>
+            <field name='name'>cuotas.tree</field>
+            <field name='model'>editor_variables</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Variable' version='7.0'>
+                    <group col='1'>
+						<separator colspan='1' string='Información de la Variable' />
+                        
+						<field name='nombre_variable'/>
+                        <field name='comparador'/>
+                        <field name='valor'/>
+                    </group>
+                </form>
+            </field>
+        </record>     
+        
+        
+        <record id="editor_variables_action" model="ir.actions.act_window">
+            <field name="name">Editor de Variables</field>
+            <field name="res_model">editor_variables</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>        
+        
+       <!-- Vista Árbol para editor_cuotas-->
+        <record model='ir.ui.view' id='view_editor_cuotas_fve_tree'>
+            <field name='name'>cuotas.tree</field>
+            <field name='model'>editor_cuotas_fve</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Editor de Cuotas'>
+                    <field name='name'/>
+                </tree>
+            </field>
+		</record>
+		
+       <record model='ir.ui.view' id='view_editor_cuotas_fve_form'>
+            <field name='name'>cuotas.form</field>
+            <field name='model'>editor_cuotas_fve</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Editor de Cuotas' version='7.0'>
+					<sheet>
+						<group col='1'>
+							<separator colspan='1' string='Información de la Cuota' />	
+							<field name='name'/>
+						</group>
+						<notebook colspan='4'>
+							<page string='Variables de la cuota'>
+								<field name='variables' />
+							</page>
+						</notebook>
+					</sheet>
+                </form>
+            </field>
+		</record>		
+
+		<record id="editor_cuotas_fve_action" model="ir.actions.act_window">
+			<field name="name">Editor de Cuotas</field>
+			<field name="res_model">editor_cuotas_fve</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+				Haga clic aquí para crear un nueva cuota.
+				</p>
+			</field>
+		</record>    
+
+
+<!-- accion plazas de cutoas -->
+<record model="ir.actions.act_window" id="acnt_editor_encuestas">
+	<field name="name">Cuotas por Plaza</field>
+	<field name="res_model">editor_encuestas</field>
+	<field name="view_type">form</field>
+	<field name="view_mode">tree,form</field>
+	<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+				Haga clic aquí para crear un nuevo registro
+			</p>
+	</field>
+</record>
+
+        
+		
+      <!-- Vista Árbol para editor_encuestas-->
+        <record model='ir.ui.view' id='view_control_encuestas_tree'>
+            <field name='name'>control_encuestas.tree</field>
+            <field name='model'>control_encuestas</field>
+			<field name="priority" eval="15" />
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Editor de Encuestas'>
+                    <field name='responsable' string="Nombre del Responsable"/>
+                    <field name='encuesta'/>
+                </tree>
+            </field>
+		</record>
+
+        <record model='ir.ui.view' id='view_control_encuestas_form'>
+            <field name='name'>control_encuestas.form</field>
+            <field name='model'>control_encuestas</field>
+			<field name="priority" eval="15" />
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Editor de Encuestas' version='7.0'>
+					<sheet>
+						<group col='1' string="Información de la Encuesta">
+						<field name='nombre_estudio'/>
+						<label for="responsable">Responsable</label><field name='responsable' />
+						<field name='encuesta' />
+						</group>
+					</sheet>
+                </form>
+            </field>
+		</record>
+		
+		<record id="editor_control_encuestas_action" model="ir.actions.act_window">
+			<field name="name">Control de Entrevistas</field>
+			<field name="res_model">control_encuestas</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+				Haga clic aquí para crear un nuevo cuestionario.
+				</p>
+			</field>			
+		</record>
+		
+		<!-- Vista Árbol para editor_encuestas-->
+        <record model='ir.ui.view' id='view_editor_encuestas_treeq'>
+            <field name='name'>encuestas.treeq</field>
+            <field name='model'>editor_encuestas</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Editor de Encuestas'>
+                    <field name='plaza'/>
+                    <field name='complejidad'/>
+                    <field name='cuota' string="Cuota" />
+                    <field name='cantidad'/>
+                    <field name='clave' string="Cuestionario" />
+		    <field name='realizadas' />
+		    <field name='restantes' />
+                </tree>
+            </field>
+		</record>
+		
+		        <record model='ir.ui.view' id='view_editor_encuestas_formq'>
+            <field name='name'>encuestas.formq</field>
+            <field name='model'>editor_encuestas</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string="Editor de Encuestas" version="7.0">
+					<sheet>
+						<h1>
+							<field name="name" required="True" placeholder="consecutivo"/>
+						</h1>
+						<group>
+							<group string="Datos Generales">
+								<field name="cantidad" />
+							</group>
+							<group string="Avance">
+								<field name="realizadas" sum="Suma" />
+								<field name="restantes" sum="Total" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Cuotas">
+								<field name="cuota" />
+							</page>
+						</notebook>
+					</sheet>
+                </form>
+            </field>
+		</record> 		
+    </data>
+</openerp>

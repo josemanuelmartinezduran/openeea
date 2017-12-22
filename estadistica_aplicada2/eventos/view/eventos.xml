@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	<!-- 19/06/2014 (fuc) Formulario de eventos
+		(+) Definir por defecto opciones en campo "Tipo":
+			- Nuevo ingreso
+			- Estudio
+			- Entrenamiento
+			- Conferencia
+			- Otra
+		(+) Agregar campo "Lista de asistencia"
+		(+) Cambiar etiqueta "Eventos" por "Creacion eventos capacitacion" (cambiado en el .po)
+		(+) Cambiar etiqueta de campo "Resumen" por "Nombre de la capacitacion"
+	-->
+
+        <record id="view_event_form_inherit_1" model="ir.ui.view">
+            <field name="name">view.event.form.inherit.1</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="arch" type="xml">
+		<data>
+			<xpath expr="//div[@class='oe_title']" position="replace">
+				<div class="oe_title">
+					<label for="name" string="Nombre de la capacitación" class="oe_edit_only"/>
+					<h1>
+						<field name="name" modifiers="{'readonly': [['state', 'in', ['done']]], 'required': true}"/>
+					</h1>
+				</div>
+			</xpath>
+			<xpath expr="//field[@name='address_id']" position="attributes">
+				<attribute name="domain">[('es_gea', '=', True)]</attribute>
+			</xpath>
+			<xpath expr="//field[@name='type']" position="replace">
+				<field name="tipo" string="Tipo" />
+				<field name="proyecto" attrs="{'invisible': [('tipo','!=', 'estudio')]}" domain="[('etapa', '=', 'proyecto')]" string="Clave" />
+				<field name="nombre_corto" />
+				<field name="ok" />
+			</xpath>
+			<xpath expr="//field[@name='note']" position="attributes">
+				<attribute name="widget">html</attribute>
+			</xpath>
+			<xpath expr="//field[@name='nb_register']" position="after">
+					<field name="tipo" />
+				</xpath>
+			<xpath expr="//page[@string='Registrations']" position="after">
+				<page string="Lista de asistencia">
+					<field name="asistencia_ids">
+						<tree string="Lista de asistencia" editable="bottom">
+							<field name="asistente" string="Participante"/>
+							<field name="nombre" />
+							<field name="company" string="Empresa"/>
+							<field name="ciudad" />
+						</tree>
+					</field>
+				</page>
+			</xpath>
+		</data>
+            </field>
+        </record>
+        
+        <!-- Modificaciones a la vista:	Lista de Eventos -->
+		<!-- <record id="event_view" model="ir.ui.view">
+			<field name="name">event.view</field>
+			<field name="model">event.event</field>
+			<field name="inherit_id" ref="event.view_event_tree"/>
+			<field name="arch" type="xml">
+				<xpath expr="//tree[@string='Events']" position="attributes">
+					<attribute name="color">red:('state', '=', 'draft')</attribute>
+				</xpath>
+			</field>
+		</record> -->
+        
+        <!-- Formulario -->
+		<record model="ir.ui.view" id="asistencia_edit">
+			<field name="name">asistencia.edit</field>
+			<field name="model">ea.asistencia</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Asistencia" version="7.0">
+					<sheet>
+						<group>
+							<group string="Participante">
+								<field name="asistente" />
+							</group>
+							<group string="Empresa">
+								<field name="company" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+    </data>
+</openerp>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!--  Busqueda Loader  -->
+		<record model="ir.ui.view" id="loader_search">
+			<field name="name">loader.search</field>
+			<field name="model">utils.employee</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Buscar">
+					<filter icon="terp-document-new" name="" string="" domain="[('','','')]" help=""/>
+					<group expand="0" string="Agrupar por...">
+						<filter string="" icon="terp-partner" domain="[]" context="{'group_by':''}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<!-- Accion  Loader -->
+		<record model="ir.actions.act_window" id="loader_actn">
+			<field name="name">Creador de Cuentas</field>
+			<field name="res_model">utils.employee</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro
+					</p>
+			</field>
+		</record>
+		
+		<!--  Formulario  Loader -->
+		<record model="ir.ui.view" id="loader_edit">
+			<field name="name">loader.edit</field>
+			<field name="model">utils.employee</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="X" version="7.0">
+					<header>
+						<button name="generate_users" type="object" string="Generar Usuarios" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="template" />
+						</h1>						
+						<notebook>
+							<page string="Usuarios">
+								<field name="usuarios">
+									<tree string="X" editable="bottom">
+										<field name="name" />
+										<field name="correo" />
+										<field name="usuario" />
+										<field name="contrasenia" />
+									</tree>
+								</field>
+							</page>							
+						</notebook>			
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!--  Lista   Loader -->
+		<record model="ir.ui.view" id="loader_view">
+			<field name="name">loader.view</field>
+			<field name="model">utils.employee</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="">
+					<field name="template" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Menu  Loader -->
+		<menuitem id="loader_menu" parent="base.menu_users" name="Creador de Cuentas" action="loader_actn" />
+	</data>
+</openerp>

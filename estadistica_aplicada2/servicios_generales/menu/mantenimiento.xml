@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	<!-- 04/04/2014 - fuc - Edicion de Mantenimiento
+		(+) Cambiar etiqueta de menu "Manufacturing" por "Mantenimiento" (Desde archivo .po)
+		(+) Quitar submenu "Ordenes de producción"
+		(+) Cambiar submenu "Fabricación" por "Sistemas" (Desde archivo .po)
+			(+) Agregar submenu "Solicitud de mantenimiento" por desarrollar
+			(+) Mover submenu "Órdenes de trabajo" cambiar nombre por "Plan de mantenimiento" (en archivo .po), por defecto es un calendario
+		(+) Agregar submenu "Otros mantenimientos" y agregar todos los submenus de sistemas
+	-->
+
+	<!-- Menu Mantenimiento, cambiando secuencia -->
+	<menuitem id="base.menu_mrp_root" name="Mantenimiento" parent="serv_generales" action="" sequence="3"/>
+
+	<!-- Ocultar menus originales:
+		Ordenes de Produccion, Plan de Mantenimiento del menu raiz: Sistemas -->
+	<menuitem id="mrp.menu_mrp_production_action" groups="hidden_menu"/>
+	<menuitem id="mrp_operations.menu_mrp_production_wc_order" groups="hidden_menu"/>
+
+	<!-- Submenu Solicitud de Mantenimiento -->
+	<record id="menu_sistemas_mantto_solicitud_mantto" model="ir.ui.menu">
+		<field name="name">Solicitud de mantenimiento</field>
+		<field name="action" ref="act_sistemas_mantenimientos"/>
+		<field name="sequence" eval="51"/>
+		<field name="parent_id" ref="mrp.menu_mrp_manufacturing"/>
+		<field name="domain">[('tipo','=','sistemas')]</field>
+	</record>
+
+	<!-- Cambios Plan de mantenimiento -->
+	<record id="menu_mrp_production_wc_order" model="ir.ui.menu">
+		<field name="name">Plan de mantenimiento</field>
+		<field name="action" ref="mrp_production_wc_action_form"/>
+		<field name="sequence" eval="52"/>
+		<field name="parent_id" ref="mrp.menu_mrp_manufacturing"/>
+	</record>
+
+	<!-- Menu Otros Mantenimientos dentro de Mantenimiento con igual contenido de Sistemas -->
+	<menuitem id="menu_otros_mantto" name="Otros mantenimientos" parent="base.menu_mrp_root" action="" sequence="3"/>
+
+	<menuitem id="menu_repair_order_otros_mantto" name="Órdenes de reproceso"
+		parent="menu_otros_mantto" action="mrp_repair.action_repair_order_tree" groups="mrp.group_mrp_user" sequence="1"/>
+
+	<record id="menu_otros_mantto_solicitud_mantto" model="ir.ui.menu">
+		<field name="name">Solicitud de mantenimiento</field>
+		<field name="action" ref="act_otros_mantenimientos"/>
+		<field name="sequence" eval="2"/>
+		<field name="parent_id" ref="menu_otros_mantto"/>
+		<field name="domain">[('tipo','=','mantenimiento')]</field>
+	</record>
+
+	<!-- Submenu Plan de Mantenimiento -->
+	<record id="menu_otros_mantto_plan_mantto" model="ir.ui.menu">
+		<field name="name">Plan de mantenimiento</field>
+		<field name="action" ref="act_otros_mantto_plan_mantto"/>
+		<field name="sequence" eval="3"/>
+		<field name="parent_id" ref="menu_otros_mantto"/>
+	</record>
+
+	</data>
+</openerp>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Modificaciones a la vista	-->
+		<record id="jmd_department_edit" model="ir.ui.view">
+			<field name="name">jmd.department.edit</field>
+			<field name="model">hr.department</field>
+			<field name="inherit_id" ref="hr.view_department_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="after">
+					<field name="codigo" />
+					<field name="area" />
+				</xpath>		
+			</field>
+		</record>		
+	</data>
+</openerp>

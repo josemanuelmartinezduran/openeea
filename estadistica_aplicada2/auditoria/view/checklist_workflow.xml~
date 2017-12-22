@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Flujo de Checlist -->
+		<record id="checklist_workflow" model="workflow">
+			<field name="name">checklist.flow</field>
+			<field name="osv">euditoria.workflow</field>
+			<field name="on_create">True</field>
+		</record>
+		
+		<!-- Nodo Inicial -->
+		<record id="flow_check_borrador" model="workflow.activity">
+			<field name="name">flow.check.borrador</field>
+			<field name="wkf_id" ref="checklist_workflow"/>
+			<field name="kind">function</field>
+			<field name="action">action_borrador()</field>
+			<field name="flow_start">True</field>
+		</record>
+		
+		<!-- Nodo Final -->
+		<record id="flow_check_aprobado" model="workflow.activity">
+			<field name="name">flow.check.aprobado</field>
+			<field name="wkf_id" ref="checklist_workflow"/>
+			<field name="kind">function</field>
+			<field name="action">action_aprobado()</field>
+			<field name="flow_end">True</field>
+		</record>
+		
+		<!-- Transición -->
+		<record id="flow_check_borrador_aprobado" model="workflow.transition">
+			<field name="act_from" ref="flow_check_borrador"/>
+			<field name="act_to" ref="flow_check_aprobado"/>
+			<field name="signal">signal_aprobar</field>
+			<field name="condition">True</field>
+		</record>
+	
+	</data>
+</openerp>

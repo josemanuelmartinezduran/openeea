@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	   <!-- Hr Employee-->
+		<record id="hr_employee_inherit_jmd" model="ir.ui.view">
+			<field name="name">hr.employee.inherit.jmd</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='department_id']" position="replace">
+					<field name="department_id" string="Departamento" />
+				</xpath>
+	
+				<xpath expr="//field[@name='company_id']" position="replace">
+					<field name="company_id" string="Empresa" />
+				</xpath>
+	
+				<xpath expr="//field[@name='job_id']" position="replace">
+					<field name="job_id" string="Puesto" />
+					<button name="set_hollydas" string="Vacaciones" type="object" />
+				</xpath>
+	
+				<xpath expr="//field[@name='category_ids']" position="after">
+					<group>
+						<group>
+							<field name="tipo_del_contrato" />
+							<field name="tipo_pago" />
+							<field name="enterprise_id" placeholder="Empresa" />
+						</group>
+						<group>
+							<field name="seagea" placeholder="SEA/GEA"/>
+							<field name="es_foraneo" />					
+							<field name="es_campo" />
+							<field name="oficina_id" attrs="{'invisible': [('es_foraneo', '!=', False)]}"/>
+							<field name="provincia_id" attrs="{'invisible': [('es_foraneo', '!=', True)]}"/>
+							<field name="cnomina" />
+						</group>
+					</group>
+				</xpath>	
+				<xpath expr="//label[@for='name']" position="attributes">
+					<attribute name="string">NIP</attribute>
+				</xpath>
+				<xpath expr="//field[@name='name']" position="after">
+					<label for="nombre" string="Nombre" />					
+					<field name="nombre" />
+					
+				</xpath>
+				
+				<xpath expr="//page[@string='Public Information']" position="after">
+				  <page string="Validaciones de Estudio">
+					<field name="validaciones">
+						<tree string="Validaciones" editable="bottom">
+							<field name="name" invisible="True"/>
+							<field name="estudio" />
+							<field name="nombre_corto" />
+							<field name="fecha" />
+						</tree>
+					</field>
+					<button name="update_validation" string="Actualizar" type="object"/>
+				  </page>
+				  <page string="Cursos">
+				  	<field name="curso_ids">
+				  		<tree string="X" editable="bottom">
+				  			<field name="name" />
+				  			<field name="evento" />
+				  			<field name="dh3" />
+				  			<field name="fecha" />
+				  		</tree>
+				  	</field>
+				  </page>
+				  <page string="Datos Bancarios"  attrs="{'invisible': [('ve_bancos', '!=', True)]}">
+				  <group>
+				  	<field name="beneficiario" />
+				  	<field name="banco" />
+				  	<field name="cuenta" />
+					<field name="ve_bancos" invisible="True" />
+				  </group>
+				  </page>
+				  
+				  <page string="Configuración RRHH">
+				  	<group>
+				  		<group string="Salario">
+				  			<field name="ve_nomina" invisible="False" />
+				  			<!-- <field name="remaining_leaves" string="Vacaciones Restantes" /> -->
+				  			<field name="salario_diario" attrs="{'invisible': [('ve_nomina', '=', False)]}"/>
+				  			<field name="is_sec" />
+				  			<field name="sec_salario"  attrs="{'invisible': ['|', ('ve_nomina', '=', False), ('is_sec', '!=', True)]}"/>
+				  			<field name="sec_company" attrs="{'invisible': [('is_sec', '=', False)]}" /> 
+				  			<field name="active" />
+				  		</group>
+				  		<group string="Fecha de Ingreso">
+				  			<field name="ingreso" />
+				  		</group>
+				  	</group>
+				  	<button type="object" name="entrar" string="Regsitrar Reingreso"  />
+				  	<button type="object" name="salir" string="Registrar Salida" />
+				  	<field name="salida_ids">
+				  		<tree string="X" editable="bottom">
+				  			<field name="name" />
+				  			<field name="egreso" />
+				  			<field name="motivo" />
+				  		</tree>
+				  	</field>
+				  </page>
+				</xpath>
+				
+				<xpath expr="//group[@string='Contact Information']" position="replace">
+					
+				</xpath>
+
+				<xpath expr="//field[@name='parent_id']" position="attributes">
+					<attribute name="string">Direccion</attribute>
+				</xpath>
+				
+				<xpath expr="//field[@name='identification_id']" position="attributes">
+					<attribute name="invisible">True</attribute>
+				</xpath>
+				
+				<xpath expr="//field[@name='bank_account_id']" position="attributes">
+					<attribute name="invisible">True</attribute>
+				</xpath>
+				
+				<xpath expr="//field[@name='otherid']" position="attributes">
+					<attribute name="invisible">True</attribute>
+				</xpath>
+				
+				<xpath expr="//field[@name='address_home_id']" position="attributes">
+					<attribute name="invisible">True</attribute>
+				</xpath>
+				
+				<xpath expr="//page[@string='HR Settings']" position="attributes">
+					<attribute name="invisible">True</attribute>
+				</xpath>
+				
+				<xpath expr="//field[@name='job_id']" position="after">
+					<field name="categoria_id" domain="[('job_id', '=' ,job_id)]"/>
+					<field name="department_id"  />
+					<field name="direccion_id" on_change="set_director(direccion_id)"/>
+				</xpath>
+				
+				<xpath expr="//field[@name='parent_id']" position="attributes">
+					<attribute name="string">Director</attribute>
+				</xpath>
+				
+				<xpath expr="//field[@name='department_id']" position="replace">
+					
+				</xpath>
+				
+				<xpath expr="//field[@name='country_id']" position="replace">
+					<field name="nacionalidad" />
+				</xpath>
+				
+				<xpath expr="//page[@string='Personal Information']" position="inside">
+					<group>
+						<group string="Otros Datos">
+							<field name="rfc" />
+							<field name="curp" />
+							<field name="tel_particular" />
+							<field name="mobile_phone" string="Móvil"/>	
+							<field name="telefono_recados" />						
+						</group>
+						<group string="Dirección y Escolaridad" >
+							<field name="calle" />
+							<field name="cp" />
+							<field name="colonia_id" domain="[('cp', '=' ,cp)]" />
+							<field name="delegacion" />
+							<field name="estado" />
+							<field name="escolaridad" />
+							<field name="certificado" />
+							<field name="particular" />
+						</group>
+					</group>
+					<group string="Contacto de Emergencia" >
+							<field name="contacto" />
+							<field name="tel_emergencia" />
+							<field name="sangre" />
+							<field name="factor_rh" />
+					</group>
+				</xpath>
+				
+			</field>
+		</record>
+		
+		
+		<!-- Modificaciones a la vista:	Nomina Inherit -->
+		<record id="nomina_inherit_form" model="ir.ui.view">
+			<field name="name">nomina.inherit.form</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='bank_account_id']" position="replace">
+				</xpath>
+				<xpath expr="//field[@name='visibility']" position="attributes">
+					<attribute name="invisible">True</attribute>
+				</xpath>
+			</field>
+		</record>
+		
+	<!-- Menu SEA -->
+	<record model="ir.actions.act_window" id="hr.actn_open_view_employee_list_my_sea">
+		<field name="name">SEA</field>
+		<field name="domain">[('seagea', '=', 'sea')]</field>
+		<field name="res_model">hr.employee</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">list,form</field>
+		<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Haga clic aquí para crear un nuevo registro
+				</p>
+		</field>
+	</record>
+	
+	<!-- Menú SEA -->
+		<menuitem id="menu_sea" parent="hr.menu_open_view_employee_list_my" name="SEA" action="hr.actn_open_view_employee_list_my_sea" />
+		
+	<!-- Menu GEA -->
+	<record model="ir.actions.act_window" id="hr.actn_open_view_employee_list_my_gea">
+		<field name="name">GEA</field>
+		<field name="domain">[('seagea', '=', 'gea')]</field>
+		<field name="res_model">hr.employee</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">list,form</field>
+		<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Haga clic aquí para crear un nuevo registro
+				</p>
+		</field>
+	</record>
+		
+		
+		<!-- Menú Gea -->
+		<menuitem id="menu_gea" parent="hr.menu_open_view_employee_list_my" name="GEA" action="hr.actn_open_view_employee_list_my_gea" />
+		
+		
+		<!-- Modificaciones a la vista	-->
+		<record id="job_jmd_view" model="ir.ui.view">
+			<field name="name">job.jmd.view</field>
+			<field name="model">hr.job</field>
+			<field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='survey_id']" position="attributes">
+					<attribute name="string">Cuestionario</attribute>
+				</xpath>
+				<xpath expr="//button[@name='action_print_survey']" position="attributes">
+					<attribute name="string">Cuestionario</attribute>
+				</xpath>
+			</field>
+		</record>
+		
+		<!--  Formulario Categoría de Puestos -->
+		<record model="ir.ui.view" id="ea_categoria_edit">
+			<field name="name">ea.categoria.edit</field>
+			<field name="model">ea.categoria</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="X" version="7.0">
+					<sheet>
+						<h1>
+							<label for="name" string="Nombre" />
+							<field name="name" placeholder="Nombre"  />
+							<label for="descripcion" string="Descripción" />
+							<field name="descripcion" placeholder="Descripción"/>
+							<label for="job_id" string="Puesto" />
+							<field name="job_id" placeholder="Puesto"/>
+						</h1>			
+					</sheet>
+					<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers" />
+							<field name="message_ids" widget="mail_thread" />
+					</div>
+				</form>
+			</field>
+		</record>
+	</data>	
+</openerp>

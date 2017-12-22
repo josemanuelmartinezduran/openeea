@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+    <data>
+	
+        <!-- Vista tree para no_conformidad-->
+        <record model='ir.ui.view' id='rac_view_tree'>
+            <field name='name'>view.rac_view_tree</field>
+            <field name='model'>rac</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Rac'>
+					<field name='name'/>
+					<field name='auditoria' string='Auditoria'/>
+					<field name='auditor' string='Auditor'/>
+					<field name='fecha_reporte'/>
+					<field name='fecha_limite'/>
+					<field name='prioridad'/>
+					<field name='responsable' string='Responsable'/>
+					<field name='informacion'/>
+					<field name='acciones'/>
+                </tree>
+            </field>
+        </record>
+		
+		
+        <!-- Vista form para no_conformidad-->
+        <record model='ir.ui.view' id='rac_view_form'>
+            <field name='name'>view.rac_view_form</field>
+            <field name='model'>rac</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Rac' version='7.0'>
+					<sheet>
+						<group>
+							<div class='oe_title'>
+								<label for='id_rac' class='oe_edit_only' string='Rac'/>
+								<h1>
+									<field name='id_rac' string='Rac'/>
+								</h1>	
+							</div>
+						</group>
+						<group>
+							<group>
+								<field name='auditoria' string='Auditoria'/>
+								<field name='auditor' string='Auditor'/>
+								<field name='fecha_reporte'/>
+								<field name='fecha_limite'/>
+							</group>
+							<group>
+								<field name='prioridad'/>
+								<field name='responsable' string='Responsable'/>
+							</group>
+						</group>
+						<notebook>
+							<page string='Informacion'>
+								<field name='informacion'/>
+							</page>
+							<page string='Acciones'>
+								<field name='acciones'/>
+							</page>
+						</notebook>
+					</sheet>
+                </form>
+            </field>
+        </record>
+				
+				
+		<!-- action para auditoria -->
+        <record id="rac_action_fve" model="ir.actions.act_window">
+            <field name="name">rac</field>
+            <field name="res_model">rac</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <!-- Menu RAC -->
+        <menuitem id="rac_menu" parent="menu_auditoria" name="RAC" action="rac_action_fve" groups="group_auditor,group_auditado" sequence="8" />
+
+		
+	</data>
+</openerp>

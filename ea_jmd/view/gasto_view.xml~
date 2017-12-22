@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	
+		<!--  Busqueda -->
+		<record model="ir.ui.view" id="ea_gasto_search_2">
+			<field name="name">ea.gasto.search</field>
+			<field name="model">ea.gasto</field>
+			<field name="type">search</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<field name="name" />
+					<group expand="0" string="Reportar por...">
+						<filter string="Proyecto" icon="terp-partner" domain="[]" context="{'group_by':'proyecto'}"/>
+						<filter string="Fecha" icon="terp-partner" domain="[]" context="{'group_by':'fecha'}"/>
+						<filter string="Plaza" icon="terp-partner" domain="[]" context="{'group_by':'plaza_id'}"/>
+						<filter string="Responsable" icon="terp-partner" domain="[]" context="{'group_by':'responsable'}"/>
+						<filter string="Estatus" icon="terp-partner" domain="[]" context="{'group_by':'state'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		
+		<!-- Accion de gastos -->
+		<record model="ir.actions.act_window" id="act_ea_gastos">
+			<field name="name">Comprobaciones</field>
+			<field name="res_model">ea.gasto</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="ea_gasto_search_2"/>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para anotar gastos de un proyecto
+					</p>
+			</field>
+		</record>
+		
+		
+
+		<!-- Menu de gastos -->
+		<menuitem id="ea_menu_gastos" parent="estadistica_aplicada2.mn_estudios_campo" name="Comprobaciones de Gastos" action="act_ea_gastos" sequence="16" />
+		
+		<!-- Accion de gastos GAC-->
+		<record model="ir.actions.act_window" id="act_ea_gastos_gac">
+			<field name="name">Comprobaciones</field>
+			<field name="res_model">ea.gasto</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="ea_gasto_search_2"/>
+			<field name="domain">[('state', 'in', ['enviado'])]</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para anotar gastos de un proyecto
+					</p>
+			</field>
+		</record>
+		
+		
+
+		<!-- Menu de gastos GAC-->
+		<menuitem id="ea_menu_gastos_gac" parent="estadistica_aplicada2.mn_estudios_campo" name="Comprobaciones de Gastos (GAC)" action="act_ea_gastos_gac" sequence="16" />
+		
+		<!-- Accion de gastos CONTA -->
+		<record model="ir.actions.act_window" id="act_ea_gastos_conta">
+			<field name="name">Comprobaciones</field>
+			<field name="res_model">ea.gasto</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="ea_gasto_search_2"/>
+			<field name="domain">[('state', 'in', ['comprobaciones', 'contabilidad', 'aprobado'])]</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para anotar gastos de un proyecto
+					</p>
+			</field>
+		</record>
+		
+		
+
+		<!-- Menu de gastos -->
+		<menuitem id="ea_menu_gastos_conta" parent="estadistica_aplicada2.mn_estudios_campo" name="Comprobaciones de Gastos (Contabilidad) " action="act_ea_gastos_conta" sequence="16" />
+		
+		<!-- -->
+
+		<record model="ir.actions.act_window" id="act_ea_mis_gastos">
+			<field name="name">Mis Comprobaciones</field>
+			<field name="domain">[('responsable.user_id', '=', uid)]</field>
+			<field name="res_model">ea.gasto</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Felicidades no tiene comprobaciones pendientes
+					</p>
+			</field>
+		</record>
+		
+		<!-- Menu de gastos -->
+		<menuitem id="ea_menu_mis_gastos" parent="estadistica_aplicada2.mn_estudios_campo" name="Mis Comprobaciones" action="act_ea_mis_gastos" sequence="17" />
+
+		
+		<!--  Lista de Gastos-->
+		<record model="ir.ui.view" id="ea_gasto_tree">
+			<field name="name">ea.gasto.tree</field>
+			<field name="model">ea.gasto</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="Gastos">
+					<field name="proyecto" />
+					<field name="nombre_corto" />
+					<field name="fecha" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>	
+		
+		<!--  Formulario de Gastos -->
+		<record model="ir.ui.view" id="ea_gasto_form">
+			<field name="name">ea.gasto.form</field>
+			<field name="model">ea.gasto</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Captura de Gasto" version="7.0">
+					<header>
+						<button string="Enviar" type="workflow" states="solicitado" name="signal_capturar" />	
+						<button string="Revisado" type="workflow" states="capturado" name="signal_enviar" confirm="¿Marcar como revisado?" groups="ea_jmd.comprobaciones" />
+						<button string="Ok GAC" type="workflow" states="enviado" name="signal_comprobar" confirm="¿Validar el documento?" groups="ea_jmd.autorizargasto"/>
+						<button string="Ok Contabilidad" type="workflow" states="comprobaciones" name="signal_contabilidad" confirm="¿Aprobar el gasto?" groups="account.group_account_manager" />
+						<button string="Ok Contabilidad" type="workflow" states="contabilidad" name="signal_aprobar" confirm="¿Aprobar el gasto?" groups="account.group_account_manager"/> 
+						<field name="state" widget="statusbar" nolabel="1" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" placeholder="Proyecto - Fecha" />
+						</h1>
+						<group>
+							<group string="Datos del proyecto">
+								<field name="proyecto" domain="[('etapa','=','proyecto')]" required="True"/>
+								<field name="nombre_corto" />
+								<field name="plaza_id" required="True" strign="Ciudad" domain="[('nombre_estudio_id', '=', proyecto)]"/>
+								<field name="responsable" required="True"/>
+								<field name="folio" readonly="True" />
+							</group>
+							<group string="Datos del gasto">
+								<field name="pid" invisible="True"/>
+								<field name="plid" invisible="True"/>
+								<field name="fecha" readonly="True" />
+								<field name="total" />
+								<field name="total_campo" />
+								<field name="total_comprobaciones" />
+								<field name="diferencia" />
+								<field name="numero_poliza" attrs="{'invisible': [('state','in', ['capturado', 'solicitado', 'enviado'])]}"/>
+							</group>
+						</group>
+						<separator string="Comprobacion" />
+						<group>
+							
+							<group string="Vales" >
+								<field name="formato_vales" filename="nformato"/>
+								<field name="nformato" invisible="True" />
+								<field name="vales_campo" />
+								<field name="vales_comprobaciones" />
+								<field name="total_comprobado_vales" />
+							</group>
+							
+							<group string="Totales" attrs="{'invisible': [('state','in', ['capturado', 'solicitado', 'enviado'])]}" >
+								<field name="total_deducible" />
+								<field name="total_no_deducible" />
+								<field name="reembolso" />
+								<field name="notas" />								
+							</group>
+						</group>
+						<notebook>
+							<page string="Depósitos">
+								<field name="solicitud_ids" attrs="{'readonly': [('state','=', 'aprobado')]}" domain="[('responsable', '=', responsable)]"> <!-- ('state', '=' ,'contabilidad'), ('comprobado', '=', False), -->
+									<tree>
+										<field name="name" />
+										<field name="motivo" />
+										<field name="monto"/>
+										<field name="total_vales" />
+										<field name="monto_ejercido"/>
+										<field name="total_solicitud" />
+										<field name="fecha_limite" />
+										<field name="state" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<separator string="Comprobación" />
+						<button type="object" name="copia_montos" string="Copia Montos" attrs="{'invisible': [('state','=', 'solicitado')]}"/>
+						<notebook>
+							<page string="A depositar" >
+								<field name="gasto_adepositar" attrs="{'readonly': [('state','=', 'aprobado')]}">
+									<tree editable="bottom">
+										<field name="presupuestado_id" domain="[('idproyecto', '=', idproyecto), ('idplaza', '=', idplaza)]" />
+										<field name="monto_campo" sum="SUMA" attrs="{'readonly': [('state', 'in', ['capturado', 'enviado', 'comprobaciones', 'contabilidad', 'aprobado'])]}"/>
+										<field name="monto_original" sum="SUMA"  attrs="{'readonly': [('state', 'in', ['solicitado', 'comprobaciones', 'contabilidad', 'aprobado'])]}" />
+										<field name="monto" sum="Total" attrs="{'readonly': [('state', 'in', ['solicitado', 'capturado', 'enviado'])]}"/>
+										<field name="documento" filename="ndocumento" invisible="True"/>
+										<field name="ndocumento" invisible="True"/>
+										<field name="numero_comprobante"  />
+										<field name="observaciones" />
+										<field name="rechazado" invisible="True" />
+										<field name="idproyecto" invisible="True" />
+										<field name="idplaza" invisible="True" />
+										<field name="state" invisible="True" readonly="True" />
+									</tree>
+								</field>
+							</page>
+							<page string="No se deposita" >
+								<field name="gasto_nosedeposita" attrs="{'readonly': [('state','=', 'aprobado')]}">
+									<tree editable="bottom">
+										<field name="presupuestado_id" domain="[('idproyecto', '=', idproyecto), ('idplaza', '=', idplaza)]" />
+										<field name="monto_campo" sum="SUMA" attrs="{'readonly': [('state', 'in', ['capturado', 'enviado', 'comprobaciones', 'contabilidad', 'aprobado'])]}"/>
+										<field name="monto_original" sum="SUMA"  attrs="{'readonly': [('state', 'in', ['solicitado', 'comprobaciones', 'contabilidad', 'aprobado'])]}" />
+										<field name="monto" sum="Total" attrs="{'readonly': [('state', 'in', ['solicitado', 'capturado', 'enviado'])]}"/>
+										<field name="documento" filename="ndocumento" invisible="True"/>
+										<field name="ndocumento" invisible="True"/>
+										<field name="numero_comprobante" />
+										<field name="observaciones" />
+										<field name="rechazado" />
+										<field name="idproyecto" invisible="True" />
+										<field name="idplaza" invisible="True" />
+										<field name="state" invisible="False" readonly="True" />
+									</tree>
+								</field>
+							</page>
+							<page string="Nómina GEA" >
+								<field name="gasto_nominagea" attrs="{'readonly': [('state','=', 'aprobado')]}">
+									<tree editable="bottom">
+										<field name="presupuestado_id" domain="[('idproyecto', '=', idproyecto), ('idplaza', '=', idplaza)]" />
+										<field name="monto_campo" sum="SUMA" attrs="{'readonly': [('state', 'in', ['capturado', 'enviado', 'comprobaciones', 'contabilidad', 'aprobado'])]}"/>
+										<field name="monto_original" sum="SUMA"  attrs="{'readonly': [('state', 'in', ['solicitado', 'comprobaciones', 'contabilidad', 'aprobado'])]}" />
+										<field name="monto" sum="Total" attrs="{'readonly': [('state', 'in', ['solicitado', 'capturado', 'enviado'])]}"/>
+										<field name="documento" filename="ndocumento" invisible="True"/>
+										<field name="ndocumento" invisible="True"/>
+										<field name="numero_comprobante" />
+										<field name="observaciones" />
+										<field name="rechazado" />
+										<field name="idproyecto" invisible="True" />
+										<field name="idplaza" invisible="True" />
+										<field name="state" invisible="False" readonly="True" />
+									</tree>
+								</field>
+							</page>
+							<page string="D/HPROD./PAGADOS/A VIAJAR/MUESTRA" >
+								<field name="gasto_otros" attrs="{'readonly': [('state','=', 'aprobado')]}">
+									<tree editable="bottom">
+										<field name="presupuestado_id" domain="[('idproyecto', '=', idproyecto), ('idplaza', '=', idplaza)]" />
+										<field name="monto_campo" sum="SUMA" attrs="{'readonly': [('state', 'in', ['capturado', 'enviado', 'comprobaciones', 'contabilidad', 'aprobado'])]}"/>
+										<field name="monto_original" sum="SUMA"  attrs="{'readonly': [('state', 'in', ['solicitado', 'comprobaciones', 'contabilidad', 'aprobado'])]}" />
+										<field name="monto" sum="Total" attrs="{'readonly': [('state', 'in', ['solicitado', 'capturado', 'enviado'])]}"/>
+										<field name="documento" filename="ndocumento" invisible="True" />
+										<field name="ndocumento" invisible="True"/>
+										<field name="numero_comprobante" />
+										<field name="observaciones" />
+										<field name="rechazado" />
+										<field name="idproyecto" invisible="True" />
+										<field name="idplaza" invisible="True" />
+										<field name="state" invisible="False" readonly="True" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+						<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers" />
+							<field name="message_ids" widget="mail_thread" />
+						</div>
+				</form>
+			</field>
+		</record>
+		
+		
+		<!-- Reporte de gastos -->
+		<!--  Lista de Gastos-->
+		<record model="ir.ui.view" id="ea_gasto_tree_2">
+			<field name="name">ea.gasto.tree</field>
+			<field name="model">ea.gasto</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="Gastos">
+					<field name="proyecto" />
+					<field name="nombre_corto" />
+					<field name="responsable" />
+					<field name="fecha" />
+					<field name="plaza_id" />
+					<field name="total" string="Total de Dinero" sum="Monto de Depositos" />
+					<field name="total_comprobado_vales" sum="Total Vales" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+		
+		
+		
+		<record model="ir.actions.act_window" id="act_ea_gastos2">
+			<field name="name">Reporte de Gastos</field>
+			<field name="res_model">ea.gasto</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="ea_gasto_tree_2"/>
+			<field name="search_view_id" ref="ea_gasto_search_2"/>
+			<field name="view_mode">tree</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Sin Datos
+					</p>
+			</field>
+		</record>
+		
+		<menuitem id="ea_menu_gastos_repo" parent="campo_report_menu" name="Reporte de Gastos" action="act_ea_gastos2" sequence="17" />
+		
+		
+		<!--  Busqueda -->
+		<record model="ir.ui.view" id="ea_gasto_desglose_search">
+			<field name="name">presupuesto_linea_search</field>
+			<field name="model">ea.presupuesto_linea</field>
+			<field name="type">search</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<field name="name" />
+					<group expand="0" string="Group By...">
+						<filter string="Proyecto" icon="terp-partner" domain="[]" context="{'group_by':'nproyecto'}"/>
+						<filter string="Plaza" icon="terp-partner" domain="[]" context="{'group_by':'plaza_id'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="act_ea_gasto_desglose">
+			<field name="name">Reporte de Gastos</field>
+			<field name="res_model">ea.presupuesto_linea</field>
+			<field name="view_type">form</field>
+			<field name="search_view_id" ref="ea_gasto_desglose_search"/>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Sin Datos
+					</p>
+			</field>
+		</record>
+		
+		<menuitem id="ea_menu_gastos_desglose_repo" parent="campo_report_menu" name="Desglose de Gastos" action="act_ea_gasto_desglose" />
+		
+		<!--  Lista -->
+		<record model="ir.ui.view" id="gasto_desglose_view">
+			<field name="name">gasto.desglose.view</field>
+			<field name="model">ea.presupuesto_linea</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="X" >
+					<field name="name" />
+					<field name="plaza_id" />
+					<field name="nproyecto" />
+					<field name="ncproyecto" />
+					<field name="total" sum="Suma" />
+				</tree>
+			</field>
+		</record>
+	</data>
+</openerp>

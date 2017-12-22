@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Flujo -->
+		<record id="servicio_wkf" model="workflow">
+			<field name="name">servicio.wkf</field>
+			<field name="osv">ea.servicio</field>
+			<field name="on_create">True</field>
+		</record>
+		
+		<!-- Nodo Inicial Borrador -->
+		<record id="servicio_wkf_Borrador" model="workflow.activity">
+			<field name="name">servicio.wkf.Borrador</field>
+			<field name="wkf_id" ref="servicio_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_borrador()</field>
+			<field name="flow_start">True</field>
+		</record>
+		
+		<!-- Nodo Generada -->
+		<record id="servicio_wkf_Generada" model="workflow.activity">
+			<field name="name">servicio.wkf.Generada</field>
+			<field name="wkf_id" ref="servicio_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_generada()</field>
+		</record>
+		
+		<!-- Nodo Validada -->
+		<record id="servicio_wkf_Validada" model="workflow.activity">
+			<field name="name">servicio.wkf.Validada</field>
+			<field name="wkf_id" ref="servicio_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_validada()</field>
+		</record>
+		
+		<!-- Nodo Final Cancelada -->
+		<record id="servicio_wkf_Cancelada" model="workflow.activity">
+			<field name="name">servicio.wkf.Cancelada</field>
+			<field name="wkf_id" ref="servicio_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_cancelada()</field>
+			<field name="flow_stop">True</field>
+		</record>
+		
+		<!-- Nodo Final Resuelta -->
+		<record id="servicio_wkf_Resuelta" model="workflow.activity">
+			<field name="name">servicio.wkf.Resuelta</field>
+			<field name="wkf_id" ref="servicio_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_cancelada()</field>
+			<field name="flow_stop">True</field>
+		</record>
+		
+		<!-- Transición Borrador a Generada-->
+		<record id="servicio_wkf_Borrador_Generada" model="workflow.transition">
+			<field name="act_from" ref="servicio_wkf_Borrador"/>
+			<field name="act_to" ref="servicio_wkf_Generada"/>
+			<field name="signal">signal_Generada</field>
+			<field name="condition">True</field>
+		</record>
+		
+		<!-- Transición Generada a Validada-->
+		<record id="servicio_wkf_Generada_Validada" model="workflow.transition">
+			<field name="act_from" ref="servicio_wkf_Generada"/>
+			<field name="act_to" ref="servicio_wkf_Validada"/>
+			<field name="signal">signal_Validada</field>
+			<field name="condition">True</field>
+		</record>
+		
+		<!-- Transición Validada a Resuelta-->
+		<record id="servicio_wkf_Validada_Resuelta" model="workflow.transition">
+			<field name="act_from" ref="servicio_wkf_Validada"/>
+			<field name="act_to" ref="servicio_wkf_Resuelta"/>
+			<field name="signal">signal_Resuelta</field>
+			<field name="condition">True</field>
+		</record>
+		
+		<!-- Transición Generada a Cancelada -->
+		<record id="servicio_wkf_Validada_Resuelta" model="workflow.transition">
+			<field name="act_from" ref="servicio_wkf_Generada"/>
+			<field name="act_to" ref="servicio_wkf_Cancelada"/>
+			<field name="signal">signal_Cancelada</field>
+			<field name="condition">True</field>
+		</record>
+		
+		<!-- Transición Validada a Generada -->
+		<record id="servicio_wkf_Validada_Generada" model="workflow.transition">
+			<field name="act_from" ref="servicio_wkf_Validada"/>
+			<field name="act_to" ref="servicio_wkf_Generada"/>
+			<field name="signal">signal_Generada2</field>
+			<field name="condition">True</field>
+		</record>
+	
+	</data>
+</openerp>

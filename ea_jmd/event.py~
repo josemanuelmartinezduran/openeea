@@ -1,0 +1,15 @@
+# -*- coding: utf-8 -*-
+from osv import osv, fields
+
+class jmdoficinas(osv.Model):
+    _inherit = "event.event"
+    _columns = {
+            'oficina': fields.many2one("event.oficina", string="Oficina"),
+        }
+
+class jmdoffice(osv.Model):
+    _name="event.oficina"
+    _columns = {
+        'name': fields.char("Nombre de la Oficina")
+        'direccion': fields.char("Dirección")
+        }

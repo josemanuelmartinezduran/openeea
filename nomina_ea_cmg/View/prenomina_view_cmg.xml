@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--  Estadistica Aplicada CMG-->
+        <!--  Se agrega el campo dias acumulados-->
+        <record id="prenomina_form_cmg" model="ir.ui.view">
+            <field name="name">prenomina.form.cmg</field>
+            <field name="model">hr.prenomina</field>
+            <field name="inherit_id" ref="ea_jmd.prenomina_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='dias_trabajados']" position="after">
+                    <field name="dias_acumulados" />
+                </xpath>
+                <xpath expr="//button[@string='Aprobar']" position="replace">
+                   <button string="Aprobar" type="workflow" states="borrador" name="signal_probar" confirm="¿Esta seguro?" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

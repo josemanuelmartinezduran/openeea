@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	<!-- 23/04/2014 - fur - Actualizacion en menu Conocimiento
+		(+) Crear accion para "Reportes de Estudios"
+		(+) Crear accion para "Presentaciones Empresariales"
+		(+) Crear accion para "Políticas y Procedimientos"
+		(+) Crear accion para "Políticas de Calidad"
+		(+) Crear accion para "Formatos y Plantillas"
+		(+) Crear accion para "Mejora Continua"
+	-->
+	<menuitem id="knowledge.menu_document" name="Conocimiento" parent="" action="" sequence="7"/>
+
+	<record id="action_document_file_form_inherit_1" model="ir.actions.act_window">
+		<field name="name">Reportes de estudios</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">ir.attachment</field>
+		<field name="view_type">form</field>
+		<field name="help" type="html">
+		  <p class="oe_view_nocontent_create">
+		    Click para crear un documento nuevo.
+		  </p>
+		</field>
+	</record>
+
+	<record id="action_document_file_form_inherit_2" model="ir.actions.act_window">
+		<field name="name">Presentaciones empresariales</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">ir.attachment</field>
+		<field name="view_type">form</field>
+		<field name="help" type="html">
+		  <p class="oe_view_nocontent_create">
+		    Click para crear un documento nuevo.
+		  </p>
+		</field>
+	</record>
+
+	<record id="action_document_file_form_inherit_3" model="ir.actions.act_window">
+		<field name="name">Políticas y procedimientos</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">ir.attachment</field>
+		<field name="view_type">form</field>
+		<field name="help" type="html">
+		  <p class="oe_view_nocontent_create">
+		    Click para crear un documento nuevo.
+		  </p>
+		</field>
+	</record>
+
+	<record id="action_document_file_form_inherit_4" model="ir.actions.act_window">
+		<field name="name">Políticas de calidad</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">ir.attachment</field>
+		<field name="view_type">form</field>
+		<field name="help" type="html">
+		  <p class="oe_view_nocontent_create">
+		    Click para crear un documento nuevo.
+		  </p>
+		</field>
+	</record>
+
+	<record id="action_document_file_form_inherit_5" model="ir.actions.act_window">
+		<field name="name">Formatos y plantillas</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">ir.attachment</field>
+		<field name="view_type">form</field>
+		<field name="help" type="html">
+		  <p class="oe_view_nocontent_create">
+		    Click para crear un documento nuevo.
+		  </p>
+		</field>
+	</record>
+
+	<record id="action_document_file_form_inherit_6" model="ir.actions.act_window">
+		<field name="name">Mejora continua</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">ir.attachment</field>
+		<field name="view_type">form</field>
+		<field name="help" type="html">
+		  <p class="oe_view_nocontent_create">
+		    Click para crear un documento nuevo.
+		  </p>
+		</field>
+	</record>
+
+	</data>
+</openerp>

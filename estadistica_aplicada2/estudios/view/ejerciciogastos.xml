@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	<!-- 01/07/2014 (gbr) Creacion formulario para Presupuestos	-->
+	<record id="formulario_gbr2" model="ir.ui.view">
+		<field name="name">Ejercicio de Gasto</field>
+		<field name="model">ejerciciogasto_formulario</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Ejercicio de Gasto">	
+				<field name="claveproyecto"/>
+				<field name="fechadepresupuesto"/>
+				<field name ="tabla_test1"/>
+			</tree>
+		</field>
+	</record>
+	
+	
+	<record id="formulario_gbr3" model="ir.ui.view">
+		<field name="name">Ejercicio de Gasto</field>
+		<field name="model">ejerciciogasto_formulario</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+		<form string="Ejercicio de Gasto" version="7.0">
+			<sheet>
+				<group>
+				<field name="claveproyecto"/>	
+				</group>
+				<group>
+					<field name="fechadepresupuesto"/>
+				</group>
+				<notebook>
+					<page string="Linea de Ejercicio de Gasto">
+						<field name ="tabla_test1"/>
+					</page>
+				</notebook>
+			</sheet>
+			<!-- <footer></footer> -->
+		</form>
+		</field>
+	</record>
+
+	
+	<!-- <tree para tablas-->
+
+	<record id="formulario_tabla_tree1" model="ir.ui.view">
+		<field name="name">formulario_tabla_tree1</field>
+		<field name="model">presupuesto_tabla1</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Ejercicio de Gasto">	
+				<field name="dato1"/>
+				<field name="plaza"/>
+				<field name="dato2"/>
+				<field name="dato3"/>
+				<field name="dato4"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record id="formulario_tabla_form1" model="ir.ui.view">
+		<field name="name">formulario_tabla_form</field>
+		<field name="model">presupuesto_tabla1</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Ejercicio de Gasto" version='7.0'>	
+				<sheet>
+					<group>
+						<field name="plaza"/>
+					</group>
+					
+					<group>
+						<group string="Informacion de la plaza">
+								<group>
+									<group>
+										<field name="ejecutivo"/>
+										<field name="capacitacion"/>
+										<field name="piloto"/>
+									</group>
+									<group>
+										<field name ="inicio"/>
+										<field name ="fin"/>
+									</group>
+								</group>
+						</group>
+					</group>
+					<notebook>
+						<page string="Ejericio de gasto">
+							<field name ="tablainterna1"/>
+						</page>
+					</notebook>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	
+	<record id="formulario_tabla_tree2" model="ir.ui.view">
+		<field name="name">formulario_tabla_tree2</field>
+		<field name="model">presupuesto_tablainterna2</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Tabla interna" editable="bottom">
+					<field name='name'/>
+					<field name="concepto"/>
+					<field name="presupuestado"/>
+					<field name="ejercido"/>
+					<field name="fecha"/>
+					<field name="gasto"/>
+					<field name="nota"/>
+					<field name="restan"/>
+			</tree>
+		</field>
+	</record>  
+	
+	
+	<record model="ir.actions.act_window" id="formulario_ejerciciogasto_action_gbr1">
+		<field name="name">Crear Ejercicio de Gasto</field>
+		<field name="res_model">ejerciciogasto_formulario</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+			Haga clic aquí para crear un nuevo registro de ejercicio de gasto.
+			</p>
+		</field>
+	</record>
+	
+	
+	
+    </data>
+</openerp>

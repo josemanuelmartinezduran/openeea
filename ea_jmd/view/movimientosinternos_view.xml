@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Agregar region a la Oportunidad-->
+        <record model="ir.ui.view" id="view_picking_form_inherit_jmd">
+            <field name="name">view.picking.form.inherit.jmd</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                		<field name="devolucion" /> 
+                    <field name="es_consigna" />
+                    <field name="empleado" attrs="{'invisible': [('es_consigna','=', False)]}"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='origin']" position="replace">
+                	<field name="justificacion" placeholder="ej Laptop para estudio X" class="oe_inline" />
+                </xpath>
+                
+                <xpath expr="//page[@string='Additional Info']" position="after">
+                	<page string='Responsiva'>
+                		<group>
+                		<group>
+                			<field name="estudio" nolabel="0" string="Estudio" domain="[('etapa','=','proyecto')]"/>
+                			<field name="elaboro" nolabel="0" string ="Persona que elaboro"/>
+                			<field name="origen" />
+                			<field name="observaciones" nolabel="0" string="Observaciones" widget="html"/>
+                		</group>
+                		</group>
+                	</page>
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- Modificaciones a la vista:	Calendario Interno -->
+		<record id="picking_calendar" model="ir.ui.view">
+			<field name="name">picking.calendar</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.stock_picking_calendar"/>
+			<field name="arch" type="xml">
+				<xpath expr="//calendar[@string='Calendar View']" position="attributes">
+					<attribute name="date_stop">devolucion</attribute>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Wizard de Cruces -->
+		<record model="ir.ui.view" id="wizard_cruces_form">
+			<field name="name">wizard.cruces</field>
+			<field name="model">ea.wizard_cruces</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Editor de Cruces" version="7.0">
+					<sheet>
+						
+						<group>
+							<group string="Instrucciones">
+								<h6>
+									Instrucciones, llene el formulario, escribiendo, la variable, el valor y el procentaje por ejemplo, para poner la mitad de hombres de mujeres pondremos, Sexo Hombre 50 y Sexo Mujer 50
+								</h6>
+							</group>
+							<group string="Cantidad">
+								<field name="cantidad" nolabel="True" required="True"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Variables">
+								<field name="variables">
+									<tree editable="bottom">
+										<field name="variable"/>
+										<field name="valor"/>
+										<field name="cantidad"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>						
+					</sheet>
+					<footer>
+						<button name="generate_cruces" string="Generar Cruces"  type="object" class="oe_highlight"/>
+					   o
+					   <button string="Cancelar" class="oe_link" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+			
+	</data>
+</openerp>

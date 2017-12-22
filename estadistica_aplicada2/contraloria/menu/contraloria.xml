@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	<!-- 02/04/2014 - fuc - Creacion modulo Contraloria
+		(+) Cambiar menu "Purchases" por "Contraloria" (Desde el archivo .po)
+		Dentro de compra agregar
+			(+) Crear submenu "Inversiones" con "Contenido de compra"
+			(+) Crear submenu "Gastos de Operacion" con "Contenido de compra"
+			(+) Crear submenu "Resumen de caja chica" por desarrollar
+			(+) Crear submenu "Analisis de gastos en campo" por desarrollar
+		Crear nuevos
+		(+) Crear submenu "Auditoria" por desarrollar
+		(+) Crear submenu "No Conformidad" por desarrollar
+		(+) Crear submenu "RACs" por desarrollar
+	-->
+
+	<!-- Menu Contraloria, cambiando secuencia -->
+	<menuitem id="base.menu_purchase_root" name="Auditoría" parent="" action="" sequence="4"/>
+
+	<!-- Ocultar menus originales
+		Presupuestos, Pedidos de Compra y Proveedores del menu raiz: Compra -->
+	<menuitem id="purchase.menu_purchase_rfq" groups="hidden_menu"/>
+	<menuitem id="purchase.menu_purchase_form_action" groups="hidden_menu"/>
+	<menuitem id="base.menu_procurement_management_supplier_name" groups="hidden_menu"/>
+
+	<!-- Menu Inversiones -->
+	<menuitem id="menu_inversiones" name="Inversiones" parent="purchase.menu_procurement_management" action="" sequence="2"/>
+
+	<record id="menu_inversiones_presupuestos" model="ir.ui.menu">
+		<field name="name">Presupuestos</field>
+		<field name="action" ref="purchase.purchase_rfq"/>
+		<field name="sequence" eval="0"/>
+		<field name="parent_id" ref="menu_inversiones"/>
+	</record>
+	<record id="menu_inversiones_pedidos" model="ir.ui.menu">
+		<field name="name">Pedidos de compra</field>
+		<field name="action" ref="purchase.purchase_form_action"/>
+		<field name="sequence" eval="6"/>
+		<field name="parent_id" ref="menu_inversiones"/>
+	</record>
+	<record id="menu_inversiones_proveedores" model="ir.ui.menu">
+		<field name="name">Proveedores</field>
+		<field name="action" ref="base.action_partner_supplier_form"/>
+		<field name="sequence" eval="15"/>
+		<field name="parent_id" ref="menu_inversiones"/>
+	</record>
+
+	<!-- Menu Gastos de Operacion -->
+	<menuitem id="menu_gasto_operacion" name="Gastos de Operación" parent="purchase.menu_procurement_management" action="" sequence="3"/>
+
+	<record id="menu_gasto_operacion_presupuestos" model="ir.ui.menu">
+		<field name="name">Presupuestos</field>
+		<field name="action" ref="purchase.purchase_rfq"/>
+		<field name="sequence" eval="0"/>
+		<field name="parent_id" ref="menu_gasto_operacion"/>
+	</record>
+	<record id="menu_gasto_operacion_pedidos" model="ir.ui.menu">
+		<field name="name">Pedidos de compra</field>
+		<field name="action" ref="purchase.purchase_form_action"/>
+		<field name="sequence" eval="6"/>
+		<field name="parent_id" ref="menu_gasto_operacion"/>
+	</record>
+	<record id="menu_gasto_operacion_proveedores" model="ir.ui.menu">
+		<field name="name">Proveedores</field>
+		<field name="action" ref="base.action_partner_supplier_form"/>
+		<field name="sequence" eval="15"/>
+		<field name="parent_id" ref="menu_gasto_operacion"/>
+	</record>
+
+	<!-- Menu Resumen de Caja Chica -->
+	<record id="act_caja_chica" model="ir.actions.act_window">
+		<field name="name">Resumen de caja chica (Por desarrollar)</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">purchase.cajachica</field>
+		<field name="view_type">tree</field>
+		<field name="view_mode">tree</field>
+	</record>
+		
+	</data>
+</openerp>
+	
