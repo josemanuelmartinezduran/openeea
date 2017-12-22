@@ -1,0 +1,47 @@
+# -*- coding: utf-8 -*-
+############################################
+# Descripción:Clase para agregar los datos de la vista de validacion
+# Ruta Estudios/Capacitacion/Validacion
+# Modulo: Estadística Aplicada /cmg
+# Desarrollador: CMG
+# HYD México 2014
+############################################
+import time
+from openerp.osv import fields, osv
+
+##########################################################
+#### Clase para agregar los datos de validación           
+#### nombre_validacion : Nombre que tendrá la validacion  
+#### fecha_capacitacion: Fecha y hora de la validación    
+#### name: Nombre del proyecto que es relacionado con el  
+#### objeto project.project                               
+#### empleado: campo relacionado con el objeto            
+#### empleado.validacion                                  
+###########################################################
+class validacion(osv.Model):
+    _name = 'capacitacion.validacion'
+    _description = 'Modulo de validacion'
+    _columns = {
+        'nombre_validacion': fields.char("Nombre"),
+        'fecha_capacitacion': fields.datetime('Fecha y hora de la capacitacion'),
+        'name': fields.many2one('project.project', 'Proyecto'),
+        'empleado': fields.one2many('empleado.validacion', 'id_empleado', "Datos del empleado"),
+    }
+
+#############################################################
+#### Clase para agregar los campos del empleado en la vista 
+#### de validacion                                          
+#### responsible_id: Nombre del empleado relacionado con    
+#### el objeto hr.employee                                  
+#### validado: Campo check para saber si está validado      
+#### fecha_validacion: fecha de la validación               
+###############################################################
+class empleado_validacion(osv.Model):
+    _name = 'empleado.validacion'
+    _description = 'Datos del empleado'
+    _columns = {
+        'name_related_moved0': fields.many2one('hr.employee', 'Nombre del empleado'),
+        'validado': fields.boolean('Validado'),
+        'fecha_validacion': fields.date('Fecha de validacion'),
+        'id_empleado': fields.integer('idEmpleado')
+    }

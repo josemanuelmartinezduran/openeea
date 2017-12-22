@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="project_wizard_report">
+   	 		<t t-call="report.html_container">
+        		<t t-foreach="docs" t-as="o">
+            		<t t-call="report.external_layout">
+                		<div class="page">
+                    		<h2>Titulo</h2>
+                    		<p>Subtitulo <span t-field="o.name"/></p>
+                    		<hr />
+                    		<table width="100">
+									<tr style="backgound-color='#EEEEEE'">
+										<td>Fecha</td>
+										<td>Monto</td>
+										<td>Capital</td>
+										<td>Intereses</td>
+									</tr>
+                    		<!-- <t t-foreach="o.line" t-as="i">
+									<tr>
+										<td><t t-esc="i.fecha"/></td>
+										<td>$<t t-esc="i.monto"/></td>
+										<td>$<t t-esc="i.capital"/></td>
+										<td>$<t t-esc="i.intereses"/></td>
+									</tr>    							
+							</t> -->
+							</table>
+                		</div>
+            		</t>
+        		</t>
+    		</t>
+		</template>
+		<report
+    		id="project_wizard_repo"
+    		model="ea.project_wizard"
+    		string="Orden de Trabajo"
+    		report_type="qweb-html"
+    		name="ea_jmd.ea.project_wizard.report"
+    		file=""
+    		attachment_use="False"
+		/>
+	</data>
+</openerp>

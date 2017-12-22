@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Flujo -->
+		<record id="solicitud_wkf" model="workflow">
+			<field name="name">solicitud.wkf</field>
+			<field name="osv">ea_solicitud</field>
+			<field name="on_create">True</field>
+		</record>
+		
+		<!-- Nodo Inicial -->
+		<record id="solicitud_wkf_draft" model="workflow.activity">
+			<field name="name">solicitud.wkf.draft</field>
+			<field name="wkf_id" ref="solicitud_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_draft()</field>
+			<field name="flow_start">True</field>
+		</record>		
+		
+		<record id="solicitud_wkf_nuevo" model="workflow.activity">
+			<field name="name">solicitud.wkf.nuevo</field>
+			<field name="wkf_id" ref="solicitud_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_nuevo()</field>
+			<field name="flow_start"></field>
+		</record>
+		
+		<record id="solicitud_wkf_gac" model="workflow.activity">
+			<field name="name">solicitud.wkf.gac</field>
+			<field name="wkf_id" ref="solicitud_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_gac()</field>
+		</record>
+		
+		<!-- Nodo -->
+		<record id="solicitud_wkf_contraloria" model="workflow.activity">
+			<field name="name">solicitud.wkf.contraloria</field>
+			<field name="wkf_id" ref="solicitud_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_contraloria()</field>
+		</record>
+		
+		<!-- Nodo Final -->
+		<record id="solicitud_wkf_contabilidad" model="workflow.activity">
+			<field name="name">solicitud.wkf.contabilidad</field>
+			<field name="wkf_id" ref="solicitud_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_contabilidad()</field>
+			<field name="flow_stop">True</field>
+		</record>
+		
+		<!-- Nodo Final -->
+		<record id="solicitud_wkf_cancelado" model="workflow.activity">
+			<field name="name">solicitud.wkf.cancelado</field>
+			<field name="wkf_id" ref="solicitud_wkf"/>
+			<field name="kind">function</field>
+			<field name="action">action_cancelado()</field>
+			<field name="flow_stop">True</field>
+		</record>
+		
+		<!-- Transición -->
+		<record id="solicitud_wkf_draft_nuevo" model="workflow.transition">
+			<field name="act_from" ref="solicitud_wkf_draft"/>
+			<field name="act_to" ref="solicitud_wkf_nuevo"/>
+			<field name="signal">signal_nuevo</field>
+			<field name="condition">True</field>
+		</record>
+		
+		<record id="solicitud_wkf_nuevo_cancelado" model="workflow.transition">
+			<field name="act_from" ref="solicitud_wkf_nuevo"/>
+			<field name="act_to" ref="solicitud_wkf_cancelado"/>
+			<field name="signal">signal_ncancelado</field>
+			<field name="condition">True</field>
+		</record>
+		
+		<record id="solicitud_wkf_gac_cancelado" model="workflow.transition">
+			<field name="act_from" ref="solicitud_wkf_gac"/>
+			<field name="act_to" ref="solicitud_wkf_cancelado"/>
+			<field name="signal">signal_gcancelado</field>
+			<field name="condition">True</field>
+		</record>
+		
+		<record id="solicitud_wkf_contraloria_cancelado" model="workflow.transition">
+			<field name="act_from" ref="solicitud_wkf_contraloria"/>
+			<field name="act_to" ref="solicitud_wkf_cancelado"/>
+			<field name="signal">signal_ccancelado</field>
+			<field name="condition">True</field>
+		</record>
+		
+		<record id="solicitud_wkf_draft_cancelado" model="workflow.transition">
+			<field name="act_from" ref="solicitud_wkf_draft"/>
+			<field name="act_to" ref="solicitud_wkf_cancelado"/>
+			<field name="signal">signal_cancelado</field>
+			<field name="condition">True</field>
+		</record>
+		
+		<record id="solicitud_wkf_nuevo_draft" model="workflow.transition">
+			<field name="act_from" ref="solicitud_wkf_nuevo"/>
+			<field name="act_to" ref="solicitud_wkf_draft"/>
+			<field name="signal">signal_draft</field>
+			<field name="condition">True</field>
+		</record>
+		
+		<record id="solicitud_wkf_nuevo_cancelado" model="workflow.transition">
+			<field name="act_from" ref="solicitud_wkf_nuevo"/>
+			<field name="act_to" ref="solicitud_wkf_cancelado"/>
+			<field name="signal">signal_cancelando</field>
+			<field name="condition">True</field>
+		</record>
+		
+		<record id="solicitud_wkf_nuevo_gac" model="workflow.transition">
+			<field name="act_from" ref="solicitud_wkf_nuevo"/>
+			<field name="act_to" ref="solicitud_wkf_contraloria"/>
+			<field name="signal">signal_gac</field>
+			<field name="condition">True</field>
+		</record>		
+		
+		<record id="solicitud_wkf_nuevo_contraloria" model="workflow.transition">
+			<field name="act_from" ref="solicitud_wkf_contraloria"/>
+			<field name="act_to" ref="solicitud_wkf_gac"/>
+			<field name="signal">signal_contraloria</field>
+			<field name="condition">True</field>
+		</record>
+		
+		<record id="solicitud_wkf_contraloria_contabilidad" model="workflow.transition">
+			<field name="act_from" ref="solicitud_wkf_gac"/>
+			<field name="act_to" ref="solicitud_wkf_contabilidad"/>
+			<field name="signal">signal_contabilidad</field>
+			<field name="condition">True</field>
+		</record>
+		
+		<record id="solicitud_wkf_cancelado_draft" model="workflow.transition">
+			<field name="act_from" ref="solicitud_wkf_cancelado"/>
+			<field name="act_to" ref="solicitud_wkf_draft"/>
+			<field name="signal">signal_revive</field>
+			<field name="condition">True</field>
+		</record>
+	
+	</data>
+</openerp>

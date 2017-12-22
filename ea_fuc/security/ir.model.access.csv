@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_racs,access_purchase_racs,model_purchase_racs,,1,1,1,1
+access_purchase_noconforme,access_purchase_noconforme,model_purchase_noconforme,,1,1,1,1
+access_purchase_auditoria,access_purchase_auditoria,model_purchase_auditoria,,1,1,1,1
+access_purchase_analisiscampo,access_purchase_analisiscampo,model_purchase_analisiscampo,,1,1,1,1
+access_purchase_cajachica,access_purchase_cajachica,model_purchase_cajachica,,1,1,1,1
+access_mrp_solicitud,access_mrp_solicitud,model_mrp_solicitud,,1,1,1,1
+access_hr_capacitacion,access_hr_capacitacion,model_hr_capacitacion,,1,1,1,1
+access_estudios_estudios,access_estudios_estudios,model_estudios_estudios,,1,1,1,1
+access_ejecutivos_cuenta,access_ejecutivos_cuenta,model_ejecutivos_cuenta,,1,1,1,1
+access_stock_empleados,access_stock_empleados,model_stock_empleados,,1,1,1,1

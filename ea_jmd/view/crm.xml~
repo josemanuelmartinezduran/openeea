@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- 07/03/2014 - jmd - Actividad 1.1.1. Administracion de clientes 
+		(+) Eliminar campos de almacen
+	-->
+	<record id="view_partner_form_inherit_2" model="ir.ui.view">
+		<field name="name">res.partner.form.inherit.2</field>
+		<field name="model">res.partner</field>
+		<field name="inherit_id" ref="base.view_partner_form"/>
+		<field name="arch" type="xml">
+			<data>
+			<xpath expr="//field[@name='ref']" position="replace">
+			</xpath>
+			<xpath expr="//field[@name='name']" position="after">
+				<field name="referencia" placeholder="Clave (3 Caracteres)"  attrs="{'invisible': [('is_company','=', False)]}"/>
+			</xpath>
+			</data>
+		</field>
+	</record>
+	
+	<!-- Accion de ejemplo -->
+<!--	<record model="ir.actions.act_window" id="mi_accion">
+		<field name="name"></field>
+		<field name="view_id" ref=""/>
+		<field name="domain">[lista de 3 tuplas(250 chars)]</field>
+		<field name="context">{diccionario(250chars)}</field> 
+		<field name="res_model">res.partner</field>
+		<field name="view_type"></field>
+		<field name="view_mode"></field>
+		<field name="target"></field>
+		<field name="search_view_id" ref="search_view_id"/>
+		<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					Haga clic aquí para crear un nuevo registro
+				</p>
+		</field>
+	</record> -->
+
+
+	</data>
+</openerp>

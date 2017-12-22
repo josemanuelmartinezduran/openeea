@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--
+            08/o9/2014 CMG
+
+            Cambio de etiquetas del apartado de Estudios.
+
+            - Cambio de la etiqueta de "Proyecto" a "Orden de trabajo"
+            - Cambio etiqueta tree Nombre Proyecto > Nombre de la orden de trabajo
+            - Cambio etiqueta tree/form Lider Proyecto > Lider de la orden de trabajo
+            - Cambio etiqueta form clave proyecto > Clave de la orden de trabajo
+            - Cambio etiqueta página Etapas proyecto > Etapas de la orden de trabajo
+
+        -->
+
+        <!-- ***** Cambios de etiqueta en la vista tree de el menú Etapas post-campo/procesos intermedios **** cmg -->
+        <record id="procesos_intermedios_view_cmg" model="ir.ui.view">
+            <field name="name">procesos.intermedios.view.cmg</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project"/>
+            <field name="arch" type="xml">
+                <!-- Nombre del proyecto  cambia a Nombre de la orden del trabajo -->
+                <xpath expr="/tree/field[@name='name']" position="replace">
+                    <field name="name" string="Nombre de la orden de trabajo" modifiers="{'required': true}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- ***** Cambios de etiqueta en la vista tree de el menú Etapas post-campo/procesos intermedios **** cmg -->
+        <!-- Vista tree -->
+        <record id="edit_project_cmg" model="ir.ui.view">
+				<field name="name">edit.project.cmg</field>
+				<field name="model">project.project</field>
+				<field name="inherit_id" ref="ea_jmd.view_project_jmd"/>
+				<field name="arch" type="xml">
+					<xpath expr="//field[@name='responsible_id']" position="replace">
+						<field name="responsible_id" string="Lider de la orden de trabajo"/>
+					</xpath>
+                </field>
+        </record>
+        <!-- Vista Form -->
+        <record id="edit_project_form_cmg" model="ir.ui.view">
+				<field name="name">edit.project.form.cmg</field>
+				<field name="model">project.project</field>
+				<field name="inherit_id" ref="ea_jmd.edit_project_jmd"/>
+				<field name="arch" type="xml">
+					<xpath expr="//field[@name='responsible_id']" position="replace">
+						<field name="responsible_id"  string="Lider de la orden de trabajo" />
+					</xpath>
+                </field>
+        </record>
+
+        <!-- ***** Cambios de etiqueta en el form campo Clave de Proyecto a Clave de la orden de trabajo -->
+        <record id="edit_project_form_clave_cmg" model="ir.ui.view">
+				<field name="name">edit.project.form.clave.cmg</field>
+				<field name="model">project.project</field>
+				<field name="inherit_id" ref="estadistica_aplicada2.project_form_inherit_1"/>
+				<field name="arch" type="xml">
+					<xpath expr="//field[@name='clave_proyecto']" position="replace">
+                        <field name="clave_proyecto" string="Clave de la orden de trabajo"/>
+                    </xpath>
+                </field>
+        </record>
+
+        <!-- Cambios en la etiqueta de la página Etapas del proyecto a Etapas de orden de trabajo -->
+        <record id="edit_project_form_pagina_cmg" model="ir.ui.view">
+				<field name="name">edit.project.form.pagina.cmg</field>
+				<field name="model">project.project</field>
+				<field name="inherit_id" ref="project.edit_project"/>
+				<field name="arch" type="xml">
+					<xpath expr="//page[@name='project_stages']" position="replace">
+                        <page string="Etapas de la orden de trabajo" attrs="{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}" name="project_stages" modifiers="{'invisible': [['use_tasks', '=', false], ['use_issues', '=', false]]}">
+				            <field name="type_ids" modifiers="{'readonly': [['state', 'in', ['cancelled', 'close']]]}"/>
+			            </page>
+                    </xpath>
+                </field>
+        </record>
+
+    </data>
+</openerp>

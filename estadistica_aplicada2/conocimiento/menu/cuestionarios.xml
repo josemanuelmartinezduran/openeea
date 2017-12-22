@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	<!-- 05/06/2014 (fuc) Creacion formulario para Creacion de cuestionarios
+		(+) Item de menu
+	-->
+
+	<record id="mn_cuestionarios" model="ir.ui.menu">
+		<field name="name">Creación de cuestionarios</field>
+		<field name="parent_id" ref="document.menu_document_doc"/>
+		<field name="sequence" eval="7"/>
+		<field name="action" ref="act_cuestionarios"/>
+	</record>
+
+    </data>
+</openerp>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	<!-- 02/04/2014 - fur - Edicion de menu Encuestas
+		(+) Cambiar etiqueta de menu "Tools" por "Encuestas" (Desde archivo .po)
+	-->
+
+	<!-- Menu Encuestas, cambiar secuencia -->
+	<!--<menuitem id="base.menu_tools" name="Encuestas" parent="" action="" sequence="13"/>-->
+
+	<!-- Ocultar menu "Encuestas" -->
+	<menuitem id="base.menu_tools" groups="hidden_menu"/>
+
+    </data>
+</openerp>

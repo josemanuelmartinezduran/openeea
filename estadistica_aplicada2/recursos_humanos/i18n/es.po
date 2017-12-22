@@ -1,0 +1,57 @@
+# Spanish translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# Felix Urbina <fur@hud.com.mx>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-04-02 09:34+0000\n"
+"PO-Revision-Date: 2014-04-02 09:34+0000\n"
+"Last-Translator: Félix Urbina <Unknown>\n"
+"Language-Team: Spanish <fur@hud.com.mx>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-07-11 06:08+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_product
+#: view:product.product:0
+msgid "Products"
+msgstr "Productos"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_main
+msgid "Human Resources"
+msgstr "Empleados"
+
+#. module: account
+#: selection:account.analytic.journal,type:0
+#: view:account.config.settings:0
+#: view:account.journal:0
+#: selection:account.journal,type:0
+#: view:account.model:0
+#: selection:account.tax,type_tax_use:0
+#: view:account.tax.template:0
+#: selection:account.tax.template,type_tax_use:0
+msgid "Purchase"
+msgstr "Compra"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
+msgid "Festivos"
+msgstr "Ausencias"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.request_approve_allocation
+#: model:ir.ui.menu,name:hr_holidays.menu_request_approve_allocation
+msgid "Allocation Requests to Approve"
+msgstr "Aprobaciones de asignación"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_request_approve_holidays
+msgid "Leave Requests to Approve"
+msgstr "Aprobaciones de ausencia"

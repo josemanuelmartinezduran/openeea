@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="ea_menusec" model="ir.module.category">
+			<field name="name">Ocultar</field>
+			<field name="description">Clases para menu</field>
+		</record>
+
+		<record id="hidden_menu" model="res.groups">
+			<field name="name">Permitir Ver Menu</field>
+			<field name="category_id" ref="ea_menusec"/>
+		</record>
+	</data>
+</openerp>

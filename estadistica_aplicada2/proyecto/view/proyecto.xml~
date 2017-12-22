@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	<!-- 09/04/2014 - Actividad 1.5.1 Creacion de proyectos
+		(+) Ocultar boton "Incidencias"
+		(+) Ocultar check "Incidencias"
+		(+) Agregar campo "Clave de proyecto"
+		(+) Cambiar etiqueta "Cliente" por "Empresa"
+	-->
+	<record id="project_form_inherit_1" model="ir.ui.view">
+		<field name="name">project.form.inherit.1</field>
+		<field name="model">project.project</field>
+		<field name="inherit_id" ref="project_issue.view_project_form_inherited"/>
+		<field name="arch" type="xml">
+			<xpath expr="//div[@name='buttons']" position="replace">
+				<div name="buttons" class="oe_right oe_button_box">
+					<button name="%(project.act_project_project_2_project_task_all)d" string="Tasks"
+						type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/>
+					<button name="attachment_tree_view" string="Documents" type="object"/>
+				</div>
+			</xpath>
+			<xpath expr="//div[@name='options_active']" position="replace">
+				<div name="options_active">
+					<field name="use_tasks" class="oe_inline" modifiers="{}"/>
+					<label for="use_tasks"/>
+					<field name="use_issues" class="oe_inline" modifiers="{}" groups="ea_menusec.hidden_menu"/>
+				</div>
+			</xpath>
+			<xpath expr="//field[@name='partner_id']" position="attributes">
+				<attribute name="string">Empresa</attribute>
+			</xpath>
+			<xpath expr="//field[@name='partner_id']" position="after">
+				<field name="clave_proyecto"/>
+			</xpath>
+		</field>
+	</record>
+
+	<!-- 21/04/2014 - Actividad 1.5.2 Administracion de tareas
+		(+) Ocultar campo "Descripcion de Pad"
+		(+) Ocultar campo "Contexto"
+		(+) Ocultar campo "Umbral de tiempo"
+		(+) Ocultar campo "Linea de venta"
+		(+) Agregar campo "Area" de tipo seleccion
+		(+) Modificar campo "Secuencia", ocultar
+		(+) 25/06/2014 Ocultar campo por nueva solicitud del cliente
+	-->
+	<!-- 
+	<record id="view_task_form_with_pad_inherit_1" model="ir.ui.view">
+		<field name="name">project.task.form.pad.inherit.1</field>
+		<field name="model">project.task</field>
+		<field name="inherit_id" ref="pad_project.view_task_form_with_pad"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='description_pad']" position="replace">
+				<field name="description" attrs="{'readonly':[('state','=','done')]}" placeholder="Añadir una Descripción..."/>
+			</xpath>
+		</field>
+	</record>
+
+	<record id="project_task_form_timebox_inherit_1" model="ir.ui.view">
+		<field name="name">project.task.form.timebox.inherit.1</field>
+		<field name="model">project.task</field>
+		<field name="inherit_id" ref="project_gtd.project_task"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='context_id']" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+			<xpath expr="//field[@name='timebox_id']" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+		</field>
+	</record>
+
+	<record id="view_project_mrp_inherit_form2_inherit_1" model="ir.ui.view">
+		<field name="name">project.mrp.form.view.inherit.1</field>
+		<field name="model">project.task</field>
+		<field name="inherit_id" ref="project_mrp.view_project_mrp_inherit_form2"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='sale_line_id']" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+		</field>
+	</record>
+	-->
+
+	<!-- 25/06/2014 (fuc) Comentado por nueva solicitud del cliente
+	<record id="project_task_form_inherit_1" model="ir.ui.view">
+		<field name="name">project.task.form.inherit.1</field>
+		<field name="model">project.task</field>
+		<field name="inherit_id" ref="project.view_task_form2"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='user_id']" position="after">
+				<field name="area" string="Área"/>
+			</xpath>
+			<xpath expr="//field[@name='progress']" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+			<xpath expr="//field[@name='planned_hours']" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+			<xpath expr="//form/sheet/notebook" position="replace">
+				<notebook>
+					<page string="Descripción">
+						<field name="description" attrs="{'readonly':[('state','=','done')]}" placeholder="Añadir una Descripción..."/>
+					</page>
+					<page string="Extra Info" attrs="{'readonly':[('state','=','done')]}">
+						<group col="2">
+							<group>
+								<field name="priority" groups="base.group_user"/>
+								<field name="partner_id"/>
+								<field name="state" invisible="1"/>
+								<field name="company_id" groups="base.group_multi_company" widget="selection"/>
+							</group>
+							<group />
+						</group>
+						<group>
+							<group string="Gantt View">
+								<field name="date_start"/>
+								<field name="date_end"/>
+							</group>
+							<group />
+						</group>
+					</page>
+				</notebook>
+			</xpath>
+		</field>
+	</record>
+	-->
+
+	</data>
+</openerp>

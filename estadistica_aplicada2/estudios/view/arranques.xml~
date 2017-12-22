@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	<!-- 04/06/2014 (fuc) Creacion formulario para Administración de arranques
+		(+) Item de menu
+		(+) Accion
+		(+) Vistas
+	-->
+
+        <record id="view_arranques_tree" model="ir.ui.view">
+            <field name="name">project.arranques.tree</field>
+            <field name="model">project.arranques</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Administración de arranques">
+                    <field name="name" string="Nombre del estudio"/>
+                    <field name="fecha_solicitud" string="Fecha de solicitud"/>
+                    <field name="fecha_entrega" string="Fecha de entrega"/>
+                    <field name="responsable_id" string="Responsable"/>
+                    <field name="tarea_estatus" string="Estatus"/>
+                    <field name="material_product_id" string="Material"/>
+                </tree>
+            </field>
+        </record>
+
+	<record id="view_arranques_form" model="ir.ui.view">
+		<field name="name">project.arranques.form</field>
+		<field name="model">project.arranques</field>
+		<field eval="2" name="priority"/>
+		<field name="arch" type="xml">
+			<form string="Administración de arranques" version="7.0">
+				<sheet>
+					<div class="oe_title">
+						<div>
+							<h1>
+							<field name="name" placeholder="Clave del estudio" autofocus="autofocus" />
+							<field name="nombre_corto" placeholder="Nombre Corto" readonly="True" />
+							</h1>
+						</div>
+						<group>
+							<field name="fecha_solicitud" string="Fecha de solicitud"/>
+							<field name="fecha_entrega" string="Fecha de entrega"/>
+						</group>
+					</div>
+					<div>
+						<group string="Tareas">
+							<group>
+								<field name="responsable_id" string="Responsable"/>
+								<field name="fecha_inicio" string="Fecha de inicio"/>
+								<field name="fecha_final" string="Fecha de finalización"/>
+								<field name="tarea_estatus" string="Estatus"/>
+							</group>
+							<group>
+								<field name="descripcion" string="Descripción de la tarea"/>
+							</group>
+						</group>
+						<group>
+							<group string="Materiales">
+								<field name="material_product_id" string="Material"/>
+								<field name="material_cant" string="Cantidad"/>
+								<field name="material_estatus" string="Estatus" domain="[('tarea_responsable_id','=','}"/>
+							</group>
+							<group string="Personal">
+								<field name="personal_puesto_id" string="Puesto"/>
+								<field name="personal_num_personas" string="Número de personas"/>
+								<field name="personal_capacitacion" string="Capacitación"/>
+								<field name="personal_plaza_id" string="Plaza" domain="[('country_id','=','México')]"/>
+							</group>
+						</group>
+					</div>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<record id="act_adm_arranques" model="ir.actions.act_window">
+		<field name="name">Administración de arranques</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">project.arranques</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">Haga clic aquí para crear un nuevo registro de estudio de arranques.</p>
+		</field>
+	</record>
+
+    </data>
+</openerp>

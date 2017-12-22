@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	<!-- 07/03/2014 - fur - Actividad 1.1.1. Administracion de clientes 
+		(+) Agregar selector "Tipo de Cuenta" en formulario principal
+		(+) Cambiar nombre de etiqueta "Comercial" por "Ejecutivo de cuenta"
+		(+) Eliminar solapa "Contabilidad"
+	-->
+	<record id="view_partner_form_inherit_1" model="ir.ui.view">
+		<field name="name">res.partner.form.inherit.1</field>
+		<field name="model">res.partner</field>
+		<field name="inherit_id" ref="base.view_partner_form"/>
+		<field name="arch" type="xml">
+		  <data>
+			<xpath expr="//field[@name='website']" position="after">
+				<field name="tipo_cuenta" string="Tipo de cuenta" invisible="1"/>
+			</xpath>
+			<xpath expr="//field[@name='user_id']" position="replace">
+				<field name="user_id" string="Ejecutivo de cuenta"/>
+			</xpath>		
+		  </data>
+		</field>
+	</record>
+    </data>
+</openerp>

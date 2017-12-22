@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	
+		
+		<record model="ir.ui.view" id="edit_project_inherit">
+			<field name="name">edit.project.inherit</field>
+			<field name="model">project.project</field>
+			<field name="inherit_id" ref="project.edit_project" />
+			<field name="arch" type="xml">
+				<data>
+					<!--Ocultando campo-->
+					<xpath expr="//field[@name='analytic_account_id']" position="replace"/>
+				</data>
+			</field>
+		</record>
+		
+	
+		<record model="ir.ui.view" id="client_form_view_1">
+			<field name="name">client.form.view1</field>
+			<field name="model">project.issue</field>
+			<field name="inherit_id" ref="project_issue.project_issue_form_view"/>
+			<field name="priority" eval="15" />
+			<field name="arch" type="xml">
+				<data>
+					
+					<xpath expr="//label[@class='oe_edit_only']" position="replace">
+						<label for="name" class="oe_edit_only" string="Incidente" />
+					</xpath>																				
+					
+					<xpath expr="//field[@name='user_id']" position="replace">
+						<field name="user_id" string="Iniciador" />
+					</xpath>																				
+					
+					<xpath expr="//field[@name='partner_id']" position="replace">
+						<field name="partner_id" string="Area" />
+					</xpath>																				
+
+					<xpath expr="//group[1]" position="after">
+						<group>
+							<field name="responsable_solucion" />
+							<field name="responsable_a_cargo" />						
+						</group>
+					</xpath>
+					
+					
+					<xpath expr="//field[@name='project_id']" position="after">
+						<field name="responsable_solucion" string="Responsable de la Solucion" />
+						<field name="responsable_a_cargo" string="A cargo de proyecto" />
+					</xpath>	
+
+					<xpath expr="//field[@name='day_open']" position="replace">
+						<field name="day_open" string="Dias desde que se abrio" />
+					</xpath>	
+
+					<xpath expr="//field[@name='working_hours_open']" position="replace">
+						<field name="working_hours_open" string="Horas de trabajo desde que se abrio el incidente" />
+					</xpath>
+					
+					<!--<xpath expr="//field[@name='analytic_account_id']" position="replace" />-->
+					
+					<!--
+					<xpath expr="//page[2]" position="replace">
+							<field name="responsable_a_cargo" />
+					</xpath>
+					-->
+				</data>
+			</field>
+		</record>
+
+	
+	</data>
+</openerp>

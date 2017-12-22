@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="cmg_workflow_security" model="ir.module.category">
+			<field name="name">permiso_workflow</field>
+			<field name="description">Permiso para operar el workflow de presentacion</field>
+		</record>
+
+		<record id="permisos_presentacion" model="res.groups">
+			<field name="name">Permitir cambiar flujo presentacion</field>
+			<field name="category_id" ref="cmg_workflow_security"/>
+		</record>
+	</data>
+</openerp>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!--  Accion tipo estudio
+		Item  -->
+		<record model="ir.actions.act_window" id="ea_tipoestucio_actn">
+			<field name="name">Tipo Estudio</field>
+			<field name="res_model">ea.tipoestudio</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		
+		<!-- Menu de Tipo Estudio -->
+		<menuitem id="menu_tipoestudio" parent="estadistica_aplicada2.mn_estudios_planeacion" name="Tipos de Estudio" action="ea_tipoestucio_actn" groups="base.group_system" sequence="16" />
+		
+		<!--  
+		Tipo de estudio vista form 
+		Autor: JMMD #IStandForFreedom #TummanVirranTaa
+		-->
+		<record model="ir.ui.view" id="tipoestudio_form_view">
+			<field name="name">Tipo de Estudio</field>
+			<field name="model">ea.tipoestudio</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<!-- Contenido de la vista -->
+				<form string="Tipo de Estudio" version="7.0">
+					<sheet>
+						<group>
+							<group>
+								<field name="name"/>
+							</group>
+							<group>
+								<field name="descripcion" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+	
+		<!--  
+		Vista tree de tipo de estudio 
+		Autor 
+		-->
+		<record model="ir.ui.view" id="tree_tipoestudio_view">
+			<field name="name">Tipos de Estudio</field>
+			<field name="model">ea.tipoestudio</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<!-- Contenido de la vista -->
+				<tree string="Tipos de Estudio" toolbar="1">
+					<field name="name" />
+					<field name="descripcion" />
+				</tree>
+			</field>
+		</record>
+	</data>
+</openerp>

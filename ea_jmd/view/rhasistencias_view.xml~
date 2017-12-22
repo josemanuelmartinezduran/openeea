@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Accion asistencias -->
+		<record model="ir.actions.act_window" id="accion_asistencia">
+			<field name="name">Registro de Aistencias</field>
+			<field name="res_model">hr.asistencias</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro
+					</p>
+			</field>
+		</record>
+			
+		<!-- Menu asistencias -->
+		<menuitem id="menu_rhasistencias" parent="hr_payroll.menu_hr_root_payroll" name="Registro de Asistencias" action="accion_asistencia" groups="base.group_hr_manager" sequence="16" />
+		
+		<!--  Formulario asistencias -->
+		<record model="ir.ui.view" id="rh_asistencias_form">
+			<field name="name">rh.asistenacias.form</field>
+			<field name="model">hr.asistencias</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="" version="7.0">
+					<header>
+						<button string="Aprobar" type="workflow" states="borrador" name="signal_aprobar" confirm="¿Registrar las asistencias?" />
+						<field name="state" widget="statusbar" nolabel="1" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" placeholder="Ejemplo: Segunda de Noviembre" />
+						</h1>
+						<group>
+							<group>
+								<field name="inicio"/>
+							</group>
+							<group>
+								<field name="fin" />
+								<button name="generate_asistencias_line" string="Generar Registros de Asistencia" type="object" confirm="Generará el registro de asistencias" states="borrador"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Lineas de Asistencia">
+								<field name="lineas">
+									<tree editable="bottom">
+										<field name="empleado" />
+									    <field name="nombre" />
+										<field name="fecha" />
+										<field name="horas" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!--  Lista asistencias-->
+		<record model="ir.ui.view" id="rh_asistencias_tree">
+			<field name="name">rh.asistencias.tree</field>
+			<field name="model">hr.asistencias</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="Registro de asistencias" toolbar="1">
+					<field name="name" />
+					<field name="inicio" />
+					<field name="fin" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Accion linea -->
+		<record model="ir.actions.act_window" id="accion_asistencia_linea">
+			<field name="name">Reporte de Asistencias</field>
+			<field name="res_model">hr.asistencias.linea</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro
+					</p>
+			</field>
+		</record>
+			
+		<!-- Menu asistencias -->
+		<menuitem id="menu_rhasistencias_lineas" parent="hr_payroll.menu_hr_root_payroll" name="Reporte de Asistencias" action="accion_asistencia_linea" groups="base.group_hr_manager" sequence="16" />
+		
+		
+		<!--  Lista asistencias-->
+		<record model="ir.ui.view" id="rh_asistencias_tree">
+			<field name="name">rh.asistencias.tree</field>
+			<field name="model">hr.asistencias.linea</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="Registro de asistencias" toolbar="1" version="7.0">
+					<field name="empleado" />
+					<field name="fecha" />
+					<field name="horas" />
+				</tree>
+			</field>
+		</record>
+	</data>
+</openerp>

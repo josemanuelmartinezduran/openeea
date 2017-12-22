@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Flujo Resultados -->
+		<record id="flow_resultados" model="workflow">
+			<field name="name">flow.resultados</field>
+			<field name="osv">auditoria.resultado</field>
+			<field name="on_create">True</field>
+		</record>
+		
+		<!-- Nodo Inicial -->
+		<record id="flow_resultados_abierta" model="workflow.activity">
+			<field name="name">flow.resultados.abierta</field>
+			<field name="wkf_id" ref="flow_resultados"/>
+			<field name="kind">function</field>
+			<field name="action">action_abierta()</field>
+			<field name="flow_start">True</field>
+		</record>
+		
+		<!-- Nodo Final -->
+		<record id="flow_resultados_cerrada" model="workflow.activity">
+			<field name="name">flow.resultados.cerrada</field>
+			<field name="wkf_id" ref="flow_resultados"/>
+			<field name="kind">function</field>
+			<field name="action">action_cerrada()</field>
+			<field name="flow_end">True</field>
+		</record>
+		
+		<!-- Transición -->
+		<record id="flow_resultados_abierta_cerrada" model="workflow.transition">
+			<field name="act_from" ref=""/>
+			<field name="act_to" ref=""/>
+			<field name="signal">signal_</field>
+			<field name="role_id" ref=""/>
+			<field name="condition">True</field>
+		</record>
+	
+	</data>
+</openerp>

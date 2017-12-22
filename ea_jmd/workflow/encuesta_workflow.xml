@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Flujo de la encuesta
+		Id del Item Encuestas
+		Autor JMD -->
+		<record id="workflow_encuesta_jmd" model="workflow">
+			<field name="name">workflow.encuesta</field>
+			<field name="osv">ea.encuesta</field>
+			<field name="on_create">True</field>
+		</record>
+		
+		<!-- Encuesta nueva -->
+		<record id="encuesta_nueva" model="workflow.activity">
+			<field name="name">Nueva</field>
+			<field name="wkf_id" ref="workflow_encuesta_jmd"/>
+			<field name="flow_start">True</field>
+			<field name="kind">function</field>
+			<field name="action">action_new()</field>
+		</record>
+		
+		<!-- Encuesta aprobado -->
+		<record id="encuesta_aprobado" model="workflow.activity">
+			<field name="name">Aprobado</field>
+			<field name="wkf_id" ref="workflow_encuesta_jmd"/>
+			<field name="kind">function</field>
+			<field name="action">action_aprobado()</field>
+		</record>
+		
+		<!-- Encuesta segunda -->
+		<record id="encuesta_segunda" model="workflow.activity">
+			<field name="name">Segunda</field>
+			<field name="wkf_id" ref="workflow_encuesta_jmd"/>
+			<field name="kind">function</field>
+			<field name="action">action_segunda()</field>
+		</record>
+		
+		<!-- Encuesta tercera -->
+		<record id="encuesta_tercera" model="workflow.activity">
+			<field name="name">Tercera</field>
+			<field name="wkf_id" ref="workflow_encuesta_jmd"/>
+			<field name="kind">function</field>
+			<field name="action">action_tercera()</field>
+		</record>
+		
+		<!-- Encuesta ejecutivos -->
+		<record id="encuesta_ec" model="workflow.activity">
+			<field name="name">Ejecutivo</field>
+			<field name="wkf_id" ref="workflow_encuesta_jmd"/>
+			<field name="kind">function</field>
+			<field name="action">action_ec()</field>
+		</record>
+		
+		<!-- Encuesta cliente -->
+		<record id="encuesta_cliente" model="workflow.activity">
+			<field name="name">Cliente</field>
+			<field name="wkf_id" ref="workflow_encuesta_jmd"/>
+			<field name="flow_stop">True</field>
+			<field name="kind">function</field>
+			<field name="action">action_cliente()</field>
+		</record>
+		
+		<!-- Encuesta cancelado -->
+		<record id="encuesta_cancelado" model="workflow.activity">
+			<field name="name">Cancelado</field>
+			<field name="wkf_id" ref="workflow_encuesta_jmd"/>
+			<field name="flow_stop">True</field>
+			<field name="kind">function</field>
+			<field name="action">action_cancelado()</field>
+		</record>
+		
+		<!-- Transición -->
+		<record id="encuesta_new_to_aprobado" model="workflow.transition">
+			<field name="act_from" ref="encuesta_nueva"/>
+			<field name="act_to" ref="encuesta_aprobado"/>
+			<field name="signal">signal_aprobado</field>
+			<field name="condition">1 == 1</field>
+			<!-- <field name="role_id" ref=""/> -->
+		</record>
+		
+		<!-- Transición -->
+		<record id="encuesta_aprobado_to_segunda" model="workflow.transition">
+			<field name="act_from" ref="encuesta_aprobado"/>
+			<field name="act_to" ref="encuesta_segunda"/>
+			<field name="signal">signal_segunda</field>
+			<field name="condition">1 == 1</field>
+			<!-- <field name="role_id" ref=""/> -->
+		</record>
+		
+		<!-- Transición -->
+		<record id="encuesta_segunda_to_tercera" model="workflow.transition">
+			<field name="act_from" ref="encuesta_segunda"/>
+			<field name="act_to" ref="encuesta_tercera"/>
+			<field name="signal">signal_tercera</field>
+			<field name="condition">1 == 1</field>
+			<!-- <field name="role_id" ref=""/> -->
+		</record>
+		
+		<!-- Transición -->
+		<record id="encuesta_tercera_to_ec" model="workflow.transition">
+			<field name="act_from" ref="encuesta_tercera"/>
+			<field name="act_to" ref="encuesta_ec"/>
+			<field name="signal">signal_ec</field>
+			<!-- <field name="role_id" ref=""/> -->
+		</record>
+		
+		<!-- Transición -->
+		<record id="encuesta_ec_to_cliente" model="workflow.transition">
+			<field name="act_from" ref="encuesta_ec"/>
+			<field name="act_to" ref="encuesta_cliente"/>
+			<field name="signal">signal_cliente</field>
+			<!-- <field name="role_id" ref=""/> -->
+		</record>
+		
+		<!-- Transición -->
+		<record id="encuesta_new_to_cancelado" model="workflow.transition">
+			<field name="act_from" ref="encuesta_nueva"/>
+			<field name="act_to" ref="encuesta_cancelado"/>
+			<field name="signal">signal_cancelado</field>
+			<!-- <field name="role_id" ref=""/> -->
+		</record>
+		
+		<!-- Transición -->
+		<record id="encuesta_aprobado_to_cancelado" model="workflow.transition">
+			<field name="act_from" ref="encuesta_aprobado"/>
+			<field name="act_to" ref="encuesta_cancelado"/>
+			<field name="signal">signal_cancel</field>
+			<!-- <field name="role_id" ref=""/> -->
+		</record>
+	</data>
+</openerp>

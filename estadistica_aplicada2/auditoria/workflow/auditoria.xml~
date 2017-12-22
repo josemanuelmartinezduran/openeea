@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+    <data>
+
+		<!-- definicion del workflow -->
+		<record id="wkf_auditoria" model="workflow">
+			<field name="on_create">True</field>
+			<field name="name">Workflow Auditoria</field>
+			<field name="osv">auditoria</field>
+		</record>
+				
+		
+		<!-- Estados del workflow correspondidos con el campo estado-->		
+		<record id="auditoria_planeacion" model="workflow.activity">
+			<field name="kind">function</field>
+			<field name="name">st.planeacion</field>
+			<field name="wkf_id" ref="wkf_auditoria"/>
+			<field name="flow_start">True</field>
+			<field name="action">action_planeacion()</field>
+		</record>
+				
+		<record id="auditoria_ejecucion" model="workflow.activity">
+			<field name="kind">function</field>
+			<field name="name">st.ejecucion</field>
+			<field name="wkf_id" ref="wkf_auditoria"/>
+			<field name="action">action_ejecucion()</field>
+		</record>
+	
+		<record id="auditoria_cierre" model="workflow.activity">
+			<field name="kind">function</field>
+			<field name="name">st.cierre</field>
+			<field name="wkf_id" ref="wkf_auditoria"/>
+			<field name="flow_stop">True</field>
+			<field name="action">action_cierre()</field>
+		</record>	
+		
+		
+		
+		
+		<!-- transiciones del workflow -->
+		<record id="trans_auditoria_planeacion" model="workflow.transition">
+			<field name="act_from" ref="auditoria_planeacion" />
+			<field name="act_to" ref="auditoria_ejecucion" />
+			<field name="signal">signal_confirm_planeacion</field>
+		</record>
+
+		<record id="trans_encuestas_ejecucion" model="workflow.transition">
+			<field name="act_from" ref="auditoria_ejecucion" />
+			<field name="act_to" ref="auditoria_cierre" />
+			<field name="signal">signal_confirm_ejecucion</field>
+		</record>
+
+		
+	
+	</data>
+	
+</openerp>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	<!-- 02/04/2014 (fuc) Creacion modulo Contraloria
+		Dentro de compra agregar
+		(+) Crear accion "Resumen de caja chica" por desarrollar
+		(+) Crear accion "Analisis de gastos en campo" por desarrollar
+		Crear nuevos
+		(+) Crear accion "Auditoria" por desarrollar
+		(+) Crear accion "No Conformidad" por desarrollar
+		(+) Crear accion "RACs" por desarrollar
+	-->
+
+	<!-- Resumen de Caja Chica -->
+	<record id="act_caja_chica" model="ir.actions.act_window">
+		<field name="name">Resumen de caja chica (Por desarrollar)</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">purchase.cajachica</field>
+		<field name="view_type">tree</field>
+		<field name="view_mode">tree</field>
+	</record>
+
+	<!-- Analisis de gastos en campo -->
+	<record id="act_analisis_campo" model="ir.actions.act_window">
+		<field name="name">Análisis de gastos en campo (Por desarrollar)</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">purchase.analisiscampo</field>
+		<field name="view_type">tree</field>
+		<field name="view_mode">tree</field>
+	</record>
+
+	<!-- Auditoria -->
+	<record id="act_auditoria" model="ir.actions.act_window">
+		<field name="name">Auditoría (Por desarrollar)</field>
+		<field name="res_model">purchase.auditoria</field>
+		<field name="view_type">tree</field>
+		<field name="view_mode">tree</field>
+	</record>
+
+	<!-- No Conformidad -->
+	<record id="act_noconforme" model="ir.actions.act_window">
+		<field name="name">No Conforme (Por desarrollar)</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">purchase.noconforme</field>
+		<field name="view_type">tree</field>
+		<field name="view_mode">tree</field>
+	</record>
+
+	<!-- RACs -->
+	<record id="act_racs" model="ir.actions.act_window">
+		<field name="name">RACs (Por desarrollar)</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">purchase.racs</field>
+		<field name="view_type">tree</field>
+		<field name="view_mode">tree</field>
+	</record>
+
+	<!-- 19/05/2014 - (fuc) 1.2.2. Generacion de la orden de compra
+		(+) Agregar campo opcional "Proyecto"
+	-->
+	<record id="purchase_order_form_inherit_1" model="ir.ui.view">
+		<field name="name">purchase.order.form.inherit.1</field>
+		<field name="model">purchase.order</field>
+		<field name="inherit_id" ref="purchase.purchase_order_form"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='partner_ref']" position="after">
+				<field name="proyecto" string="Proyecto" domain="[('etapa', '=', 'proyecto')]"/>
+			</xpath>
+			<!-- 30/05/2014 - (fuc) Cambios de revision
+				(+) Ocultar campo "Almacen destino"
+				(+) Ocultar campo "Direccion de cliente"
+				(+) Ocultar campo "Destino"
+			-->
+			<xpath expr="//field[@name='warehouse_id']" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+			<xpath expr="//field[@name='dest_address_id']" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+			<xpath expr="//field[@name='location_id']" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+			<!-- 06/06/2014 (fuc) Revisiones y correcciones
+				(+) Ocultar campo "Documento origen"
+				(+) Agregar campo "Justificacion de la solicitud"
+				(+) Cambiar etiqueta de campo "Producto" por "Producto / Servicio"
+				(+) Cambiar etiqueta de campo "Fecha planificada" por "Fecha de entrega"
+			-->
+			<xpath expr="//field[@name='origin']" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+
+			<xpath expr="//field[@name='product_id']" position="replace">
+				<field name="product_id" string="Producto / Servicio"/>
+			</xpath>
+			<xpath expr="//field[@name='date_planned']" position="replace">
+				<field name="date_planned" string="Fecha de entrega"/>
+			</xpath>
+			<xpath expr="//page[@string='Purchase Order']" position="after">
+				<page string="Justificación">
+					<field name="justificacion" />
+				</page>
+			</xpath>
+		</field>
+	</record>
+
+	</data>
+</openerp>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--ACCION BOTONES-->
+        <record id="crear_project_wizard" model="ir.actions.act_window">
+            <field name="name">Crear proyectos</field>
+            <field name="res_model">ea.project_wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="ea_jmd.wiz_project_jmd"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <!--VISTAS-->
+
+        <record model="ir.ui.view" id="cotizaciones_jmos_form">
+            <field name="name">cotizaciones_jmos.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="before">
+                    <button name="%(crear_project_wizard)d" string="Crear Proyecto" type="action" class="oe_right" invisible="True" />
+                </xpath>
+
+                <xpath expr="//notebook/page[1]" position="after">
+                    <page string="Plazas">
+                        <field name="plaza_line">
+                            <tree editable="bottom">
+                                <field name="name"/>
+								<field name="cotizacion" invisible="True"/>
+								<field name="nombre_corto" readonly="True" invisible="True"/>
+								<field name="nombre_estudio_id" domain='[("etapa", "=", "proyecto"), ("nombre_corto", "=", nombre_corto)]' string="Clave del Estudio"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!--wizard-->
+
+        <record model="ir.ui.view" id="wiz_project_jmos">
+            <field name="name">wiz_project.jmos</field>
+            <field name="model">ea.project_wizard</field>
+            <field name="inherit_id" ref="ea_jmd.wiz_project_jmd"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='pi_date_end']" position="replace">
+                    <field name="pi_date_end" on_change="procesamiento_onchange_hud(pi_date_end)"/>
+                </xpath>
+
+                <xpath expr="//field[@name='procesamiento_date_end']" position="replace">
+                    <field name="procesamiento_date_end" on_change="analisis_onchange_hud(procesamiento_date_end)" />
+                </xpath>
+
+                <xpath expr="//field[@name='analisis_date_end']" position="replace">
+                    <field name="analisis_date_end" on_change="entrega_onchange_hud(analisis_date_end)"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
+

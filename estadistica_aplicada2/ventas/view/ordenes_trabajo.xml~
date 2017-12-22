@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	<!-- 27/03/2014 - fur - Actividad 1.7.1 Orden de trabajo
+		(+) Eliminar campo "Orden de Produccion"
+		(+) Agregar campo "Responsable"
+		(+) Modificar campo "Centro de produccion" por "Zona o lugar afectado"
+		(+) Modificar campo "Estado de produccion" por "Estatus"
+		(+) Modificar campo "Informacion" por "Dejar unicamente fecha planeada"
+	-->
+	<record id="mrp_production_workcenter_form_view_inherit_1" model="ir.ui.view">
+		<field name="name">mrp.production.workcenter.form.view.inherit.1</field>
+		<field name="model">mrp.production.workcenter.line</field>
+		<field name="inherit_id" ref="mrp_operations.mrp_production_workcenter_form_view_inherit"/>
+		<field name="arch" type="xml">
+			<xpath expr="/form/sheet/group/field[@name='production_id']" position="replace"/>
+			<xpath expr="/form/sheet/group/field[@name='workcenter_id']" position="replace">
+				<field name="workcenter_id" string="Zona o lugar afectado"/>
+			</xpath>
+			<xpath expr="/form/sheet/group/field[@name='production_state']" position="replace">
+				<field name="production_state" string="Estatus"/>
+			</xpath>
+			<xpath expr="/form/sheet/group/field[@name='sequence']" position="after">
+				<field name="responsable" string="Responsable"/>
+			</xpath>
+			<xpath expr="/form/sheet/notebook/page" position="replace">
+				<page string="Información">
+				<group>
+					<group string="Fecha planeada">
+						<field name="date_planned" modifiers="{}"/>
+						<field name="date_planned_end" />
+					</group>
+				</group>
+				</page>
+			</xpath>
+		</field>
+	</record>
+
+	<!-- 28/03/2014 - fur - Actividad 1.7.2 Centros de trabajo
+		(+) Eliminar campo "Horario de trabajo"
+		(+) Eliminar campo "Informacion general"
+	-->
+	<record id="workcenter_form_inherit_1" model="ir.ui.view">
+		<field name="name">workcenter.form.inherit.1</field>
+		<field name="model">mrp.workcenter</field>
+		<field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+		<field name="arch" type="xml">
+			<xpath expr="/form/group/group/field[@name='calendar_id']" position="replace"/>
+			<xpath expr="/form/notebook" position="attributes">
+                   		<attribute name="invisible">1</attribute>
+			</xpath>
+		</field>
+	</record>
+
+	</data>
+</openerp>

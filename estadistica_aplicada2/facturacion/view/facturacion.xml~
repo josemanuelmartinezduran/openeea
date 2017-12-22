@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		
+		<record model="ir.ui.view" id="sale_view_order_new_payment_term_jmos_inherit">
+			<field name="name">sale.view.order.new.payment.term.jmos.inherit</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="account.invoice_form"/>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='pay_method_id']" position="replace"/>
+				</data>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="account_invoice_form_inherit">
+			<field name="name">account.invoice.form.inherit</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_form"/>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='payment_ids']" position="replace">
+					<field name="payment_ids">
+									<tree string="Payments">
+                                    <field name="date"/>
+                                    <field name="move_id"/>
+                                    <field name="ref"/>
+                                    <field name="name"/>
+                                    <field name="journal_id" groups="base.group_user"/>
+                                    <field name="debit"/>
+                                    <field name="credit"/>
+									<field name="metodo_pago"/>
+                                    <field name="amount_currency" groups="base.group_multi_currency"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
+									</tree>
+					</field>
+									
+					</xpath>
+				</data>
+			</field>
+		</record>
+	</data>
+</openerp>

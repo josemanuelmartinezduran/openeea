@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!--  Busqueda Conciliación de Pagos SEA  -->
+		<record model="ir.ui.view" id="ea_conciliacion_search">
+			<field name="name">ea.conciliacion.search</field>
+			<field name="model">ea.conciliacion</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Buscar">
+					<filter icon="terp-document-new" name="" string="" domain="[('','','')]" help=""/>
+					<group expand="0" string="Agrupar por...">
+						<filter string="" icon="terp-partner" domain="[]" context="{'group_by':''}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<!-- Accion  Conciliación de Pagos SEA -->
+		<record model="ir.actions.act_window" id="ea_conciliacion_actn">
+			<field name="name">Conciliación SEA</field>
+			<field name="res_model">ea.conciliacion</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro
+					</p>
+			</field>
+		</record>
+		
+		<!--  Formulario  Conciliación de Pagos SEA -->
+		<record model="ir.ui.view" id="ea_conciliacion_edit">
+			<field name="name">ea.conciliacion.edit</field>
+			<field name="model">ea.conciliacion</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="X" version="7.0">
+					<header>
+						<button string="Actualizar" name="actualiza" type="object" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" domain="[('es_sea', '=' ,True)]" />
+						</h1>
+						<group>
+							<group>
+								<field name="proyecto_id" />
+								<field name="nombre_corto" />
+							</group>
+							<group>
+							</group>
+						</group>
+						<notebook>
+							<page string="Facturas">
+								<field name="factura_ids">
+									<tree string="X" editable="bottom">
+										<field name="name" />
+										<field name="fecha" />
+										<field name="monto" />
+									</tree>
+								</field>
+							</page>
+							<page string="Entrevistas Realizadas">
+								<field name="realizadas_ids">
+									<tree string="X" editable="bottom">
+										<field name="name" />
+										<field name="fecha" />
+										<field name="cantidad" />
+									</tree>
+								</field>
+							</page>
+							<page string="Entrevistas Solicitadas">
+								<field name="solicitadas_ids">
+									<tree string="X" editable="bottom">
+										<field name="name" />
+										<field name="cantidad" />
+									</tree>
+								</field>
+							</page>							
+						</notebook>			
+					</sheet>
+					<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers" />
+							<field name="message_ids" widget="mail_thread" />
+					</div>
+				</form>
+			</field>
+		</record>
+		
+		<!--  Lista   Conciliación de Pagos SEA -->
+		<record model="ir.ui.view" id="ea_conciliacion_view">
+			<field name="name">ea.conciliacion.view</field>
+			<field name="model">ea.conciliacion</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="">
+					<field name="name" />
+					<field name="proyecto_id" />
+					<field name="nombre_corto" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Menu  Conciliación de Pagos SEA -->
+		<menuitem id="ea_conciliacion_menu" parent="estadistica_aplicada2.mn_estudios_campo" name="Conciliación SEA" action="ea_conciliacion_actn" />
+	</data>
+</openerp>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!--  Busqueda -->
+		<record model="ir.ui.view" id="bonos_search">
+			<field name="name">bonos-search</field>
+			<field name="model">hr.bonos</field>
+			<field name="type">search</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<field name="name" />
+					<filter icon="terp-document-new" name="aprobar" string="Por Aprobar" domain="[('state','=','borrador')]" help=""/>
+					<filter icon="terp-document-new" name="aprobados" string="Aprobados" domain="[('state','=','aprobado')]" help=""/>
+					<group expand="0" string="Group By...">
+						<filter string="Estado" icon="terp-partner" domain="[]" context="{'group_by':'state'}"/>
+						<filter string="Persona" icon="terp-partner" domain="[]" context="{'group_by':'empleado'}"/>
+						<filter string="Fecha" icon="terp-partner" domain="[]" context="{'group_by':'fecha'}"/>
+						<filter string="Proyecto" icon="terp-partner" domain="[]" context="{'group_by':'proyecto_id'}"/>
+						<filter string="Concepto" icon="terp-partner" domain="[]" context="{'group_by':'name'}"/>
+						<filter string="Plaza" context="{'group_by':'plaza'}" />
+						<filter string="Código de Plaza" context="{'group_by':'codigo_plaza'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<!-- Accion para preaprobar bonificaiones en lote -->
+		<record id="action_bono_bulkaproove" model="ir.actions.server">
+    		<field name="name">Autorizar</field>
+    		<field name="type">ir.actions.server</field>
+    		<field name="model_id" ref="model_hr_bonos"/>
+    		<field name="state">code</field>
+    		<field name="code">self.action_aprobado(cr, uid, context.get('active_ids'))</field>
+		</record>
+
+		<!-- Boton en la vista de lista -->
+		<record id="value_hr_bonos" model="ir.values">
+    		<field name="name">Autorizar Bonos</field>
+    		<field name="action_id" ref="action_bono_bulkaproove"/>
+    		<field name="value" eval="'ir.actions.server,' + str(ref('action_bono_bulkaproove'))"/>
+    		<field name="key">action</field>
+    		<field name="model_id" ref="model_hr_bonos"/>
+    		<field name="model">hr.bonos</field>
+    		<field name="key2">client_action_multi</field>
+		</record>
+		
+		<!-- Acción de bonos -->
+		<record model="ir.actions.act_window" id="hr_bonos_act">
+			<field name="name">Bonificaciones a la Nómina</field>
+			<field name="res_model">hr.bonos</field>
+			<field name="view_type">form</field>
+			<field name="search_view_id" ref="bonos_search"/>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro
+					</p>
+			</field>
+		</record>
+		
+		<!-- Menu de bonos -->
+		<menuitem id="menu_bonos" parent="hr_payroll.menu_hr_root_payroll" name="Bonificaciones" action="hr_bonos_act" groups="base.group_hr_manager" />
+		
+		<!--  Vista Form de Bonos -->
+		<record model="ir.ui.view" id="hr_bonos_form">
+			<field name="name">hr.bonos.form</field>
+			<field name="model">hr.bonos</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Bonificaciones" version="7.0">
+					<header>
+						<button string="Pre Aprobar" type="workflow" states="borrador" name="signal_preaprobar" />
+						<button string="Aprobar" type="workflow" states="preaprobado" name="signal_aprobar" />
+						<field name="state" widget="statusbar" nolabel="1" />
+					</header>
+					<sheet>
+						<h4>
+							<label for="empleado" />
+						</h4>
+						<h1>
+							<field name="empleado" placeholder="Empleado" required="True" attrs="{'readonly': [('de_reporte','=',True)]}"/>
+						</h1>
+						<group>
+							<group string="Información">
+								<field name="fecha" attrs="{'readonly': [('de_reporte','=',True)]}" />
+								<field name="name" attrs="{'readonly': [('de_reporte','=',True)]}" />
+								<field name="nombre" invisible="True" attrs="{'readonly': [('de_reporte','=',True)]}" />
+								<field name="proyecto_id" domain="[('etapa','=','proyecto')]" attrs="{'readonly': [('de_reporte','=',True)]}"/>
+								<field name="nombre_corto" readonly="True"  />
+								<field name="cantidad" invisible="True" /> <!-- attrs="{'invisible': [('name','!=','Productividad')], 'readonly': [('de_reporte','=',True)]}" -->
+								<field name="plaza" readonly="True" />
+								<field name="codigo_plaza" />
+								<field name="codigos_pago" attrs="{'invisible': [('de_reporte','!=',True)], 'readonly': [('de_reporte','=',True)]}" />
+								<field name="h_envio" attrs="{'invisible': [('de_reporte','!=',True)]}" readonly="True" />
+								<field name="folio" attrs="{'invisible': [('de_reporte','!=',True)]}" readonly="True" />
+								<field name="reporte_id" attrs="{'invisible': [('de_reporte','!=',True)]}" readonly="True" />
+								<field name="de_reporte" readonly="True" />
+								<field name="es_extra" readonly="True" />
+								<field name="es_tableta" readonly="True" />
+								<field name="es_pi" readonly="True" />
+								<field name="es_cati" readonly="True" />
+								<field name="es_completar" readonly="True" />
+							</group>
+							<group string="Monto">
+								<field name="tipo" attrs="{'readonly': [('de_reporte','=',True)]}"/>
+								<field name="monto" attrs="{'invisible': [('tipo','!=','monto')], 'readonly': [('de_reporte','=',True)]}"/>
+								<field name="dias" attrs="{'invisible': [('tipo','!=','dias')], 'readonly': [('de_reporte','=',True)]}"/>
+								<field name="cantidad" />
+								<field name="departamento" readonly="True" />
+								<field name="puesto" readonly="True" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Observaciones">
+								<field name="observaciones" widget="html"/>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers" />
+							<field name="message_ids" widget="mail_thread" />
+					</div>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Vista Tree de Bonos -->
+		<record model="ir.ui.view" id="bonos_tree">
+			<field name="name">bonos.tree</field>
+			<field name="model">hr.bonos</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="Bonificaciones" toolbar="1">
+					<field name="empleado" />
+					<field name="fecha" />
+					<field name="proyecto_id" />
+					<field name="nombre_corto" />
+					<field name="name" />
+					<field name="plaza" />
+					<field name="codigo_plaza" />
+					<field name="codigos_pago" />
+					<field name="nombre" />
+					<field name="tipo" />
+					<field name="monto" />
+					<field name="dias" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+		
+		
+		
+		
+	</data>
+</openerp>

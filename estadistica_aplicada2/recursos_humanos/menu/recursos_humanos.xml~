@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+	<!-- Ventana de accion Por Desarrollar -->
+	<record id="act_por_desarrollar" model="ir.actions.act_window">
+		<field name="name">Por desarrollar</field>
+		<field name="res_model">hr.capacitacion</field>
+		<field name="view_type">tree</field>
+		<field name="view_mode">tree</field>
+	</record>
+
+	<!-- 03/04/2014 (fuc) Edicion Recursos Humanos
+		(+) Crear submenu "Capacitación" dentro de menu "Recursos Humanos" con contenido "Por desarrollar"
+	-->
+
+	<!-- menu Recursos Humanos -->
+	<menuitem id="hr.menu_hr_root" name="Recursos Humanos" parent="" action="" sequence="6"/>
+
+	<!-- Cambio de etiqueta "Recursos Humanos" por "Empleados" -->
+	<menuitem id="hr.menu_hr_main" name="Empleados" parent="hr.menu_hr_root" action="" sequence="0"/>
+
+	<!-- submenu Capacitacion -->
+	<menuitem id="mn_hr_capacitacion" name="Capacitación" parent="hr.menu_hr_root" action="" sequence="2"/>
+	<menuitem id="sbmn_cap_evento_personal" name="Evento de Capacitación al Personal" parent="mn_hr_capacitacion" action="act_por_desarrollar" sequence="1"/>
+	<menuitem id="sbmn_cap_induccion" name="Curso de Inducción" parent="mn_hr_capacitacion" action="act_por_desarrollar" sequence="2"/>
+
+	<!-- submenu Evaluaciones -->
+	<menuitem id="mn_hr_evaluaciones" name="Evaluaciones" parent="hr.menu_hr_root" action="" sequence="4"/>
+	<menuitem id="sbmn_eval_evaluaciones" name="Evaluaciones" parent="mn_hr_evaluaciones" action="act_por_desarrollar" sequence="1"/>
+	<menuitem id="sbmn_eval_pet_entrevista" name="Petición de Entrevista" parent="mn_hr_evaluaciones" action="act_por_desarrollar" sequence="2"/>
+
+    </data>
+</openerp>

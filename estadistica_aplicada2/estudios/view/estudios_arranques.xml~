@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	<record id="act_adm_arranques" model="ir.actions.act_window">
+		<field name="name">Kick Off</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">arranques.admin</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form,calendar</field>
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+			Haga clic aquí para crear un nuevo registro de estudio de arranques.
+			</p>
+		</field>
+	</record>
+
+	<!-- 04/06/2014 (fuc) Creacion formulario para Administración de arranques
+		(+) Item de menu
+		(+) Accion
+		(+) Vistas
+	-->
+        <record id="view_arranques_tree" model="ir.ui.view">
+            <field name="name">project.arranques.tree</field>
+            <field name="model">arranques.admin</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Administración de arranques">
+                    <field name="name" string="Clave del estudio"/>
+                    <field name="nombre_corto" string="Nombre corto" />
+		    		<field name="fecha_solicitud" string="Fecha" />
+                </tree>
+            </field>
+        </record>
+
+	<record id="view_arranques_form" model="ir.ui.view">
+		<field name="name">project.arranques.form</field>
+		<field name="model">arranques.admin</field>
+		<field eval="2" name="priority"/>
+		<field name="arch" type="xml">
+			<form string="Administración de arranques" version="7.0">
+				<sheet>
+					<div class="oe_title">
+						<div>
+							<h1>
+							<field name="name" placeholder="Nombre del estudio" autofocus="autofocus" required="1" domain="[('etapa', '=', 'proyecto')]"/>
+							<field name="nombre_corto" placeholder="Nombre corto" readonly="True" />
+							</h1>
+						</div>
+						<group>
+							<field name="fecha_solicitud" string="Fecha"/>
+							<field name="hora_inicio" />
+							<field name="hora_fin" />
+						</group>
+					</div>
+					<div>
+				</div>
+				<notebook>
+				  <page string="Tareas">
+					<field name="tarea_ids">
+						<tree editable="bottom">
+							<field name="name" />
+							<field name="responsable" invisible="True"/>
+							<field name="date" />
+							<field name="statuss" />							
+						</tree>
+					</field>
+				  </page>
+				  <page string="Asistentes">
+				  	<field name="asistentes">
+				  		<tree editable="bottom">
+				  			<field name="name" />
+				  		</tree>
+				  	</field>
+				  </page>
+				  <page string="Materiales" invisible="True">
+					<field name="material_ids" >
+						<tree editable="bottom">
+							<field name="name" />
+							<field name="ammount" />
+							<field name="statuss" />
+						</tree>
+					</field>
+				  </page>
+				  <page string="Personal">
+					<field name="personal_ids">
+						<tree editable="bottom">
+							<field name="name" />
+							<field name="job_id" />
+							<field name="ammount" />
+						</tree>
+					</field>
+				  </page>
+				</notebook>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<!-- Grafico Arranques -->
+	<record model="ir.ui.view" id="arranques_calendar">
+		<field name="name">arranques.calendar</field>
+		<field name="model">arranques.admin</field>
+		<field name="type">calendar</field>
+		<field name="priority" eval="16"/>
+		<field name="arch" type="xml">
+			<calendar string="X" date_start="fecha_solicitud" color="name">
+				<field name="name" />
+			</calendar>
+		</field>
+	</record>
+
+    </data>
+</openerp>

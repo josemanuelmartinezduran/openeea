@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <!-- Modificaciones a la vista-->
+    <record id="event_edit" model="ir.ui.view">
+      <field name="name">event.edit</field>
+      <field name="model">event.event</field>
+      <field name="inherit_id" ref="event.view_event_form"/>
+      <field name="arch" type="xml">
+	<xpath expr="//field[@name='company_id']" position="after">
+	  <field name="oficina" />
+	  <field name="sala" />
+	</xpath>
+      </field>
+    </record>
+    
+    <!-- Modificaciones a la vista:	Event Calendar -->
+		<record id="jmd_calendar_event" model="ir.ui.view">
+			<field name="name">jmd.calendar.event</field>
+			<field name="model">event.event</field>
+			<field name="inherit_id" ref="event.view_event_calendar"/>
+			<field name="arch" type="xml">
+				<xpath expr="//calendar" position="replace">
+					<calendar color="sala" date_start="date_begin" date_stop="date_end" string="Capacitaciones">
+                    <field name="name"/>
+                    <field name="date_begin" />
+                    <field name="oficina" />
+                    <field name="sala" />
+                </calendar>
+				</xpath>
+			</field>
+		</record>
+  </data>
+</openerp>

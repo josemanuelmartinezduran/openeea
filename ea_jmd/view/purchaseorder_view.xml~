@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Modificaciones a la vista	-->
+		<record id="purhcase_order_form_jmd" model="ir.ui.view">
+			<field name="name">purchase.order.form.jmd</field>
+			<field name="model">purchase.order</field>
+			<field name="inherit_id" ref="purchase.purchase_order_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='date_order']" position="after">
+					<field name="deducible" />
+					<field name="plaza" domain="[('nombre_estudio_id', '=', proyecto)]" />
+					<field name="gasto_oficina" />
+					<field name="nombre_corto" readonly="True" />
+				</xpath>
+				
+				
+			</field>
+		</record>	
+	</data>
+</openerp>
