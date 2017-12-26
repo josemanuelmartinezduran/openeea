@@ -105,7 +105,7 @@
 					</page>
 				</xpath>
 
-				<xpath expr="//field[@name='privacy_visibility'" position="attributes">
+				<xpath expr="//field[@name='privacy_visibility']" position="attributes">
 					<attribute name="invisibe">True</attribute>
 				</xpath>
 
