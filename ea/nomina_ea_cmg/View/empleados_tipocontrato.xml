@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Agregar el campo tipo de contrato
+            2 posibles : Nómina y Honorarios
+            Desarrolló CMG
+        -->
+        <record id="empleados_tipocontrato" model="ir.ui.view">
+            <field name="name">empleados.tipocontrato</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vehicle_distance']" position="after">
+                    <field name="tipo_contrato"/>
+                    <field name="dias_labora"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,87 @@
+<<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!--  Busqueda balanza  -->
+		<record model="ir.ui.view" id="balanza_search">
+			<field name="name">balanza.search</field>
+			<field name="model">sat.balanza</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Buscar">
+					<filter icon="terp-document-new" name="" string="" domain="[('','','')]" help=""/>
+					<group expand="0" string="Agrupar por...">
+						<filter string="" icon="terp-partner" domain="[]" context="{'group_by':''}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<!-- Accion  balanza -->
+		<record model="ir.actions.act_window" id="balanza_actn">
+			<field name="name">Balanza SAT</field>
+			<field name="res_model">sat.balanza</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro
+					</p>
+			</field>
+		</record>
+		
+		<!--  Formulario  balanza -->
+		<record model="ir.ui.view" id="%1_edit">
+			<field name="name">balanza.edit</field>
+			<field name="model">sat.balanza</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="X" version="7.0">
+					<sheet>
+						<h1>
+							<field name="name" />
+						</h1>
+						<group>
+							<group>
+								<field name="" />
+							</group>
+							<group>
+								<field name="" />
+							</group>
+						</group>
+						<notebook>
+							<page string="">
+								<field name="">
+									<tree string="X" editable="bottom">
+										<field name="" />
+									</tree>
+								</field>
+							</page>							
+						</notebook>			
+					</sheet>
+					<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers" />
+							<field name="message_ids" widget="mail_thread" />
+					</div>
+				</form>
+			</field>
+		</record>
+		
+		<!--  Lista   Balanza -->
+		<record model="ir.ui.view" id="balanza_view">
+			<field name="name">balanza.view</field>
+			<field name="model">sat.balanza</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="">
+					<field name="name" />
+					<field name="	" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Menu  balanza -->
+		<menuitem id="balanza_menu" parent="ea_jmd.account_report-jmd" name="menu" action="balanza_actn" />
+	</data>
+</openerp>

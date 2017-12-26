@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	<!-- 08/09/2014 CMG
+	    Creación del submenú Estapas post-campo/Presentación
+	-->
+    <!-- acciion-->
+    <record model="ir.actions.act_window" id="presentacion_act_form_cmg">
+            <field name="name">Presentación</field>
+            <field name="res_model">project.presentacion</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear una nueva presentación
+					</p>
+			</field>
+    </record>
+    <!-- Menú presentación -->
+        <menuitem id="sbmn_proyectos_presentacion_cmg" name="Presentacion" action="presentacion_act_form_cmg"  parent="estadistica_aplicada2.mn_estudios_procesos"  sequence="5" />
+    </data>
+</openerp>

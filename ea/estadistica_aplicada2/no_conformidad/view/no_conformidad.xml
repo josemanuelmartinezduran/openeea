@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Vista tree para no_conformidad-->
+        <record model='ir.ui.view' id='no_conformidad_view_tree'>
+            <field name='name'>view.no_conformidad_view_tree</field>
+            <field name='model'>no_conformidad</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Auditoria'>
+					<field name='name'/>
+					<field name='generador' string='Generador'/>
+					<field name="gnombre" />
+					<field name='responsable' string='Responsable'/>
+					<field name="rnombre" />
+					<field name='jefe_del_responsable' string='Jefe del responsable'/>
+					<field name="jnombre" />
+					<field name="auditoria" />
+					<field name='area' string='Área'/>
+					<field name='fecha' string='Fecha'/>
+					<field name='prioridad' string='Prioridad'/>
+					<field name="state" />
+                </tree>
+            </field>
+        </record>
+		
+        <!-- Vista form para no_conformidad-->
+        <record model='ir.ui.view' id='no_conformidad_view_form'>
+            <field name='name'>view.no_conformidad_view_form</field>
+            <field name='model'>no_conformidad</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='No conformidad' version='7.0'>
+					<header> 
+						<button states="generada"  type="workflow" name="signal_validar" string="Validar" />
+						<button states="validada"  type="workflow" name="signal_cerrar" string="Cerrar" />
+						<field name="state" nolabel="1" widget="statusbar" />						
+					</header>
+					<sheet>
+						<group>
+							<div class='oe_title'>
+								<label for='name' class='oe_edit_only' string='Clave de la no conformidad'/>
+								<h1>
+									<field name='name' string='Clave de la no conformidad'/>
+								</h1>	
+							</div>
+						</group>
+						<group>
+							<group>
+								<field name="concepto" />
+								<field name='generador' string='Generador'/>
+								<field name="gnombre" />
+								<field name='responsable' string='Responsable'/>
+								<field name="rnombre" />
+								<field name='jefe_del_responsable' string='Jefe del responsable'/>
+								<field name="jnombre" />
+							</group>
+							<group>
+								<field name='area'/>
+								<field name='fecha'/>
+								<field name='prioridad'/>
+							</group>
+						</group>
+						<notebook>
+							<page string='Informacion'>
+								<field name='descripcion'/>
+							</page>
+							<page string="Consecuencias">
+								<field name="consecuencias" />
+							</page>
+							<page string='Acciones'>
+								<field name='acciones'/>
+							</page>							
+						</notebook>
+					</sheet>
+											<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers" />
+							<field name="message_ids" widget="mail_thread" />
+						</div>
+                </form>
+            </field>
+        </record>		
+		
+		<!-- action para no conformidad -->
+        <record id="no_conformidad_action_fve" model="ir.actions.act_window">
+            <field name="name">No Conformidad</field>
+            <field name="res_model">no_conformidad</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+			<!-- Menu -->
+			<menuitem id="sb_noconf" parent="menu_auditoria" name="No Conformidad" action="no_conformidad_action_fve" groups="group_auditor,group_auditado" sequence="10" />
+		
+		
+        <!-- Vista tree para no_conformidad acciones-->
+        <record model='ir.ui.view' id='no_conformidad_acciones_view_tree'>
+            <field name='name'>view.no_conformidad_acciones_view_tree</field>
+            <field name='model'>no_conformidad.acciones</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Auditoria'>
+					<field name='persona' string='Persona'/>
+					<field name="nombre" />
+					<field name='accion' string='Acción'/>
+					<field name='fecha'/>
+					<field name='horas_dedicas'/>
+                </tree>
+            </field>
+        </record>		
+
+		
+        <!-- Vista form para no_conformidad acciones-->
+        <record model='ir.ui.view' id='no_conformidad_acciones_view_form'>
+            <field name='name'>view.no_conformidad_acciones_view_form</field>
+            <field name='model'>no_conformidad.acciones</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Auditoria' version='7.0'>
+					<group>
+						<field name='persona' string='Persona'/>
+						<field name="nombre" />
+						<field name='accion' string='Acción'/>
+						<field name='fecha'/>
+						<field name='horas_dedicas'/>
+					</group>
+                </form>
+            </field>
+        </record>
+	</data>
+</openerp>

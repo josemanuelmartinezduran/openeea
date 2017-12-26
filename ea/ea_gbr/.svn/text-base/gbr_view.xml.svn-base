@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+	  <!--11/03/2014  - gbr - Actividad 1.3.6 Creacion de Ubicaciones 
+              (+)Eliminar Campos ubicacion xyz en la vista Almacen>Ubicaciones
+              (+)Agregar  Campos "Es persona" tipo de informacion "si/no" "Empleado" tipo de informacion "relacionar
+              (+)Cambiar nombre al Campo Restraso del Encadanamiento por Plazo en esta ubicacion 
+          -->
+	  
+	  <record model="ir.ui.view" id="stock.view_location_form_gbr">
+		  <field name="name">stock.view.location.form.gbr</field>
+		  <field name="inherit_id" ref="stock.view_location_form" />
+		  <field name="model">stock.location</field>
+		  <field name="arch" type="xml">
+		          <xpath expr="/form/group/group/field[@name='chained_delay']" position="replace">
+			    <field name="chained_delay" string="Plazo en esta ubicacion"/>	                 
+		          </xpath>
+
+			<!--
+			<xpath expr="/form/group/group/field[@name='posx']" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+			<xpath expr="/form/group/group/field[@name='posy']" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+			<xpath expr="/form/group/group/field[@name='posz']" position="attributes">
+				<attribute name="invisible">1</attribute>
+			</xpath>
+			-->
+			<xpath expr="/form/group" position="replace">
+			<group>
+			<group string="Información adicional">
+				<field name="usage" modifiers="{'required': true}"/>
+				<field name="partner_id" modifiers="{}"/>	
+				<field name="company_id" widget="selection" modifiers="{}"/>
+				<field name="icon" modifiers="{}"/>
+				<field name="scrap_location" modifiers="{}"/>
+				<field name="active" modifiers="{}"/>
+			</group>
+			<group string="Ubicaciones encadenadas">
+				<field name="chained_location_type" modifiers="{'required': true}"/>
+				<field name="chained_location_id" attrs="{'required':[('chained_location_type','=','fixed')],'invisible':[('chained_location_type','in',['none','customer'])]}" modifiers="{'invisible': [['chained_location_type', 'in', ['none', 'customer']]], 'required': [['chained_location_type', '=', 'fixed']]}"/>
+				<field name="chained_auto_packing" modifiers="{'required': true}"/>
+				<field name="chained_delay" string="Plazo en esta ubicacion" modifiers="{}"/>
+				<field name="chained_journal_id" modifiers="{}"/>
+				<field name="chained_picking_type" modifiers="{}"/>
+				<field name="chained_company_id" widget="selection" modifiers="{}"/>
+			</group>
+			</group>
+			<group string="Empleado">
+				<field name="es_persona" modifiers="{}"/>
+				<field name="empleado" string="Empleado relacionado" modifiers="{}"/>
+			</group>
+			</xpath>
+			<!--
+			<xpath expr="/form/group/group/field[@name='posz']" position="after">
+				<group string="Empleado">
+					<field name="es_persona"/>
+					<field name="empleado" string="Empleado relacionado"/>
+				</group>
+			</xpath>			
+			-->
+		  </field>
+	</record>
+	</data>
+</openerp>

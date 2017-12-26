@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	<!-- Accion generica Por Desarrollar -->
+	<record id="act_por_desarrollar" model="ir.actions.act_window">
+		<field name="name">Por desarrollar</field>
+		<field name="res_model">estudios.estudios</field>
+		<field name="view_type">tree</field>
+		<field name="view_mode">tree</field>
+	</record>
+
+	<!-- 23/04/2014 (fuc) Actualizacion de menu
+		(+) Creacion menu "Adquisiciones"
+		(+) Creacion submenu "Productos Entrantes"
+		(+) Creacion submenu "Control de Facturas"
+		(+) Creacion submenu "Productos"
+		(+) Creacion submenu "Proveedores"
+		(+) Creacion submenu "Cotizaciones"
+		(+) Creacion submenu "Productos por Categoria"
+	-->
+
+	<menuitem id="mn_adquisiciones" name="Adquisiciones" parent="serv_generales" action="" sequence="1"/>
+	<menuitem id="sbmn_adq_prod_entrantes" name="Productos Entrantes" parent="mn_adquisiciones" action="stock.action_reception_picking_move" sequence="1"/>
+	<menuitem id="sbmn_adq_ctrl_facturas" name="Control de Facturas" parent="mn_adquisiciones" action="act_por_desarrollar" sequence="2"/>
+	<menuitem id="sbmn_adq_productos" name="Productos" parent="mn_adquisiciones" action="product.product_normal_action_puchased" sequence="3"/>
+	<menuitem id="sbmn_adq_proveedores" name="Proveedores" parent="mn_adquisiciones" action="base.action_partner_supplier_form" sequence="4"/>
+	<menuitem id="sbmn_adq_cotizaciones" name="Cotizaciones" parent="mn_adquisiciones" action="purchase.purchase_rfq" sequence="5"/>
+	<menuitem id="sbmn_adq_prod_categoria" name="Productos por Categoría" parent="mn_adquisiciones" action="product.product_category_action" sequence="6"/>
+
+	</data>
+</openerp>

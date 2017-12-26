@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!--  Busqueda Costo  -->
+		<record model="ir.ui.view" id="costo_search">
+			<field name="name">costo.search</field>
+			<field name="model">ea.costos</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Buscar">
+					<filter icon="terp-document-new" name="" string="" domain="[('','','')]" help=""/>
+					<group expand="0" string="Agrupar por...">
+						<filter string="" icon="terp-partner" domain="[]" context="{'group_by':''}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<!-- Accion  Costo -->
+		<record model="ir.actions.act_window" id="costo_actn">
+			<field name="name">Disctribución de Costos</field>
+			<field name="res_model">ea.costos</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro
+					</p>
+			</field>
+		</record>
+		
+		<!--  Formulario  Costo -->
+		<record model="ir.ui.view" id="costo_edit">
+			<field name="name">costo.edit</field>
+			<field name="model">ea.costos</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="X" version="7.0">
+					<header>
+					<button string="Calcular" type="object" name="calcula_costos" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" />
+						</h1>
+						<group>
+							<group>
+								<field name="inicio" />
+							</group>
+							<group>
+								<field name="fin" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Proyectos">
+								<field name="line_ids">
+									<tree string="X" editable="bottom">
+										<field name="name" />
+										<field name="bonos" />
+										<field name="nomina" />
+									</tree>
+								</field>
+							</page>							
+						</notebook>			
+					</sheet>
+					<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers" />
+							<field name="message_ids" widget="mail_thread" />
+					</div>
+				</form>
+			</field>
+		</record>
+		
+		<!--  Lista   Costo -->
+		<record model="ir.ui.view" id="costo_view">
+			<field name="name">costo.view</field>
+			<field name="model">ea.costos</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="">
+					<field name="name" />
+					<field name="inicio" />
+					<field name="fin" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Menu  Costo -->
+		<menuitem id="costo_menu" parent="hr_payroll.menu_hr_root_payroll" name="Distribución de Costos" action="costo_actn" />
+		
+		<!--  Busqueda Detalle de Costo -->
+		<record model="ir.ui.view" id="ea_costo_detail_search">
+			<field name="name">ea.costo.detail.search</field>
+			<field name="model">ea.costo.detail</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Buscar">
+                    <field name="name" />
+                    <field name="persona" />
+                    <field name="fecha" />
+					<group expand="0" string="Agrupar por...">
+						<filter string="Proyecto" icon="terp-partner" domain="[]" context="{'group_by':'name'}"/>
+						<filter string="Persona" icon="terp-partner" domain="[]" context="{'group_by':'persona'}"/>
+						<filter string="Fecha" icon="terp-partner" domain="[]" context="{'group_by':'fecha'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+		
+		<!-- Accion Detalle de Costo -->
+		<record model="ir.actions.act_window" id="ea_costo_detail_actn">
+			<field name="name">ea.costo.detal.actn</field>
+			<field name="res_model">ea.costo.detail</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro
+					</p>
+			</field>
+		</record>
+		
+		<!--  Lista  Detalle de Costo -->
+		<record model="ir.ui.view" id="ea_costo_detail_list">
+			<field name="name">ea.costo.detail.list</field>
+			<field name="model">ea.costo.detail</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="">
+					<field name="name" />
+					<field name="persona" />
+					<field name="fecha" />
+					<field name="monto" sum="Suma"/>
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Menu  Costo -->
+		<menuitem id="costo_detail_menu" parent="hr_payroll.menu_hr_root_payroll" name="Distribución de Costos (Detalle)" action="ea_costo_detail_actn" />
+	</data>
+</openerp>

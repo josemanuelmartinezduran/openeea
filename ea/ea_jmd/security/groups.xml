@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	<!-- Otros permisos -->
+	<record model="ir.module.category" id="ea_otros">
+      <field name="name">Otros Permisos</field>
+      <field name="description">Permisos Especiales de la Aplicación</field>
+   </record>
+   
+   <record id="otros_planeacion" model="res.groups">
+		<field name="name">Autorizar Planeación</field>
+		<field name="category_id" ref="ea_otros"/>
+   </record>
+   
+   <record id="autorizar_cotizacion" model="res.groups">
+		<field name="name">Autorizar Cotización</field>
+		<field name="category_id" ref="ea_otros"/>
+   </record>
+   
+   <record id="sistemas" model="res.groups">
+		<field name="name">Sistemas</field>
+		<field name="category_id" ref="ea_otros"/>
+   </record>
+   
+   <record id="ver_salarios" model="res.groups">
+		<field name="name">Ver Nómina</field>
+		<field name="category_id" ref="ea_otros"/>
+   </record>
+   
+   <record id="autoriza_extras" model="res.groups">
+		<field name="name">Autorizar Extras</field>
+		<field name="category_id" ref="ea_otros"/>
+   </record>
+   
+   <record id="nomina_plazas" model="res.groups">
+		<field name="name">Nomina Plazas</field>
+		<field name="category_id" ref="ea_otros"/>
+   </record>
+
+   <record id="ver_bancos" model="res.groups">
+		<field name="name">Ver Cuentas Bancarias</field>
+		<field name="category_id" ref="ea_otros"/>
+   </record>   
+   
+		<!-- Cuestionarios -->
+	<record model="ir.module.category" id="ea_cuestionario">
+      <field name="name">Aprobaciones de Cuestionarios</field>
+      <field name="description">Niveles de aporbación de Cuestionarios</field>
+   </record>
+   
+   <record id="cuestionario_interno" model="res.groups">
+		<field name="name">Aprobación interna (Campo)</field>
+		<field name="category_id" ref="ea_cuestionario"/>
+   </record>
+   
+   <record id="cuestionario_cancelar" model="res.groups">
+		<field name="name">Cancelar Cuestionario</field>
+		<field name="category_id" ref="ea_cuestionario"/>
+   </record>
+   
+   <record id="cuestionario_segunda" model="res.groups">
+		<field name="name">Segunda Aprobación (Kickoff)</field>
+		<field name="category_id" ref="ea_cuestionario"/>
+   </record>
+   
+   <record id="cuestionario_tercera" model="res.groups">
+		<field name="name">Tercera Aprobación (Campo)</field>
+		<field name="category_id" ref="ea_cuestionario"/>
+   </record>
+   
+   <record id="cuestionario_procesamiento" model="res.groups">
+		<field name="name">Cuarta Aprobación (Procesamiento)</field>
+		<field name="category_id" ref="ea_cuestionario"/>
+   </record>
+   
+   <record id="cuestionario_cliente" model="res.groups">
+		<field name="name">Quinta Aprobación (Ejecutivo)</field>
+		<field name="category_id" ref="ea_cuestionario"/>
+   </record>
+   
+   <record id="cuestionario_modificar" model="res.groups">
+		<field name="name">Permitir Subir o Modificar el Archivo</field>
+		<field name="category_id" ref="ea_cuestionario"/>
+   </record>
+
+
+		<!-- 1.3.7 Inventario
+		-->
+	<record model="ir.module.category" id="ea_extra">
+      <field name="name">Inventario</field>
+      <field name="description">Permite cargar el inventario en automatico</field>
+   </record>
+
+   <record id="inventory_autofill" model="res.groups">
+		<field name="name">Permitir Autollenar</field>
+		<field name="category_id" ref="ea_extra"/>
+	</record>
+	
+	<!-- Campo -->
+	<record model="ir.module.category" id="ea_campo">
+      <field name="name">Campo</field>
+      <field name="description">Niveles de permisos de campo</field>
+   </record>
+   
+	<record id="campo_operativo" model="res.groups">
+		<field name="name">Operativo de Campo</field>
+		<field name="category_id" ref="ea_campo"/>
+	</record>
+	
+	<record id="campo_administrativo" model="res.groups">
+		<field name="name">Administrativo de Campo</field>
+		<field name="category_id" ref="ea_campo"/>
+	</record>
+
+	<record id="campo_gerente" model="res.groups">
+		<field name="name">Gerente de Campo</field>
+		<field name="category_id" ref="ea_campo"/>
+	</record>
+	
+	<record id="autorizargasto" model="res.groups">
+		<field name="name">Autorizar Gasto GAC/DOC </field>
+		<field name="category_id" ref="ea_campo"/>
+	</record>
+	
+	<record id="comprobaciones" model="res.groups">
+		<field name="name">Comprobaciones </field>
+		<field name="category_id" ref="ea_campo"/>
+	</record>
+	
+	<record id="contralor" model="res.groups">
+		<field name="name">Contraloría </field>
+		<field name="category_id" ref="ea_campo"/>
+	</record>
+	
+	
+	
+	<!-- Contraloria -->
+	<record model="ir.module.category" id="ea_contraloria">
+      <field name="name">Auditoría</field>
+      <field name="description">Niveles de permisos de contraloría</field>
+   </record>
+   
+   <record id="contraloria" model="res.groups">
+		<field name="name">Líder de Auditoría</field>
+		<field name="category_id" ref="ea_contraloria"/>
+	</record>
+	
+	<record id="servicio_cliente" model="res.groups">
+		<field name="name">Servicio al Cliente</field>
+		<field name="category_id" ref="ea_contraloria"/>
+	</record>
+	
+	<record id="consultar_proyectos" model="res.groups">
+		<field name="name">Consultas Generales </field>
+		<field name="category_id" ref="ea_contraloria"/>
+	</record>
+	
+	<record id="ver_proyecto" model="res.groups">
+		<field name="name">Ver Fichas de Proyecto</field>
+		<field name="category_id" ref="ea_contraloria"/>
+	</record>
+	</data>
+</openerp>

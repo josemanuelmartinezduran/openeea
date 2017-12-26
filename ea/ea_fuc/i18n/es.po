@@ -1,0 +1,245 @@
+# Spanish translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# Felix Urbina <fur@hud.com.mx>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-04-02 09:34+0000\n"
+"PO-Revision-Date: 2014-04-02 09:34+0000\n"
+"Last-Translator: Félix Urbina <Unknown>\n"
+"Language-Team: Spanish <fur@hud.com.mx>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-07-11 06:08+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
+
+#. module: mail
+#: model:ir.ui.menu,name:mail.mail_feeds_main
+msgid "Messaging"
+msgstr "Centro de información"
+
+#: model:ir.ui.menu,name:mail.mail_feeds
+msgid "Messaging"
+msgstr "Mensajes internos"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
+#: model:ir.ui.menu,name:mrp.next_id_77
+msgid "Manufacturing"
+msgstr "Sistemas"
+
+#. module: mrp
+#: model:ir.ui.menu,name:base.menu_mrp_root
+#: model:ir.actions.act_window,name:mrp.open_board_manufacturing
+#: model:ir.ui.menu,name:mrp.menu_board_manufacturing
+msgid "Manufacturing"
+msgstr "Mantenimiento"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
+#: view:mrp.repair.cancel:0
+msgid "Cancel Repair Order"
+msgstr "Cancelar orden reproceso"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
+#: model:ir.ui.menu,name:mrp_repair.menu_repair_order
+msgid "Repair Orders"
+msgstr "Órdenes de reproceso"
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,repair_id:0
+#: field:mrp.repair.line,repair_id:0
+msgid "Repair Order Reference"
+msgstr "Referencia orden reproceso"
+
+#. module: mrp
+#: view:board.board:0
+msgid "Manufacturing board"
+msgstr "Tablero mantenimiento"
+
+#. module: survey
+#: model:ir.ui.menu,name:base.menu_reporting
+msgid "Reporting"
+msgstr "Indicadores de negocio"
+
+#: model:ir.ui.menu,name:base.menu_tools
+msgid "Tools"
+msgstr "Encuestas"
+
+#. module: purchase
+#: model:ir.ui.menu,name:base.menu_purchase_root
+#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
+#: model:ir.actions.act_window,name:purchase.open_board_purchase
+#: model:ir.ui.menu,name:purchase.menu_board_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config
+#: view:res.partner:0
+msgid "Purchases"
+msgstr "Contraloría"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_board_project
+#: model:ir.model,name:project.model_project_project
+#: model:ir.ui.menu,name:project.menu_project_dashboard
+#: model:ir.ui.menu,name:project.menu_project_management
+#: view:project.project:0
+#: view:project.task:0
+#: field:project.task,project_id:0
+#: field:project.task.delegate,project_id:0
+#: field:project.task.history.cumulative,project_id:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,project_id:0
+#: model:res.request.link,name:project.req_link_project
+msgid "Project"
+msgstr "Proyecto"
+
+#. module: purchase
+#: view:purchase.order:0
+#: field:purchase.order,partner_id:0
+#: view:purchase.order.line:0
+#: view:purchase.report:0
+#: field:purchase.report,partner_id:0
+msgid "Supplier"
+msgstr "Proveedor"
+
+#. module: purchase
+#: view:product.product:0
+msgid "Suppliers"
+msgstr "Proveedores"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Project"
+msgstr "Proyecto"
+
+#. module: portal_project
+#: model:ir.actions.act_window,name:portal_project.open_view_project
+#: model:ir.ui.menu,name:portal_project.portal_services_projects
+msgid "Projects"
+msgstr "Proyecto"
+
+#. module: sale
+#: field:sale.config.settings,module_project:0
+msgid "Project"
+msgstr "Proyecto"
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_project_management
+#: model:ir.ui.menu,name:base.menu_main_pm
+#: model:ir.ui.menu,name:base.menu_project_config
+#: model:ir.ui.menu,name:base.menu_project_report
+msgid "Project"
+msgstr "Proyecto"
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_case_job_req_main
+msgid "Recruitment"
+msgstr "Reclutamiento"
+
+#. module: stock_kardex
+#: view:product.product:0
+msgid "Products"
+msgstr "Productos"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_product
+#: view:product.product:0
+msgid "Products"
+msgstr "Productos"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_main
+msgid "Human Resources"
+msgstr "Empleados"
+
+#. module: sale_crm
+#: model:ir.ui.menu,name:product.menu_products
+#: model:ir.ui.menu,name:base.menu_product
+msgid "Products"
+msgstr "Productos"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
+#: view:mrp.production.workcenter.line:0
+#: view:mrp.workorder:0
+msgid "Work Orders"
+msgstr "Plan de mantenimiento"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management
+#: model:ir.ui.menu,name:base.next_id_73
+#: model:process.process,name:purchase.process_process_purchaseprocess0
+msgid "Purchase"
+msgstr "Adquisición"
+
+#: model:ir.ui.menu,name:base.next_id_64
+msgid "Sales"
+msgstr "Ventas"
+
+#: model:ir.ui.menu,name:base.next_id_10
+msgid "Survey"
+msgstr "Estudios"
+
+#. module: account
+#: selection:account.analytic.journal,type:0
+#: view:account.config.settings:0
+#: view:account.journal:0
+#: selection:account.journal,type:0
+#: view:account.model:0
+#: selection:account.tax,type_tax_use:0
+#: view:account.tax.template:0
+#: selection:account.tax.template,type_tax_use:0
+msgid "Purchase"
+msgstr "Compra"
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.action_view_mail_mail
+#: model:ir.ui.menu,name:mail.menu_mail_mail
+#: view:mail.mail:0
+#: view:mail.message:0
+msgid "Emails"
+msgstr "Correos"
+
+#. module: event
+#: model:ir.ui.menu,name:base.menu_event_main
+msgid "Events Organization"
+msgstr "Organización de eventos"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
+msgid "Festivos"
+msgstr "Ausencias"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.request_approve_allocation
+#: model:ir.ui.menu,name:hr_holidays.menu_request_approve_allocation
+msgid "Allocation Requests to Approve"
+msgstr "Aprobaciones de asignación"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_request_approve_holidays
+msgid "Leave Requests to Approve"
+msgstr "Aprobaciones de ausencia"
+
+#. module: mail
+#: model:ir.actions.client,name:mail.action_mail_to_me_feeds
+#: model:ir.ui.menu,name:mail.mail_tomefeeds
+msgid "To: me"
+msgstr "Para: mi"
+
+#. module: base_calendar
+#: view:crm.meeting:0
+#: model:ir.actions.act_window,name:base_calendar.action_crm_meeting
+msgid "Meetings"
+msgstr "Calendario"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_case_category_act_oppor11
+msgid "Opportunities"
+msgstr "Oportunidades de negocio"

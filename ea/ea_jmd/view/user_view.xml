@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Modificaciones a la vista:	User JMD -->
+		<record id="jmd_user_edit" model="ir.ui.view">
+			<field name="name">jmd.user.edit</field>
+			<field name="model">res.users</field>
+			<field name="inherit_id" ref="base.view_users_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='company_id']" position="after">
+					<field name="cnomina" />
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

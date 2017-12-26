@@ -1,0 +1,11 @@
+import fuc
+import almacen
+import ejecutivos
+import estudios
+import mantenimiento
+import rrhh
+import contraloria
+import proyecto
+import serv_ti
+import conocimiento
+import cuestionarios

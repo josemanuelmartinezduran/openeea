@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Cambios a la oportunidad de negiocio -->
+		<record id="crm_case_form_view_oppor_jmd_1" model="ir.ui.view">
+			<field name="name">crm.case.form.view.oppor.jmd.1</field>
+			<field name="model">crm.lead</field>
+			<field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='categ_ids']" position="replace">
+					<field name="tipo"/>
+				</xpath>
+			</field>
+		</record>
+		
+		<!-- Modificaciones a la vista	-->
+		<record id="jmd_lead_edit" model="ir.ui.view">
+			<field name="name">jmd.lead.edit</field>
+			<field name="model">crm.lead</field>
+			<field name="inherit_id" ref="sale_crm.crm_case_form_view_oppor"/>
+			<field name="arch" type="xml">
+				<xpath expr="//button[@string='Create Quotation']" position="attributes">
+					<attribute name="string">Convertir a Cotización</attribute>
+				</xpath>
+				<xpath expr="//button[@string='Convert to Quotation']" position="attributes">
+					<attribute name="string">Convertir a Cotización</attribute>
+				</xpath>		
+			</field>
+		</record>		
+	</data>
+</openerp>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<!-- Seach View RAC-->
+		<record model="ir.ui.view" id="rac_search">
+			<field name="name">rac.search</field>
+			<field name="model">rac</field>
+			<field name="type">search</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<search string="RACS">
+					<filter string="Abiertas" name="abiertas" domain="[('state','=','abierta']" context=""/>
+					<group expand="0" string="Agrupar por...">
+                   <filter string="Auditoría" name="Auditoria" domain="[]" context="{'group_by':'auditoria'}"/>
+                   <filter string="Estado" name="Estado" domain="[]" context="{'group_by':'state'}"/>
+               </group>
+				</search>
+			</field>
+		</record>
+		
+        <!-- Vista tree para RAC -->
+        <record model='ir.ui.view' id='rac_view_tree'>
+            <field name='name'>view.rac_view_tree</field>
+            <field name='model'>rac</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Rac'>
+					<field name='name'/>
+					<field name="auditoria" />
+					<field name='fecha_reporte'/>
+					<field name='fecha_limite'/>
+					<field name='prioridad'/>
+					<field name='responsable'/>
+					<field name="state" />
+                </tree>
+            </field>
+        </record>
+		
+		
+        <!-- Vista form para rac-->
+        <record model='ir.ui.view' id='rac_view_form'>
+            <field name='name'>view.rac_view_form</field>
+            <field name='model'>rac</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Rac' version='7.0'>
+                <header>
+                	<button name="signal_cerrar" string="Cerrar" type="workflow" confirm="Cerrará la RAC" states="abierta"/>
+                	<field name="state" widget="statusbar"/> 
+                </header>
+						<sheet>
+						<h4>
+							<label for="name" />
+						</h4>
+						<h1>
+							<field name='name' string='RAC' placeholder="Nombre de la RAC"/>
+						</h1>
+						<group>
+							<group string="Datos de la Auditoría Precedente">
+								<field name='auditoria' string="Auditoría" />
+								<field name='auditor' widget="many2many_tags"/>
+								<field name='fecha_reporte'/>
+							</group>
+							<group string="Datos del Responsable">
+								<field name='prioridad'/>
+								<field name='responsable' string='Responsables' widget="many2many_tags" />
+								<field name='fecha_limite'/>
+							</group>
+						</group>
+						<notebook>
+							<page string='Descripción de la RAC'>
+								<field name='informacion'>
+									<tree string="Descripcion de la RAC" editable="bottom">
+										<field name="name" />
+										<field name="comentarios" />
+										<field name="emisor" />
+										<field name="receptor" />
+									</tree>
+								</field>
+							</page>
+							<page string='Acciones'>
+								<field name='acciones'>
+									<tree string="Acciones" editable="bottom">
+										<field name="persona" />
+										<field name="name" string="Acción"/>
+										<field name="fecha" />
+										<field name="realizado" />
+										<field name="tipo" string="Tipo"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+											<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers" />
+							<field name="message_ids" widget="mail_thread" />
+						</div>
+                </form>
+            </field>
+        </record>
+				
+				
+		<!-- action para auditoria -->
+        <record id="rac_action_fve" model="ir.actions.act_window">
+            <field name="name">RAC</field>
+            <field name="res_model">rac</field>
+            <field name="search_view_id" ref="rac_search"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+        </record>
+        
+        <!-- Menu RAC -->
+        <menuitem id="rac_menu" parent="menu_auditoria" name="RAC" action="rac_action_fve" groups="group_auditor,group_auditado" sequence="8" />
+
+			<!--  Calendar -->
+			<record model="ir.ui.view" id="rac_cal">
+				<field name="name">rac.cal</field>
+				<field name="model">rac</field>
+				<field name="type">calendar</field>
+				<field name="priority" eval="16"/>
+				<field name="arch" type="xml">
+					<calendar string="Calendario de RAC" date_start="fecha_reporte" date_stop="fecha_limite" color="state">
+						<field name="name"/>
+					</calendar>
+				</field>
+			</record>
+			
+			<!-- Grafico -->
+			<record model="ir.ui.view" id="rac_graph">
+				<field name="name">rac.graph</field>
+				<field name="model">rac</field>
+				<field name="type">graph</field>
+				<field name="priority" eval="16"/>
+				<field name="arch" type="xml">
+					<graph string="Grafico de RAC" type="pie" orientation="horizontal">
+						<field name="informacion" />
+						<field name="acciones" operator="+"/>
+					</graph>
+				</field>
+			</record>
+		
+	</data>
+</openerp>

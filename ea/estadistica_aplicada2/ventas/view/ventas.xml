@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	<!-- 10/03/2014 - fur - Actividad 1.1.3. Ciclo de Ventas
+		(+) Cambiar etiqueta "Asunto" por "Tipo de estudio"
+		(+) Cambiar de etiqueta "en" por "Probabilidad de cierre"
+		(+) Eliminar solapa Iniciativa
+	-->
+	<record id="crm_case_form_view_oppor_inherit_1" model="ir.ui.view">
+		<field name="name">crm.case.form.view.oppor.inherit.1</field>
+		<field name="model">crm.lead</field>
+		<field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+		<field name="arch" type="xml">
+			<data>
+			<div class="oe_title" position="replace">
+				<h1 class="oe_title">
+					<label for="name" class="oe_edit_only" string="Descripción"/>
+					<field name="name" modifiers="{'required': true}"/>
+				</h1>
+				<group>
+					<label for="planned_revenue" class="oe_edit_only"/>
+					<h2>
+						<field name="company_currency" invisible="1" modifiers="{'invisible': true, 'readonly': true}"/>
+						<field name="planned_revenue" class="oe_inline" widget="monetary" options="{'currency_field': 'company_currency'}" modifiers="{}"/>
+						<span> Probabilidad de cierre </span>
+						<field name="probability" class="oe_inline" widget="integer" modifiers="{}"/>
+						<span class=""> <![CDATA[&#37;]]></span>
+					</h2>
+				</group>
+			</div> 
+			<xpath expr="/form/sheet/notebook" position="attributes">
+                   		<attribute name="invisible">1</attribute>
+			</xpath>
+			<xpath expr="/form/sheet">
+				<notebook>
+					<page string="Notas internas">
+						<field name="description" modifiers="{}"/>
+					</page>
+					<page string="Recaudación de fondos" invisible="1" modifiers="{'invisible': true}">
+						<group>
+							<field name="payment_mode" widget="selection" modifiers="{}"/>
+							<field name="planned_cost" modifiers="{}"/>
+						</group>
+					</page>
+					<page string="Tasks">
+                    <field name="task_ids" colspan="4" nolabel="1">
+                        <tree editable="bottom" string="Tasks">
+                            <field name="name"/>
+                            <field name="user_id"/>
+
+                            <field string="Timebox" name="timebox_id"/>
+                            <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open"/>
+                            <button name="next_timebox" type="object" icon="gtk-go-forward" string="Next" states="draft,pending,open"/>
+
+                            <field name="state"/>
+                            <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
+                            <button name="action_close" states="draft,pending,open" string="Done" type="object" icon="terp-dialog-close" help="For changing to done state"/>
+                        </tree>
+                    </field>
+                </page>
+				</notebook>
+			</xpath>
+		</data>
+		</field>
+	</record>
+
+	<!-- 13/03/2014 - fur - Actividad 1.1.5. Analisis de desempeno de ventas
+		(+) Agregar campo "Tipo de estudio"
+		(+) Cambiar etiqueta "Numero de pedido" por "Clave de estudio"
+		(+) Cambiar etiqueta "Fecha de pedido" por "Fecha 1ra cotizacion"
+		(+) Cambiar etiqueta "Total" por "Total aprobado"
+	-->
+
+	<record id="view_order_tree_inherit_1" model="ir.ui.view">
+		<field name="name">view.order.tree.inherit.1</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="sale.view_order_tree"/>
+		<field name="arch" type="xml">
+			<xpath expr="//tree" position="replace">
+				<tree string="Pedidos de ventas" fonts="bold:message_unread==True" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
+					<field name="message_unread" invisible="1" modifiers="{'readonly': true, 'tree_invisible': true}"/>
+					<field name="name" string="Clave de estudio" modifiers="{'readonly': [['state', 'not in', ['draft', 'sent']]], 'required': true}"/>
+
+					<field name="date_order" string="Fecha 1ra cotización" modifiers="{'readonly': [['state', 'not in', ['draft', 'sent']]], 'required': true}"/>
+					<field name="partner_id" modifiers="{'readonly': [['state', 'not in', ['draft', 'sent']]], 'required': true}"/>
+					<field name="user_id" modifiers="{}"/>
+					<field name="amount_total" string="Total aprobado" sum="Total impuestos incluidos" modifiers="{'readonly': true}"/>
+					<field name="state" modifiers="{'readonly': true}"/>
+				</tree>
+			</xpath>
+		</field>
+	</record>
+
+	</data>
+</openerp>

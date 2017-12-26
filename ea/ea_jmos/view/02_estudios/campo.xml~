@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--VISTA FORM-->
+
+        <record model="ir.ui.view" id="ea_avance_jmos_form">
+            <field name="name">ea_avance_jmos.form</field>
+            <field name="model">ea.avance</field>
+            <field name="inherit_id" ref="ea_jmd.ea_avance_form"/>
+            <field name="arch" type="xml">
+            </field>
+        </record>
+    </data>
+</openerp>

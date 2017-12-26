@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<openerp>
+    <data>
+        <report auto="False" id="reporte_ventas" model="sale.order" name="ea.cotizacion.report"
+            rml="ea_jmd/report/cotizacion_report.rml" string="Cotización" usage="default"/>
+    </data>
+</openerp>

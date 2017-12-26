@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	<!-- 04/04/2014 - fur - Edicion de menu
+		(+) Cambiar etiqueta de menu "Informes" por "Indicadores de negocio" (Desde archivo .po)
+	-->
+
+
+    </data>
+</openerp>

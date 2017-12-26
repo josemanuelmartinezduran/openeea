@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Flujo -->
+		<record id="ce_wkfl" model="workflow">
+			<field name="name">control.encuestas.flow</field>
+			<field name="osv">control_encuestas</field>
+			<field name="on_create">True</field>
+		</record>
+		
+		<!-- Nodo Inicial -->
+		<record id="ce_wkfl_nuevo" model="workflow.activity">
+			<field name="name">Nuevo</field>
+			<field name="wkf_id" ref="ce_wkfl"/>
+			<field name="kind">function</field>
+			<field name="action">action_nuevo()</field>
+			<field name="flow_start">True</field>
+		</record>
+		
+		<!-- Nodo Final -->
+		<record id="ce_wkfl_autorizado" model="workflow.activity">
+			<field name="name">Autorizado</field>
+			<field name="wkf_id" ref="ce_wkfl"/>
+			<field name="kind">function</field>
+			<field name="action">action_autorizado()</field>
+			<field name="flow_end">True</field>
+		</record>
+		
+		<!-- Transición -->
+		<record id="ce_wkfl_nuevo_autorizado" model="workflow.transition">
+			<field name="act_from" ref="ce_wkfl_nuevo"/>
+			<field name="act_to" ref="ce_wkfl_autorizado"/>
+			<field name="signal">signal_autorizar</field>
+			<field name="role_id" ref="estadistica_aplicada2.group_auditor"/>
+			<field name="condition">True</field>
+		</record>
+	
+	</data>
+</openerp>

@@ -1,0 +1,176 @@
+1# -*- coding: utf-8 -*-
+from osv import osv, fields
+
+
+class jmdhremployee(osv.Model):
+    _inherit = "hr.employee"
+
+    # Employees can be searched by nombre or name
+    def name_search(self, cr, uid, name, args=None, operator='ilike',
+        context=None, limit=100):
+        if not args:
+            args = []
+        args = args[:]
+        ids = []
+        if name:
+            ids = self.search(cr, uid, ['|', ('nombre', 'like', name),
+                ('name', 'like', name)] + args, limit=limit)
+        return self.name_get(cr, uid, ids, context=context)
+
+    #Display both names
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
+        reads = self.read(cr, uid, ids, ['nombre', 'name'])
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['nombre']:
+                name = name + ' ' + record['nombre']
+            res.append((record['id'], name))
+        return res
+
+    def update_validation(self, cr, uid, ids, context=None):
+        ret = {}
+        validation_obj = self.pool.get("capacitacion.validacion")
+        emp_obj = self.pool.get("hr.employee.valid")
+        for i in self.browse(cr, uid, ids, context):
+            for l in i.validaciones:
+                validation_obj.unlink(cr, uid, [l.id], context)
+            for j in validation_obj.browse(cr, uid,
+                validation_obj.search(cr, uid, [(1, '=', 1)])):
+                for k in j.empleado:
+                    if str(k.name_related.name) == str(i.name) and k.validado:
+                        emp_obj.create(cr, uid, {
+                            'name': i.nombre,
+                            'estudio': j.name.id,
+                            'fecha': k.fecha_validacion,
+                            'relation': i.id
+                            })
+        return ret
+
+    def ve_nomina(self, cr, uid, ids, fieldname, args, context=None):
+        res = {}
+        for i in self.browse(cr, uid, ids, context):
+            res[i.id] = False
+            print("El usuario puede ver nomina?")
+            print((self.pool.get('res.users').has_group(cr, uid,
+                'ea_jmd.ver_salarios')))
+            if self.pool.get('res.users').has_group(cr, uid,
+                'ea_jmd.ver_salarios'):
+                res[i.id] = True
+        return res
+
+    def ve_bancos(self, cr, uid, ids, fieldname, args, context=None):
+        res = {}
+        for i in self.browse(cr, uid, ids, context):
+            res[i.id] = False
+            print("El usuario puede ver bancos?")
+            print((self.pool.get('res.users').has_group(cr, uid,
+                'ea_jmd.ver_bancos')))
+            if self.pool.get('res.users').has_group(cr, uid,
+                'ea_jmd.ver_bancos'):
+                res[i.id] = True
+        return res
+
+    _columns = {
+            'tipo_del_contrato': fields.selection([("salarios", "Nómina"),
+                ("honorarios", "Honorarios")], string="Tipo de Contrato"),
+            'tipo_pago': fields.selection([("dia", "Sueldo Fijo"),
+                ("productividad", "Productividad")], string="Tipo de Pago"),
+            'day_wage': fields.float(digits=(9, 2), string="Salario Diario"),
+            'nombre': fields.char("Nombre Completo"),
+            'seagea': fields.selection([('gea', 'GEA'), ('sea', 'SEA')],
+                "GEA/SEA"),
+            'nombre_oficina': fields.char("Nombre de Oficina"),
+            'validaciones': fields.one2many("hr.employee.valid", "relation",
+                string="Validaciones"),
+            'beneficiario': fields.char("Beneficiario"),
+            'banco': fields.char("Banco"),
+            'cuenta': fields.char("Número de Cuenta"),
+            'oficina': fields.char("Oficina"),
+            'categoria': fields.char("Categoria"),
+            'enterprise_id': fields.many2one("ea.enterprise",
+                string="Empresa"),
+            'adeudo_horas': fields.integer("Adeudo en Horas"),
+            've_nomina': fields.function(ve_nomina, string="Ve Nómina",
+                type="boolean", store=False),
+            've_bancos': fields.function(ve_nomina, string="Ve Bancos",
+                type="boolean", store=False),
+            'calle': fields.char("Calle"),
+            'numero': fields.char("Número"),
+            'colonia': fields.char("Colonia"),
+            'delegacion': fields.char("Delegación o Municipio"),
+            'cp': fields.char("Código Postal"),
+            'rfc': fields.char("RFC"),
+            'homoclave': fields.char("Homoclave"),
+            'nacimiento': fields.date("Fecha de Nacimiento"),
+            'escolaridad': fields.char("Escolaridad"),
+            'sucursal': fields.many2one("hr.sucursal", "Sucursal"),
+            #'diplomas': fields.one2many("hr.diploma", "empleado_id", string="Diplomas"),
+        }
+
+    _sql_constraints = [('unique_name', 'unique(name_related)',
+        'Ya existe ese empleado.')]
+
+    _defaults = {
+            'seagea': 'gea'
+        }
+
+class jmddiploma(osv.Model):
+    _name = "hr.diploma"
+    _colums = {
+        'name': fields.char("Nombre"),
+        'entregado': fields.boolean("Entregado"),
+        'empleado_id': fields.many2one("hr.employee", string="Empleado"),
+        }
+
+class jmdsucursal(osv.Model):
+    _name = "hr.sucursal"
+    _colums = {
+        'name': fields.char("Nombre")
+        }
+
+class jmdvalidemployee(osv.Model):
+    _name = "hr.employee.valid"
+    _columns = {
+            'name': fields.char(string="Nombre del Empleado", size=40),
+            'estudio': fields.many2one("project.project",
+                string="Clave del Estudio"),
+            'diploma': fields.boolean("Diploma Entregado"),
+            'nombre_corto': fields.related("estudio", "nombre_corto",
+                type="char", string="Nombre Corto", readonly=True, store=True),
+            'fecha': fields.date("Fecha"),
+            'relation': fields.many2one("hr.employee")
+        }
+
+
+class jmdcontract(osv.Model):
+    _inherit = "hr.contract"
+    _columns = {
+        'nombre': fields.related("employee_id", "nombre", type="char",
+            string="Nombre", readonly=True, store=True)
+        }
+
+
+class jmdevaluation(osv.Model):
+    _inherit = "hr.evaluation.interview"
+    _columns = {
+            'nombre': fields.related("user_to_review_id", "nombre",
+                type="char", string="Nombre", readonly=True, store=True)
+        }
+
+
+class jmdevaluation(osv.Model):
+    _inherit = "hr_evaluation.evaluation"
+    _columns = {
+            'nombre': fields.related("employee_id", "nombre",
+                type="char", string="Nombre", readonly=True, store=True)
+        }
+
+
+class jmdpayslip(osv.Model):
+    _inherit = "hr.payslip"
+    _columns = {
+            'nombre': fields.related("employee_id", "nombre",
+                type="char", string="Nombre", readonly=True, store=True)
+        }

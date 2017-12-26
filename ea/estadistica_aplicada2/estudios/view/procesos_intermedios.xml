@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	<!-- 26/06/2014 (fuc) Procesos intermedios - Tareas
+		(+) Agregar campo "Cuotas x Hora"
+		(+) Agregar campo "Concepto"
+		(+) Agregar campo "Cantidad planificada"
+		(+) Agregar campo "Cantidad real"
+		(+) Hacer calculo de porcentaje por cantidad y no por horas
+	-->
+	<record id="view_task_form2_inherit_2" model="ir.ui.view">
+		<field name="name">project.task.form.inherit.2</field>
+		<field name="model">project.task</field>
+		<field name="inherit_id" ref="project.view_task_form2"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='planned_hours']" position="after">
+				<field name="cuota_x_hora" string="Cuota x Hora" attrs="{'invisible':[('area','!=','procesos_intermedios')]}"/>
+				<field name="concepto" string="Concepto" attrs="{'invisible':[('area','!=','procesos_intermedios')]}"/>
+				<field name="cantidad_planificada" string="Cantidad planificada" attrs="{'invisible':[('area','!=','procesos_intermedios')]}"/>
+				<field name="cantidad_real" string="Cantidad real (Terminada)" attrs="{'invisible':[('area','!=','procesos_intermedios')]}"/>
+			</xpath>
+		</field>
+	</record>
+
+	</data>
+</openerp>

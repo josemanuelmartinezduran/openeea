@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	<!-- Creacion modulo Contraloria
+		(+) Cambiar menu "Purchases" por "Contraloría" 
+			(+) Crear submenu "Compra" con "Contenido de Project"
+			(+) Crear submenu "Inversiones" con "Contenido de compra"
+				(-) Crear submenu "Gastos de Operación" con "Contenido de compra"
+				(-) Crear submenu "Resumen de caja chica" con "Contenido de Project"
+				(-) Crear submenu "Análisis de gastos en campo" por desarrollar
+			(-) Crear submenu "Auditoría" por desarrollar
+			(-) Crear submenu "No Conformidad" por desarrollar
+			(-) Crear submenu "RACs" por desarrollar
+	-->
+
+	<!-- Submenu Inversiones -->
+	<menuitem id="menu_purchase_inversiones" parent="base.menu_purchase_root" name="Inversiones" sequence="2"/>
+	
+	<!-- Presupuestos -->
+	<record id="action_purchase_inversiones_presupuestos" model="ir.actions.act_window">
+		<field name="name">Presupuestos</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">product.pricelist.version</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="purchase.purchase_order_tree"/>
+		<field name="domain">[('pricelist_id.type','=','purchase')]</field>
+	</record>
+	<menuitem id="menu_purchase_inversiones_presupuestos" parent="menu_purchase_inversiones" name="Presupuestos"
+		action="action_purchase_inversiones_presupuestos" sequence="5"/>
+
+	<!-- Pedidos de Compra -->
+	<record id="action_purchase_inversiones_pedidos_compra" model="ir.actions.act_window">
+		<field name="name">Pedidos de compra</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">product.pricelist.version</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="purchase.purchase_order_tree"/>
+		<field name="domain">[('pricelist_id.type','=','purchase')]</field>
+	</record>
+	<menuitem id="menu_purchase_inversiones_pedidos_compra" parent="menu_purchase_inversiones" name="Pedidos de compra"
+		action="action_purchase_inversiones_pedidos_compra" sequence="6"/>
+
+
+	<record id="purchase_order_form" model="ir.ui.view">
+		<field name="name">purchase.order.form</field>
+		<field name="model">purchase.order</field>
+		<field name="arch" type="xml">
+			<form string="Purchase Order" version="7.0">
+				<header>
+		<button name="wkf_send_rfq" states="draft" string="Enviar por correo electrónico" type="object" context="{'send_rfq':True}" class="oe_highlight" modifiers="{'invisible': [['state', 'not in', ['draft']]]}"/>
+		<button name="wkf_send_rfq" states="sent" string="Enviar por correo electrónico" type="object" context="{'send_rfq':True}" modifiers="{'invisible': [['state', 'not in', ['sent']]]}"/>
+		<button name="print_quotation" string="Imprimir" type="object" states="draft" class="oe_highlight" modifiers="{'invisible': [['state', 'not in', ['draft']]]}"/>
+		<button name="print_quotation" string="Imprimir" type="object" states="sent" modifiers="{'invisible': [['state', 'not in', ['sent']]]}"/>
+		<button name="purchase_confirm" states="draft" string="Confirmar pedido" modifiers="{'invisible': [['state', 'not in', ['draft']]]}"/>
+		<button name="purchase_confirm" states="sent" string="Confirmar pedido" class="oe_highlight" modifiers="{'invisible': [['state', 'not in', ['sent']]]}"/>
+		<button name="wkf_send_rfq" states="confirmed" string="Reenviar pedido de compra" type="object" class="oe_highlight" modifiers="{'invisible': [['state', 'not in', ['confirmed']]]}"/>
+		<button name="action_cancel" states="approved,except_picking,except_invoice" string="Cancelar pedido" type="object" modifiers="{'invisible': [['state', 'not in', ['approved', 'except_picking', 'except_invoice']]]}"/>
+		<button name="picking_ok" states="except_picking" string="Corregido manualmente" modifiers="{'invisible': [['state', 'not in', ['except_picking']]]}"/>
+		<button name="invoice_ok" states="except_invoice" string="Corregido manualmente" modifiers="{'invisible': [['state', 'not in', ['except_invoice']]]}"/>
+		<button name="purchase_approve" states="confirmed" string="Aprobar pedido" class="oe_highlight" modifiers="{'invisible': [['state', 'not in', ['confirmed']]]}"/>
+		<button name="view_picking" string="Recibir productos" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}" class="oe_highlight" modifiers="{'invisible': ['|', ['shipped', '=', true], ['state', '!=', 'approved']]}"/>
+		<button name="view_invoice" string="Recibir factura" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}" class="oe_highlight" modifiers="{'invisible': ['|', ['invoice_method', '=', 'picking'], '|', ['state', '!=', 'approved'], ['invoiced', '=', true]]}"/>
+		<button name="action_cancel_draft" states="cancel,sent,confirmed" string="Cambiar a borrador" type="object" modifiers="{'invisible': [['state', 'not in', ['cancel', 'sent', 'confirmed']]]}"/>
+		<button name="purchase_cancel" states="draft,confirmed,sent" string="Cancelar pedido" modifiers="{'invisible': [['state', 'not in', ['draft', 'confirmed', 'sent']]]}"/>
+		<field name="state" widget="statusbar" statusbar_visible="draft,sent,approved,done" statusbar_colors="{'except_picking':'red','except_invoice':'red','confirmed':'blue'}" readonly="1" modifiers="{'readonly': true}"/>
+	</header>
+	<sheet>
+		<div class="oe_right oe_button_box" name="buttons">
+			<button type="object" name="view_picking" string="Albaranes de entrada" states="approved" modifiers="{'invisible': [['state', 'not in', ['approved']]]}"/>
+			<button type="object" name="invoice_open" string="Facturas" attrs="{'invisible': [('state', '=', 'draft')]}" modifiers="{'invisible': [['state', '=', 'draft']]}"/>
+		</div>
+		<div class="oe_title">
+			<h1>
+				<label string="Solicitud de presupuesto " attrs="{'invisible': [('state','not in',('draft','sent'))]}" modifiers="{'invisible': [['state', 'not in', ['draft', 'sent']]]}"/>
+				<label string="Pedido de compra " attrs="{'invisible': [('state','in',('draft','sent'))]}" modifiers="{'invisible': [['state', 'in', ['draft', 'sent']]]}"/>
+				<field name="name" class="oe_inline" readonly="1" modifiers="{'readonly': true, 'required': true}"/>
+			</h1>
+		</div>
+		<group>
+			<group>
+				<field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}" domain="[('supplier','=',True)]" modifiers="{'readonly': [['state', 'in', ['confirmed', 'done', 'approved']]], 'required': true}"/>
+				<field name="partner_ref" modifiers="{'readonly': [['state', 'in', ['confirmed', 'done', 'approved']]]}"/>
+				<field domain="[('type','=','purchase')]" name="pricelist_id" on_change="onchange_pricelist(pricelist_id, context)" invisible="1" modifiers="{'invisible': true, 'readonly': [['state', 'in', ['confirmed', 'done', 'approved']]], 'required': true}"/>
+				<field name="currency_id" invisible="1" modifiers="{'invisible': true, 'readonly': true, 'required': true}"/>
+				<field name="journal_id" invisible="1" modifiers="{'invisible': true}"/>
+			</group>
+			<group>
+				<field name="date_order" modifiers="{'readonly': [['state', 'in', ['confirmed', 'approved']]], 'required': true}"/>
+				<field name="origin" attr="{'invisible': [('origin','=',False)]}" modifiers="{}"/>
+				<field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" invisible="1" modifiers="{'invisible': true}"/>
+				<field name="company_id" widget="selection" invisible="1" modifiers="{'invisible': true, 'readonly': [['state', 'in', ['confirmed', 'approved']]], 'required': true}"/>
+			</group>
+		</group>
+		<notebook>
+			<page string="Pedido de compra">
+				<field name="order_line" modifiers="{'readonly': [['state', 'in', ['done', 'approved']]]}"/>
+				<group class="oe_subtotal_footer oe_right">
+					<field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}" modifiers="{'readonly': true}"/>
+					<field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}" modifiers="{'readonly': true}"/>
+					<div class="oe_subtotal_footer_separator oe_inline">
+						<label for="amount_total"/>
+						<button name="button_dummy" states="draft" string="(actualizar)" type="object" class="oe_edit_only oe_link" modifiers="{'invisible': [['state', 'not in', ['draft']]]}"/>
+					</div>
+					<field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}" modifiers="{'readonly': true}"/>
+				</group>
+				<div class="oe_clear"/>
+				<field name="notes" class="oe_inline" placeholder="Términos y condiciones..." modifiers="{}"/>
+			</page>
+			<page string="Envíos y facturas entrantes">
+				<group>
+					<group>
+						<field name="dest_address_id" string="Dirección de cliente" on_change="onchange_dest_address_id(dest_address_id)" invisible="1" modifiers="{'invisible': true, 'readonly': [['state', 'in', ['confirmed', 'done', 'approved']]]}"/>
+						<field name="minimum_planned_date" modifiers="{}"/>
+						<field name="location_id" invisible="1" modifiers="{'invisible': true, 'readonly': [['state', 'in', ['confirmed', 'done', 'approved']]], 'required': true}"/>
+						<field name="shipped" modifiers="{'readonly': true}"/>
+					</group>
+					<group>
+						<field name="invoice_method" modifiers="{'readonly': [['state', 'not in', ['draft', 'sent']]], 'required': true}"/>
+						<field name="invoiced" modifiers="{'readonly': true}"/>
+						<field name="payment_term_id" widget="selection" modifiers="{}"/>
+						<field name="fiscal_position" attrs="{'readonly': [('invoiced','=', True)]}" modifiers="{'readonly': [['invoiced', '=', true]]}"/>
+						<field name="validator" modifiers="{'readonly': true}"/>
+						<field name="date_approve" modifiers="{'readonly': true}"/>
+					</group>
+				</group>
+			</page>
+		</notebook>
+	</sheet>
+	<div class="oe_chatter">
+		<field name="message_follower_ids" widget="mail_followers" modifiers="{}"/>
+		<field name="message_ids" widget="mail_thread" modifiers="{}"/>
+	</div>
+</form>
+		</field>
+	</record>
+
+
+
+	</data>
+</openerp>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Vista tree  -->
+        <record id="validacion_tree_cmg" model="ir.ui.view">
+            <field name="name">validacion.tree.cmg</field>
+            <field name="model">capacitacion.validacion</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Validacion">
+                    <field name="nombre_validacion" string="Nombre"/>
+                    <field name="fecha_capacitacion" string="Fecha de capacitacion"/>
+                    <field name="name" string="Proyecto"  context="{'etapa':'proyecto'}" domain="[('etapa','=','proyecto')]" />
+                    <field name="nombre_corto" string="Nombre corto" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vista Form  -->
+        <record id="validacion_form_cmg" model="ir.ui.view">
+            <field name="name">validacion.form.cmg</field>
+            <field name="model">capacitacion.validacion</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Validacion"  version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <div>
+                                <h1>
+                                    <field name="nombre_validacion" placeholder="Nombre de la validación"/>
+                                    
+                                </h1>
+                            </div>
+                            <group>
+                                <group string="Proyecto">
+                                		<field name="nombre_corto" readonly="True" />
+                                    <field name="fecha_capacitacion" string="Fecha de capacitacion"/>
+                                    <field name="name" string="Proyecto" context="{'etapa':'proyecto'}" domain="[('etapa','=','proyecto')]" required="True" />
+                                </group>
+                            </group>
+                        </div>
+                        <notebook>
+                            <page string="Empleados">
+                                <field name ="empleado">
+                                    <tree string="Validaciones" editable="bottom">
+										<field name="name_related"/>
+										<field name="nombre" />                                    	
+                                    	<field name="validado"/>
+                                       <field name="fecha_validacion"/>
+										<field name="empresa"/>
+										<field name="ciudad"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    						<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers" />
+							<field name="message_ids" widget="mail_thread" />
+						</div>
+                </form>
+            </field>
+        </record>
+        
+        <!--  Busqueda Validaciones -->
+		<record model="ir.ui.view" id="jmd_validacion_search">
+			<field name="name">jmd.validacion.search</field>
+			<field name="model">capacitacion.validacion</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Buscar">
+                    <field name="name" />
+				</search>
+			</field>
+		</record>
+        
+        <!-- Modificaciones a la vista	-->
+		<record id="event_jmd_inh2" model="ir.ui.view">
+			<field name="name">event.jmd.inh2</field>
+			<field name="model">event.event</field>
+			<field name="search_view_id" ref="jmd_validacion_search"/>
+			<field name="inherit_id" ref="event.view_event_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='company_id']" position="after">
+					<button name="generate_validacion" string="Generar Lista de Validacion" type="object" confirm="" states="done"/>
+				</xpath>		
+			</field>
+		</record>	
+
+    </data>
+</openerp>
+

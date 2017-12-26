@@ -1,0 +1,1 @@
+import encuestas_variables

@@ -1,0 +1,29 @@
+{
+"name": "Codigo_de_Gerardo", 
+"version": "0.1",
+"depends": ["base", "stock", "hr"],
+"author": "Yo",
+"category": "Customization",
+"description": """
+Modulos específicos de la implementación de estadística aplicada
+""",
+"update_xml":[
+#'security/groups.xml',
+#'security/ir.model.access.csv',
+],
+"data": [
+'gbr_view.xml',
+#Aqui van todos los archivo que se creem
+#"mivista.xml",
+#'workflow/workflow.xml',
+#'pagomedico_view.xml'
+],
+"demo": [
+#Aqui van datos de demostración
+],
+"test": [
+#Archivos de testing
+],
+"installable": True,
+"autoinstall": False,
+}

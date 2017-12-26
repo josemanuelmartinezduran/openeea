@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Modificaciones a la vista:	Sistemas -->
+		<record id="jmd_helpdesk_edit" model="ir.ui.view">
+			<field name="name">jmd.helpdesk.edit</field>
+			<field name="model">crm.helpdesk</field>
+			<field name="inherit_id" ref="estadistica_aplicada2.helpdesk_from_suport_inherit_1"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='categ_id']" position="attributes">
+					<attribute name="domain"> [] </attribute>
+				</xpath>
+				
+				<xpath expr="//page[@string='Checklist']" position="attributes">
+					<attribute name="attrs">{'invisible': [('tipo_mto', '=', 'correctivo')]}</attribute>
+				</xpath>
+				
+			</field>
+		</record>
+		
+		<!-- Modificaciones a la vista:	Aplazamientos -->
+		<record id="jmd_aplazamiento_edit" model="ir.ui.view">
+			<field name="name">jmd.aplazamiento.edit</field>
+			<field name="model">ea.aplazamiento</field>
+			<field name="inherit_id" ref="estadistica_aplicada2.ea_aplazamiento_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='nombre']" position="replace">
+				</xpath>
+				<xpath expr="//field[@name='anombre']" position="replace">
+				</xpath>
+			</field>
+		</record>
+		
+		<!-- Modificaciones a la vista:	Lista Solicitudes -->
+		<!-- <record id="jmd_helpdek_view" model="ir.ui.view">
+			<field name="name">jmd.helpdesk.view</field>
+			<field name="model">crm.helpdesk</field>
+			<field name="inherit_id" ref="crm_helpdesk.crm_case_tree_view_helpdesk"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='partner_id']" position="after">
+					<field name="usuario" />
+				</xpath>
+			</field>
+		</record> -->
+	</data>
+</openerp>

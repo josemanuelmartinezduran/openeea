@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Flujo RAC -->
+		<record id="flow_rac" model="workflow">
+			<field name="name">flow.rac</field>
+			<field name="osv">rac</field>
+			<field name="on_create">True</field>
+		</record>
+		
+		<!-- Nodo Inicial -->
+		<record id="flow_rac_abierta" model="workflow.activity">
+			<field name="name">flow.rac.abierta</field>
+			<field name="wkf_id" ref="flow_rac"/>
+			<field name="kind">function</field>
+			<field name="action">action_abierta()</field>
+			<field name="flow_start">True</field>
+		</record>
+		
+		<!-- Nodo Final -->
+		<record id="flow_rac_cerrada" model="workflow.activity">
+			<field name="name">flow.rac.cerrada</field>
+			<field name="wkf_id" ref="flow_rac"/>
+			<field name="kind">function</field>
+			<field name="action">action_cerrar()</field>
+			<field name="flow_end">True</field>
+		</record>
+		
+		<!-- Transición -->
+		<record id="abierta_to_cerrada" model="workflow.transition">
+			<field name="act_from" ref="flow_rac_abierta"/>
+			<field name="act_to" ref="flow_rac_cerrada"/>
+			<field name="signal">signal_cerrar</field>
+			<field name="condition">True</field>
+		</record>
+	
+	</data>
+</openerp>

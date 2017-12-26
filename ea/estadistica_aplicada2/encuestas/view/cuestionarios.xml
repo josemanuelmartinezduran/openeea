@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+    <data>
+    
+
+		<record id="view_cuestionarios_tree" model="ir.ui.view">
+			<field name="name">view.cuestionarios.tree</field>
+			<field name="model">document.cuestionarios</field>
+			<field eval="1" name="priority"/>
+			<field name="arch" type="xml">
+				<tree string="Creación de cuestionarios">
+					<field name="nom_estudio_id" string="Nombre del estudio"/>
+					<field name="nom_responsable_id" string="Responsable"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_cuestionarios_form" model="ir.ui.view">
+			<field name="name">view.cuestionarios.form</field>
+			<field name="model">document.cuestionarios</field>
+			<field eval="2" name="priority"/>
+			<field name="arch" type="xml">
+				<form string="Creacion de cuestionarios" version="7.0">
+					<header>
+						<field name="state" nolabel="1" widget="statusbar" />
+						<button type="workflow" states="nuevo" name="signal_confirm_nuevo" string="Confirmar Revision" />
+						<button type="workflow" states="revisado" name="signal_confirm_revisado" string="Aprobar" />
+					</header>
+					<sheet>
+					  <group>
+						<group>
+							<field name="nom_estudio_id" string="Nombre del estudio" autofocus="autofocus" modifiers="{'required': True}"/>
+							<field name="arch_cuestionario" />
+							<field name="nom_responsable_id" string="Responsable" autofocus="autofocus" modifiers="{'required': True}"/>
+						</group>
+					  </group>
+					  <notebook>
+							<page string="Versiones">
+								<field name="archivo_ids"/>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="act_cuestionarios" model="ir.actions.act_window">
+			<field name="name">Creación de cuestionarios</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">document.cuestionarios</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+				Haga clic aquí para crear un nuevo cuestionario.
+				</p>
+			</field>
+		</record>
+		
+		<!--
+		<record id="mn_cuestionarios" model="ir.ui.menu">
+			<field name="name">Creación de cuestionarios</field>
+			<field name="parent_id" ref="document.menu_document_doc"/>
+			<field name="sequence" eval="7"/>
+			<field name="action" ref="act_cuestionarios"/>
+		</record>
+		-->
+
+		
+    </data>
+
+</openerp>

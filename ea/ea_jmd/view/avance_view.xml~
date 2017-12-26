@@ -1,0 +1,816 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		
+		<!--  Busqueda Busqueda Reporte de Campo -->
+		<record model="ir.ui.view" id="ea_avance_search">
+			<field name="name">ea.avance.search</field>
+			<field name="model">ea.avance</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Buscar">
+					<field name="cuota" string="Folio de la Entrevista"/>
+					<field name="folio" />
+               <field name="name" />
+               <field name="proyecto" />
+               <field name="nombre_corto" />
+               <field name="plaza_id" />
+					<group expand="0" string="Agrupar por...">
+						<filter string="Proyecto" icon="terp-partner" domain="[]" context="{'group_by':'proyecto'}"/>
+						<filter string="Plaza" icon="terp-partner" domain="[]" context="{'group_by':'plaza_id'}"/>
+						<filter string="Estado" icon="terp-partner" domain="[]" context="{'group_by':'state'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+	
+		<!--  Formulario avance -->
+		<record model="ir.ui.view" id="ea_avance_form">
+			<field name="name">ea.avance.form</field>
+			<field name="model">ea.avance</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Avance" version="7.0">
+					<header>
+						<button string="Enviar" type="workflow" states="capturado" name="signal_enviar"/>
+						<button string="Reiniciar" type="workflow" states="enviado" name="signal_reiniciar"/>
+						<button string="Mandar a RH" type="workflow" states="enviado" name="signal_rh" />
+						<button string="Mandar a Supervisión" type="workflow" states="rh" name="signal_edicion"/>
+						<button string="Mandar a PI" type="workflow" states="edicion" name="signal_pi"/>
+						<button string="Aprobar" type="workflow" states="pi" name="signal_validar" confirm="¿Desea aprobar el lote?" />
+						<field name="state" widget="statusbar" nolabel="1" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" required="True" placeholder="Proyecto-Plaza-Fecha" attrs="{'readonly': [('state','in', ['enviado', 'rh', 'edicion', 'validado'])]}"/>
+							<field name="folio" readonly="True" />
+						</h1>
+						<group>
+							<group string="Datos del Proyecto">
+								<field name="proyecto" domain="[('etapa', '=', 'proyecto')]" attrs="{'readonly': [('state','in', ['enviado', 'rh', 'edicion', 'validado'])]}" on_change="set_name(fecha)" required="True" />
+								<field name="nombre_corto" readonly="True" />
+								<field name="plaza_id" domain="[('nombre_estudio_id', '=', proyecto)]" attrs="{'readonly': [('state','in', ['enviado', 'rh', 'edicion', 'validado'])]}" on_change="set_name(fecha)" required="True"/>
+								<field name="gea_sea" />
+								<field name="supervisor" />
+								<field name="tipo_reporte" required="True"/>
+								<field name="tablets" readonly="True" />
+							</group>
+							<group string="Datos del Avance">
+								<field name="fecha"  on_change="set_name(fecha)" required="True" />
+								<field name="h_envio" readonly="True"/>
+								<field name="proyecto_id" invisible="1" />
+								<field name="calendarizacion" filename="cal_name" invisible="True" />
+								<field name="cal_name" invisible="True" />
+							</group>
+						</group>
+						<separator string="Otros Datos" />
+						<group>
+							<group>
+								<field name="codigo_sea" />
+								<field name="spot" />
+								<field name="colonia" />
+								<field name="delegacion" />
+								<field name="calle1" />
+								<field name="calle2" />
+								<field name="dia_semana" invisible="True" />
+								<field name="enviada" />
+							</group>
+							<group>
+								<field name="cambio" />
+								<field name="inicio" attrs="{'invisible': [('cambio','!=', True)]}"/>
+								<field name="colonia2" attrs="{'invisible': [('cambio','!=', True)]}"/>
+								<field name="calle21" attrs="{'invisible': [('cambio','!=', True)]}"/>
+								<field name="calle22" attrs="{'invisible': [('cambio','!=', True)]}" />
+								<field name="salida_oficina" />
+								<field name="llegada_campo" />
+								<field name="termino_campo" />
+							</group>
+						</group>
+						<notebook attrs="{'invisible': [('state','!=', 'capturado')]}">
+							<page string="Auxiliar Captura" >
+								<group>
+									<field name="aux_levanto" />
+									<field name="aux_supervisor" />
+									<field name="aux_criterio"  domain="[('idestudio', '=', proyecto)]"/>
+									<field name="aux_cuestionario" domain="[('idproyecto', '=', proyecto), ('plaza.id', '=', plaza_id)]"/>
+									<field name="aux_cantidad" />
+									<button type="object" name="add_lines" string="Agregar" />
+								</group>
+							</page>
+						</notebook>
+						<notebook>
+							<page string="Avance">
+								<field name="cuota" attrs="{'readonly': [('state','in', ['enviado', 'rh', 'validado'])]}">
+									<tree string="Cuotas" editable="bottom">
+										<field name="id" invisible="True" />
+										<field name="folio" />
+										<field name="tiraje" domain="[('idproyecto', '=', proyecto), ('plaza.id', '=', plaza_id)]" string="Cuestionario"/>
+										<field name="concepto" domain="[('idestudio', '=', proyecto)]" />
+										<field name="cuota_ids" domain="[('proyecto', '=', proyecto), ('relation_id.plaza_id.id', '=', plaza_id),  ('relation_id.encuesta.id', '=', idcuestionario)]" widget="many2many_tags" />
+										<field name="empleado" />
+										<field name="supervisor" string="Supervisión" />
+										<field name="stand_by" readonly="True"/>
+										<field name="rechazada" readonly="True"/>
+										<field name="proyecto" invisible="True" />
+										<field name="plaza_id" invisible="True" />
+										<field name="supervision" widget="many2many_tags"/>
+										<field name="sup_oficina" widget="many2many_tags"/>
+										<field name="relation_avance" invisible="True" />
+										<field name="idcuestionario" invisible="True"/>
+										<field name="conteo" invisible="True" />
+                              <button name="pausa_encuesta" string="Pausa Entrevista" type="object" icon="gtk-media-pause" />
+                              <button name="cancela_encuesta" string="Cancela Entrevista" type="object" icon="gtk-cancel"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Nómina">
+								<field name="nominas">
+									<tree name="Nominas" editable="bottom">
+										<field name="empleado_id" />
+										<field name="nombre" invisible="True"/>
+										<field name="conteo" />
+										<field name="productividad" />
+										<field name="ve_nomina" />
+										<field name="salario" />
+										<field name="conceptos_pago" widget="many2many_tags" />
+										<field name="monto" />										
+									</tree>
+								</field>
+								<button name="generate_payroll" string="Generar Nómina" type="object" />
+								<button name="calculate" string="Calcula Montos" type="object" />
+								<button name="enviar_rrhh" string="Enviar a RRHH" type="object" /> 
+							</page>
+							<page string="Excepciones">								
+								<field name="excepciones_ids">
+									<tree string="X" editable="bottom">
+										<field name="name" />
+										<field name="description" />
+									</tree>
+								</field>
+							</page>
+							<page string="Incidencias">
+								<field name="incidencia_ids" attrs="{'readonly': [('state','in', ['enviado', 'rh', 'edicion', 'validado'])]}">
+									<tree string="Incidenecias" editable="bottom">
+										<field name="cuestionario" domain="[('proyecto.id', '=', proyecto)]"/>
+										<field name="proyecto" invisible="True" />
+										<field name="plaza_id" invisible="True" />
+										<field name="tipo" />
+										<field name="filtro" string="Filtro/Pregunta"/>
+										<field name="fecha" />
+										<field name="cantidad" />
+									</tree>
+								</field>
+							</page>
+							<page string="Rechazadas" attrs="{'invisible': [('state','=', 'capturado')]}" readonly="True">
+								<field name="rechazadas_ids">
+									<tree string="Incidenecias" editable="bottom">
+										<field name="folio" />
+										<field name="investigador" />
+										<field name="supervisor" />
+										<field name="revisor" />
+										<field name="fecha" />
+										<field name="comentario" />
+										<field name="fase" />
+									</tree>
+								</field>
+							</page>
+							<page string="Observaciones">
+								<field name="observaciones" />
+							</page>
+						</notebook>					
+					</sheet>
+					<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers" />
+							<field name="message_ids" widget="mail_thread" />
+					</div>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Accion de avance -->
+		<record model="ir.actions.act_window" id="act_avance">
+			<field name="name">Reporte de Campo</field>			
+			<field name="res_model">ea.avance</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form,tree</field>
+			<field name="search_view_id" ref="ea_avance_search"/>
+			<field name="view_id" ref="ea_avance_form"/>		
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro de avance
+					</p>
+			</field>
+		</record>		
+		
+		
+		<!-- Accion Wizard de Avance -->
+		<record model="ir.actions.act_window" id="actn_avance_wizard">
+			<field name="name">Registro de Revisión</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="res_model">revision.wizard</field>
+			<field name="context">{'current_id': current_id}</field>
+			<field name="target">new</field>
+		</record>
+			
+		<!-- Menu avance -->
+		<menuitem id="ea_menu_avance" parent="estadistica_aplicada2.mn_estudios_campo" name="Reporte de Campo" action="act_avance" sequence="17" />
+		
+		
+		
+				
+		
+		
+		<!--  Formulario avance para registros -->
+		<record model="ir.ui.view" id="ea_registro_form">
+			<field name="name">ea.avance.form</field>
+			<field name="model">ea.avance</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Avance" version="7.0">
+					<header>
+						<button string="Enviar" type="workflow" states="capturado" name="signal_enviar"/>
+						<button string="Reiniciar" type="workflow" states="enviado" name="signal_reiniciar"/>
+						<button string="Mandar a RH" type="workflow" states="enviado" name="signal_rh" />
+						<button string="Mandar a Supervisión" type="workflow" states="rh" name="signal_edicion"/>
+						<button string="Mandar a PI" type="workflow" states="edicion" name="signal_pi"/>
+						<button string="Aprobar" type="workflow" states="pi" name="signal_validar" confirm="¿Desea aprobar el lote?" />
+						<field name="state" widget="statusbar" nolabel="1" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" required="True" placeholder="Proyecto-Plaza-Fecha" attrs="{'readonly': [('state','in', ['enviado', 'rh', 'edicion', 'validado'])]}"/>
+						</h1>
+						<group>
+							<group string="Datos del Proyecto">
+								<field name="proyecto" domain="[('etapa', '=', 'proyecto')]" attrs="{'readonly': [('state','in', ['enviado', 'rh', 'edicion', 'validado'])]}" on_change="set_name(fecha)" required="True" />
+								<field name="nombre_corto" readonly="True" />
+								<field name="plaza_id" domain="[('nombre_estudio_id', '=', proyecto)]" attrs="{'readonly': [('state','in', ['enviado', 'rh', 'edicion', 'validado'])]}" on_change="set_name(fecha)" required="True"/>
+								<field name="gea_sea" />
+								<field name="supervisor" />
+								<field name="tipo_reporte" required="True"/>
+							</group>
+							<group string="Datos del Avance">
+								<field name="fecha"  on_change="set_name(fecha)" required="True" />
+								<field name="h_envio" readonly="True"/>
+								<field name="proyecto_id" invisible="1" />
+								<field name="calendarizacion" filename="cal_name" invisible="True"/>
+								<field name="cal_name" invisible="True" />
+							</group>
+						</group>
+						<separator string="Otros Datos" />
+						<group>
+							<group>
+								<field name="codigo_sea" />
+								<field name="partner_id" />
+								<field name="spot" />
+								<field name="colonia" />
+								<field name="delegacion" />
+								<field name="calle1" />
+								<field name="calle2" />
+								<field name="dia_semana" invisible="True"/>
+							</group>
+							<group>
+								<field name="cambio" />
+								<field name="inicio" attrs="{'invisible': [('cambio','!=', True)]}"/>
+								<field name="colonia2" attrs="{'invisible': [('cambio','!=', True)]}"/>
+								<field name="calle21" attrs="{'invisible': [('cambio','!=', True)]}"/>
+								<field name="calle22" attrs="{'invisible': [('cambio','!=', True)]}" />
+								<field name="salida_oficina" />
+								<field name="llegada_campo" />
+								<field name="termino_campo" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Registro">
+								<field name="cuota" attrs="{'readonly': [('state','in', ['enviado', 'rh', 'edicion', 'validado'])]}">
+									<tree string="Cuotas" editable="bottom">
+										<field name="id" invisible="True" />
+										<field name="tiraje" domain="[('idproyecto', '=', proyecto)]" string="Registro"/>
+										<field name="cantidad" />
+										<field name="concepto" />
+										<field name="cuota_ids" domain="[('proyecto', '=', proyecto), ('relation_id.plaza_id.id', '=', plaza_id),  ('relation_id.encuesta.id', '=', idcuestionario)]" widget="many2many_tags" />
+										<field name="empleado" />
+										<field name="supervisor" string="Supervisión" />
+										<field name="stand_by" readonly="True"/>
+										<field name="rechazada" readonly="True"/>
+										<field name="proyecto" invisible="True" />
+										<field name="plaza_id" invisible="True" />
+										<field name="ntienda" />
+										<field name="sucursal" />
+										<field name="supervision" widget="many2many_tags"/>
+										<field name="sup_oficina" widget="many2many_tags"/>
+										<field name="relation_avance" invisible="True" />
+										<field name="idcuestionario" invisible="True"/>
+										<field name="conteo" />
+                                        <button name="pausa_encuesta" string="Pausa Entrevista" type="object" icon="gtk-media-pause" />
+                                        <button name="cancela_encuesta" string="Cancela Entrevista" type="object" icon="gtk-cancel"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Nómina">
+								<field name="nominas">
+									<tree name="Nominas" editable="bottom">
+										<field name="empleado_id" />
+										<field name="nombre" />
+										<field name="productividad" />
+										<field name="salario" readonly="1"/>
+										<field name="conceptos_pago" widget="many2many_tags" />
+										<field name="monto" />										
+									</tree>
+								</field>
+								<button name="generate_payroll" string="Generar Nómina" type="object" />
+								<button name="calculate" string="Calcula Montos" type="object" />
+								<button name="enviar_rrhh" string="Enviar a RRHH" type="object" /> 
+							</page>
+							<page string="Excepciones">								
+								<field name="excepciones_ids">
+									<tree string="X" editable="bottom">
+										<field name="name" />
+										<field name="description" />
+									</tree>
+								</field>
+							</page>
+							<page string="Incidencias">
+								<field name="incidencia_ids" attrs="{'readonly': [('state','in', ['enviado', 'rh', 'edicion', 'validado'])]}">
+									<tree string="Incidenecias" editable="bottom">
+										<field name="cuestionario" domain="[('proyecto.id', '=', proyecto)]"/>
+										<field name="proyecto" invisible="True" />
+										<field name="plaza_id" invisible="True" />
+										<field name="filtro" string="Filtro/Pregunta"/>
+										<field name="fecha" />
+										<field name="cantidad" />
+									</tree>
+								</field>
+							</page>
+							<page string="Rechazadas" attrs="{'invisible': [('state','=', 'capturado')]}" readonly="True">
+								<field name="rechazadas_ids">
+									<tree string="Incidenecias" editable="bottom">
+										<field name="folio" />
+										<field name="investigador" />
+										<field name="supervisor" />
+										<field name="revisor" />
+										<field name="fecha" />
+										<field name="comentario" />
+										<field name="fase" />
+									</tree>
+								</field>
+							</page>
+							<page string="Observaciones">
+								<field name="observaciones" />
+							</page>
+						</notebook>					
+					</sheet>
+					<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers" />
+							<field name="message_ids" widget="mail_thread" />
+					</div>
+				</form>
+			</field>
+		</record>
+		
+		<!-- Accion de avance -->
+		<record model="ir.actions.act_window" id="act_registro">
+			<field name="name">Reporte de Campo (Registros)</field>			
+			<field name="res_model">ea.avance</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="ea_registro_form"/>			
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro de avance
+					</p>
+			</field>
+		</record>
+		
+		
+		<!-- Menu avance -->
+		<menuitem id="ea_menu_registros" parent="estadistica_aplicada2.mn_estudios_campo" name="Reporte de Campo (Registros)" action="act_registro" sequence="17" />
+		
+		
+		<!--  Formulario avance para gente de campo -->
+		<record model="ir.ui.view" id="ea_avance_form_campo">
+			<field name="name">ea.avance.form</field>
+			<field name="model">ea.avance</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Avance" version="7.0">
+					<header>
+						<button string="Enviar" type="workflow" states="capturado" name="signal_enviar"/>
+						<button string="Reiniciar" type="workflow" states="enviado" name="signal_reiniciar"/>
+						<button string="Mandar a RH" type="workflow" states="enviado" name="signal_rh" />
+						<button string="Mandar a Supervisión" type="workflow" states="rh" name="signal_edicion"/>
+						<button string="Mandar a PI" type="workflow" states="edicion" name="signal_pi"/>
+						<button string="Aprobar" type="workflow" states="pi" name="signal_validar" confirm="¿Desea aprobar el lote?" />
+						<field name="state" widget="statusbar" nolabel="1" />
+					</header>
+					<sheet>
+						<h1>
+							<field name="name" required="True" placeholder="Proyecto-Plaza-Fecha" attrs="{'readonly': [('state','in', ['enviado', 'rh', 'edicion', 'validado'])]}"/>
+							<field name="folio" readonly="True" />
+						</h1>
+						<group>
+							<group string="Datos del Proyecto">
+								<field name="proyecto" domain="[('etapa', '=', 'proyecto')]" attrs="{'readonly': [('state','in', ['enviado', 'rh', 'edicion', 'validado'])]}" on_change="set_name(fecha)" required="True" />
+								<field name="nombre_corto" readonly="True" />
+								<field name="plaza_id" domain="[('nombre_estudio_id', '=', proyecto)]" attrs="{'readonly': [('state','in', ['enviado', 'rh', 'edicion', 'validado'])]}" on_change="set_name(fecha)" required="True"/>
+								<field name="gea_sea" />
+								<field name="supervisor" />
+								<field name="tipo_reporte" required="True"/>
+								<field name="tablets" readonly="True" />
+							</group>
+							<group string="Datos del Avance">
+								<field name="fecha"  on_change="set_name(fecha)" required="True" />
+								<field name="h_envio" readonly="True"/>
+								<field name="proyecto_id" invisible="1" />
+								<field name="calendarizacion" filename="cal_name" invisible="True" />
+								<field name="cal_name" invisible="True" />
+							</group>
+						</group>
+						<separator string="Otros Datos" />
+						<group>
+							<group>
+								<field name="codigo_sea" />
+								<field name="spot" />
+								<field name="colonia" />
+								<field name="delegacion" />
+								<field name="calle1" />
+								<field name="calle2" />
+								<field name="dia_semana" invisible="True" />
+								<field name="enviada" />
+							</group>
+							<group>
+								<field name="cambio" />
+								<field name="inicio" attrs="{'invisible': [('cambio','!=', True)]}"/>
+								<field name="colonia2" attrs="{'invisible': [('cambio','!=', True)]}"/>
+								<field name="calle21" attrs="{'invisible': [('cambio','!=', True)]}"/>
+								<field name="calle22" attrs="{'invisible': [('cambio','!=', True)]}" />
+								<field name="salida_oficina" />
+								<field name="llegada_campo" />
+								<field name="termino_campo" />
+							</group>
+						</group>
+						<notebook attrs="{'invisible': [('state','!=', 'capturado')]}">
+							<page string="Auxiliar Captura" >
+								<group>
+									<field name="aux_levanto" />
+									<field name="aux_supervisor" />
+									<field name="aux_criterio"  domain="[('idestudio', '=', proyecto)]"/>
+									<field name="aux_cuestionario" domain="[('idproyecto', '=', proyecto), ('plaza.id', '=', plaza_id)]"/>
+									<field name="aux_cantidad" />
+									<button type="object" name="add_lines" string="Agregar" />
+								</group>
+							</page>
+						</notebook>
+						<notebook>
+							<page string="Avance">
+								<field name="cuota" attrs="{'readonly': [('state','in', ['enviado', 'rh', 'validado'])]}">
+									<tree string="Cuotas" editable="bottom">
+										<field name="id" invisible="True" />
+										<field name="folio" />
+										<field name="tiraje" domain="[('idproyecto', '=', proyecto), ('plaza.id', '=', plaza_id)]" string="Cuestionario"/>
+										<field name="concepto" domain="[('idestudio', '=', proyecto)]" />
+										<field name="cuota_ids" domain="[('proyecto', '=', proyecto), ('relation_id.plaza_id.id', '=', plaza_id),  ('relation_id.encuesta.id', '=', idcuestionario)]" widget="many2many_tags" />
+										<field name="empleado" />
+										<field name="supervisor" string="Supervisión" />
+										<field name="stand_by" readonly="True"/>
+										<field name="rechazada" readonly="True"/>
+										<field name="proyecto" invisible="True" />
+										<field name="plaza_id" invisible="True" />
+										<field name="supervision" widget="many2many_tags"/>
+										<field name="sup_oficina" widget="many2many_tags"/>
+										<field name="relation_avance" invisible="True" />
+										<field name="idcuestionario" invisible="True"/>
+										<field name="conteo" invisible="True" />
+                              <button name="pausa_encuesta" string="Pausa Entrevista" type="object" icon="gtk-media-pause" />
+                              <button name="cancela_encuesta" string="Cancela Entrevista" type="object" icon="gtk-cancel"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Nómina">
+								<field name="nominas">
+									<tree name="Nominas" editable="bottom">
+										<field name="empleado_id" />
+										<field name="nombre" invisible="True"/>
+										<field name="conteo" />
+										<field name="productividad" />
+										<field name="ve_nomina" />
+										<field name="conceptos_pago" widget="many2many_tags" />								
+									</tree>
+								</field>
+								<button name="generate_payroll" string="Generar Nómina" type="object" />
+								<button name="calculate" string="Calcula Montos" type="object" />
+								<button name="enviar_rrhh" string="Enviar a RRHH" type="object" /> 
+							</page>
+							<page string="Excepciones">								
+								<field name="excepciones_ids">
+									<tree string="X" editable="bottom">
+										<field name="name" />
+										<field name="description" />
+									</tree>
+								</field>
+							</page>
+							<page string="Incidencias">
+								<field name="incidencia_ids" attrs="{'readonly': [('state','in', ['enviado', 'rh', 'edicion', 'validado'])]}">
+									<tree string="Incidenecias" editable="bottom">
+										<field name="cuestionario" domain="[('proyecto.id', '=', proyecto)]"/>
+										<field name="proyecto" invisible="True" />
+										<field name="plaza_id" invisible="True" />
+										<field name="tipo" />
+										<field name="filtro" string="Filtro/Pregunta"/>
+										<field name="fecha" />
+										<field name="cantidad" />
+									</tree>
+								</field>
+							</page>
+							<page string="Rechazadas" attrs="{'invisible': [('state','=', 'capturado')]}" readonly="True">
+								<field name="rechazadas_ids">
+									<tree string="Incidenecias" editable="bottom">
+										<field name="folio" />
+										<field name="investigador" />
+										<field name="supervisor" />
+										<field name="revisor" />
+										<field name="fecha" />
+										<field name="comentario" />
+										<field name="fase" />
+									</tree>
+								</field>
+							</page>
+							<page string="Observaciones">
+								<field name="observaciones" />
+							</page>
+						</notebook>					
+					</sheet>
+					<div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers" />
+							<field name="message_ids" widget="mail_thread" />
+					</div>
+				</form>
+			</field>
+		</record>
+		
+		
+		<!--  Busqueda Busqueda de reporte de campo (Campo) -->
+		<record model="ir.ui.view" id="ea_avancecampo_search">
+			<field name="name">ea.avancecampo.search</field>
+			<field name="model">ea.avance</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+            <search string="Buscar">
+					<field name="cuota" string="Folio de la Entrevista"/>
+					<field name="folio" />
+               <field name="name" />
+               <field name="proyecto" />
+               <field name="nombre_corto" />
+               <field name="plaza_id" />
+					<group expand="0" string="Agrupar por...">
+						<filter string="Proyecto" icon="terp-partner" domain="[]" context="{'group_by':'proyecto'}"/>
+						<filter string="Plaza" icon="terp-partner" domain="[]" context="{'group_by':'plaza_id'}"/>
+						<filter string="Estado" icon="terp-partner" domain="[]" context="{'group_by':'state'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+	
+		<!-- Accion de avance -->
+		<record model="ir.actions.act_window" id="act_reporte_campo_campo">
+			<field name="name">Reporte de Campo (Campo)</field>			
+			<field name="res_model">ea.avance</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="ea_avance_form_campo"/>
+			<field name="search_view_id" ref="ea_avancecampo_search"/>			
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro de avance
+					</p>
+			</field>
+		</record>
+		
+		
+		<!-- Menu avance -->
+		<menuitem id="ea_menu_reporte_campo" parent="estadistica_aplicada2.mn_estudios_campo" name="Reporte de Campo (Campo)" action="act_reporte_campo_campo" sequence="18" />
+		
+		
+		
+		<!--  Arbol avance -->
+		<record model="ir.ui.view" id="ea_avance_tree">
+			<field name="name">ea.avance.tree</field>
+			<field name="model">ea.avance</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="Avance de Proyecto" toolbar="True">
+					<field name="name" />
+					<field name="folio" />
+					<field name="proyecto" string="Clave del proyecto" />
+					<field name="nombre_corto" string="Nombre corto" />
+					<field name="plaza_id" />
+					<field name="fecha" />
+					<field name="supervisor" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Formulario Linea de Avance -->
+		<record model="ir.ui.view" id="linea_avance_edit">
+			<field name="name">linea.avance.edit</field>
+			<field name="model">ea.avance.linea</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Avance" version="7.0">
+					<sheet>
+						<h1>
+							<h4>
+								<label for="name" />
+							</h4>
+							<field name="name" required="True" />
+							<button name="%(actn_avance_wizard)d" string="Cancelar Encuestas" type="action"/>
+						</h1>
+						<group>
+							<group string="Datos del avance">
+								<field name="cantidad" />
+								<field name="cuestionario" />
+								<field name="cuota" />
+							</group>
+							<group string="Investigador">
+								<field name="empleado" />
+								<field name="supervisor" />
+								<field name="proyecto" invisible="1"/>
+								<field name="current_id" />
+							</group>
+						</group>
+						<notebook>
+							<page string="">
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<!--  Busqueda -->
+		<record model="ir.ui.view" id="avance_report_search">
+			<field name="name">avance.report.search</field>
+			<field name="model">ea.avance.linea</field>
+			<field name="type">search</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<field name="nombre_corto" />
+					<field name="project_name" />
+					<field name="folio" string="Folio" />
+					<field name="plaza_name" />
+					<field name="supervisor" />
+					<field name="empleado" string="Investigador"/>
+						<filter icon="terp-document-new" name="Stand By" string="Pausa" domain="[('stand_by','=',True)]" help=""/>
+						<filter icon="terp-document-new" name="Rechazadas" string="Rechazadas" domain="[('rechazada','=',True)]" help=""/>
+						<filter icon="terp-document-new" name="Efectivas" string="Efectivas" domain="[('rechazada','=',False), ('stand_by', '=', False)]" help=""/>
+					<group expand="0" string="Group By...">
+						<filter string="Proyecto" icon="terp-partner" domain="[]" context="{'group_by':'project_name'}"/>
+						<filter string="Plaza" icon="terp-partner" domain="[]" context="{'group_by':'plaza_name'}"/>
+						<filter string="Fecha" icon="terp-partner" domain="[]" context="{'group_by':'fecha'}"/>
+						<filter string="Supervisor" icon="terp-partner" domain="[]" context="{'group_by':'supervisor'}"/>
+						<filter string="Investigador" icon="terp-partner" domain="[]" context="{'group_by':'empleado'}"/>
+					</group>
+				</search>
+			</field>
+		</record>		
+
+		<!--  Lista Reporte de Avance -->
+		<record model="ir.ui.view" id="avance_report_list">
+			<field name="name">avance.report.view</field>
+			<field name="model">ea.avance.linea</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="" toolbar="1" colors="">
+					<field name="nombre_corto" />
+					<field name="project_name" />
+					<field name="plaza_name" />
+					<field name="fecha" />
+					<field name="cuota_ids" />
+					<field name="supervisor" />
+					<field name="empleado" string="Investigador"/>
+					<field name="folio" />
+					<field name="stand_by" />
+					<field name="rechazada" />
+					<field name="supervision" />
+				</tree>
+			</field>
+		</record>		
+		
+		<!-- Accion reporte de avances -->
+		<record model="ir.actions.act_window" id="acnt_avance_report">
+			<field name="name">Detalle de Entrevistas</field>
+			<field name="res_model">ea.avance.linea</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree</field>
+			<field name="search_view_id" ref="avance_report_search"/>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						No hay registros
+					</p>
+			</field>
+		</record>
+		
+		<!-- Reportes de Campo -->		
+		<menuitem id="campo_report_menu" parent="estadistica_aplicada2.mn_estudios" name="Reportes" sequence="5" />
+		
+		
+		<!-- Reporte de Cuotas  -->
+		<menuitem id="avance_report_menu" parent="campo_report_menu" name="Detalle de Entrevistas" action="acnt_avance_report" sequence="10" />
+		<menuitem id="avance_linea_menu" parent="estadistica_aplicada2.mn_estudios_campo" name="Desglose de Cuotas" action="acnt_avance_report" sequence="30" />
+		
+		<!--  Busqueda Entrevistas -->
+		<record model="ir.ui.view" id="tiraje_search">
+			<field name="name">tiraje.search</field>
+			<field name="model">ea.tiraje</field>
+			<field name="type">search</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<field name="name" />
+					<group expand="0" string="Group By...">
+						<filter string="Estudio" icon="terp-partner" domain="[]" context="{'group_by':'proyecto_name'}"/>
+						<filter string="Plaza" icon="terp-partner" domain="[]" context="{'group_by':'plaza_name'}"/> 
+					</group>
+				</search>
+			</field>
+		</record>		
+		
+		<!-- Accion de Entrevistas -->
+		<record model="ir.actions.act_window" id="entrevistas_actn">
+			<field name="name">Reporte de Entrevistas</field>
+			<field name="res_model">ea.tiraje</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree</field>
+			<field name="search_view_id" ref="tiraje_search"/>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro
+					</p>
+			</field>
+		</record>
+		
+		<!-- Reporte de Tiraje  -->
+		<menuitem id="tiraje_report_menu" parent="campo_report_menu" name="Reporte de Entrevistas" action="entrevistas_actn" sequence="31" />
+		
+		<!--  Lista Tiraje -->
+		<record model="ir.ui.view" id="tiraje_view">
+			<field name="name">tiraje.view</field>
+			<field name="model">ea.tiraje</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="Tiraje" toolbar="1">
+					<field name="proyecto_name" />
+					<field name="plaza_name" />
+					<field name="cantidad" />
+					<field name="realizadas" />
+					<field name="count_realizadas" sum="SUMA" />
+					<field name="count_supervisadas" sum="SUMA" />
+					<field name="count_osupervisadas" sum="SUMA" />
+					<field name="count_supervisadasd" sum="SUMA" />
+					<field name="count_supervisadasr" sum="SUMA" />
+				</tree>
+			</field>
+		</record>		
+		
+		<!-- Reporte de Cuotas Concentrado -->
+		
+		<!-- Accion Tipo Supervisión -->
+		<record model="ir.actions.act_window" id="ea_tipo_supervision">
+			<field name="name">ea.tipo_supervision</field>
+			<field name="res_model">ea.tipo_supervision</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro
+					</p>
+			</field>
+		</record>
+		
+		<!--  Lista  Tipo Supervision -->
+		<record model="ir.ui.view" id="ea_tipo_supervision_tree">
+			<field name="name">Tipo de Supervisión</field>
+			<field name="model">ea.tipo_supervision</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="X" editable="bottom" >
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		
+		<!-- Menu Tipo de Supervisión -->
+		<menuitem id="ea_menu_tiposup" parent="estadistica_aplicada2.mn_estudios_campo" name="Tipos de Supervisión" action="ea_tipo_supervision" sequence="18" />
+
+	</data>
+</openerp>

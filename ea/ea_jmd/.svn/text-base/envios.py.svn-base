@@ -1,0 +1,7 @@
+from osv import osv, fields
+
+class paqueteria(osv.Model):
+    _name="hd.paqueteria"
+    _columns={
+        "name":fields.char(string="Nombre", size=40)
+    }

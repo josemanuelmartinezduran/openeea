@@ -1,0 +1,193 @@
+# -*- coding: utf-8 -*-
+#IStandForFreedom
+from osv import osv, fields
+import datetime
+
+
+class auditoria(osv.osv):
+    _name = 'auditoria'
+    _inherit = "mail.thread"
+
+    def action_planeacion(self, cr, uid, ids):
+            self.write(cr, uid, ids, {'state': 'planeacion'})
+            return True
+
+    def generate_rac(self, cr, uid, ids, context=None):
+        ret = {}
+        rac_obj = self.pool.get("rac")
+        for i in self.browse(cr, uid, ids, context):
+            rac_obj.create(cr, uid, {
+                    'name': i.name,
+                    'auditoria': i.id,
+                })
+        return ret
+
+    def action_ejecucion(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'ejecucion'})
+        #Creando los resultados
+        for i in self.browse(cr, uid, ids, context):
+            for j in i.planeacion:
+                for k in j.checklist.preguntas:
+                    vals = {
+                        'name': k.pregunta,
+                        'referencia': k.valor_referencia,
+                        'tipo': k.tipo_respuesta,
+                        'numero': k.numero,
+                        'relation': i.id,
+                        'state': "abierta"
+                        }
+                    self.pool.get("auditoria.resultado").create(cr, uid,
+                        vals, context)
+        return True
+
+    def action_cierre(self, cr, uid, ids):
+        self.write(cr, uid, ids, {'state': 'cierre'})
+        return True
+
+    _columns = {
+        'id_auditoria': fields.integer('id_auditoria'),
+        'name': fields.char('Nombre', required=True),
+        'gastos_supervision': fields.boolean("Gastos por Supervisión"),
+        'auditores': fields.many2many('hr.employee', string='Nombre'),
+        'inicio': fields.datetime('Fecha de inicio'),
+        'fin': fields.datetime('Fecha de fin'),
+        'state': fields.selection([('planeacion', 'Planeacion'),
+            ('ejecucion', 'En ejecucion'), ('cierre', 'Cierre')], 'Estado'),
+        'tipo_auditoria': fields.selection([('metodologica', 'Metodologica'),
+                ('administrativa', 'Administrativa'),
+                ('campo', 'De Campo')], 'Tipo auditoria'),
+        'proyecto': fields.many2one("project.project", string="Proyecto"),
+        'nombre_corto': fields.related('proyecto', 'nombre_corto',
+                string="Nombre Corto", type="char"),
+        'planeacion': fields.one2many('auditoria.planeacion', 'relation',
+            'Planeacion'),
+        'objetivo': fields.text('Objetivo de la auditoria'),
+        'resultado_ids': fields.one2many("auditoria.resultado", "relation",
+            string="Resultados"),
+        'alcance': fields.text("Alcance"),
+    }
+
+
+class auditoria_planeacion(osv.osv):
+    _name = 'auditoria.planeacion'
+    _columns = {
+        'id_planeacion': fields.integer('Id'),
+        'fecha': fields.datetime('Fecha', required=True),
+        'auditor': fields.many2one('hr.employee', string='Auditor',
+            required=True),
+        'anombre': fields.related("auditor", "nombre", type="char",
+            string="Nombre", readonly=True),
+        'sujeto': fields.many2one('hr.employee', string='Sujeto'),
+        'nombre': fields.related("sujeto", "nombre", type="char",
+            string="Nombre", readonly=True),
+        'checklist': fields.many2one('auditoria.checklist', string='Checklist'),
+        'aprobado': fields.selection([('si', 'Si'), ('no', 'No')], 'Aprobado'),
+        'observaciones': fields.text('Observaciones'),
+        'relation': fields.many2one("auditoria")
+    }
+
+
+class auditoria_checklist(osv.osv):
+    _name = 'auditoria.checklist'
+
+    def action_borrador(self, cr, uid, ids):
+            self.write(cr, uid, ids, {'state': 'borrador'})
+            return True
+
+    def action_aprobado(self, cr, uid, ids):
+            self.write(cr, uid, ids, {'state': 'aprobado'})
+            return True
+
+    _columns = {
+        'id_checklist': fields.integer('Id'),
+        'name': fields.char('Nombre'),
+        'preguntas': fields.one2many('auditoria.checklist_preguntas',
+            'relation', 'Preguntas'),
+        'creador': fields.many2one("hr.employee", string="Creador de la lista"),
+        'fecha': fields.date("Fecha de creación"),
+        'state': fields.selection([('borrador', 'Borrador'),
+            ('aprobado', 'Aprobado')], "Estado", readonly=True)
+    }
+
+    _defaults = {
+        'fecha': lambda *a: datetime.date.today().strftime('%Y-%m-%d'),
+    }
+
+
+class auditoria_checklist_preguntas (osv.osv):
+    _name = 'auditoria.checklist_preguntas'
+    _columns = {
+        'id_pregunta': fields.integer('Id'),
+        'numero': fields.integer("Numero"),
+        'pregunta': fields.char('Pregunta'),
+        'tipo_respuesta': fields.selection([('sino', 'Si/No'),
+            ('num', 'Numerico'), ("abierta", "Abierta")], 'Tipo de respuesta'),
+        'valor_referencia': fields.char('Valor de referencia'),
+        'relation': fields.many2one("auditoria.checklist")
+    }
+    _defaults = {
+        'id_pregunta': lambda obj, cr, uid, context:
+            obj.pool.get('ir.sequence').get(cr, uid, 'my.sequence.name'),
+    }
+
+
+class auditoria_resultado(osv.Model):
+    _name = "auditoria.resultado"
+
+    def action_abierta(self, cr, uid, ids):
+            self.write(cr, uid, ids, {'state': 'abierta'})
+            return True
+
+    def action_cerrada(self, cr, uid, ids):
+            self.write(cr, uid, ids, {'state': 'cerrada'})
+            return True
+
+    def generate_rac(self, cr, uid, ids, context=None):
+        ret = {}
+        for i in self.browse(cr, uid, ids, context):
+            rac_obj = self.pool.get("rac")
+            idrac = rac_obj.create(cr, uid, {
+                'name': i.name,
+                'auditoria': i.relation.id,
+                'informacion': i.comentario,
+                })
+            self.write(cr, uid, [i.id], {'rac': idrac})
+        return ret
+
+    def generate_nc(self, cr, uid, ids, context=None):
+        ret = {}
+        for i in self.browse(cr, uid, ids, context):
+            nc_obj = self.pool.get("no_conformidad")
+            idnc = nc_obj.create(cr, uid, {
+                'name': i.name,
+                'responsable': i.responsable.id,
+                'descripcion': i.comentario,
+                'auditoria': i.relation.id,
+                })
+            self.write(cr, uid, [i.id], {'no_conformidad': idnc})
+        return ret
+
+    _columns = {
+            'name': fields.char(string="Pregunta", size=120),
+            'numero': fields.integer("Numero"),
+            'nombre': fields.related("responsable", "nombre", type="char",
+                    string="Nombre", readonly=True, store=False),
+            'referencia': fields.char(string="Valor de Referencia", size=120),
+            'tipo': fields.selection([("sino", "Si/No"), ("num",
+                    "Numerica"), ("abierta", "Abierta")],
+                    string="Tipo de Pregunta"),
+            'valor_real': fields.char(string="Valor Real", size=120),
+            'aprobado': fields.boolean(string="Aprobado"),
+            'comentario': fields.text(string="Comentario"),
+            'responsable': fields.many2one("hr.employee", string="Responsable",
+                ondelete="set null"),
+            'fecha_observacion': fields.date("Fecha de la Observación"),
+            'fecha_limite': fields.date("Fecha Límite"),
+            'fecha_solucion': fields.date("Fecha de Resolución"),
+            'state': fields.selection([('abierta', 'Abierta'),
+                ('cerrada', 'Cumple'), ('cerrada_nc', 'No Cumple')], "Estado", readonly=True),
+            'relation': fields.many2one("auditoria", string="Auditoria"),
+            'no_conformidad': fields.many2one("no_conformidad",
+                "No Conformidad"),
+            'rac': fields.many2one("rac", "RAC"),
+        }

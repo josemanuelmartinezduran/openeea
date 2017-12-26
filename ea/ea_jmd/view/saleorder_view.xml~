@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Modificaciones a la vista	-->
+		<record id="cotizacion_view" model="ir.ui.view">
+			<field name="name">cotizacion.view</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_quotation_tree"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='user_id']" position="attributes">
+					<attribute name="string">Ejecutivo de Cuenta</attribute>
+				</xpath>		
+			</field>
+		</record>
+		
+		<!-- Modificaciones a la vista:	Vista de Arbol de Proyetos Aporbados -->
+		<record id="jmd_view_saleorder" model="ir.ui.view">
+			<field name="name">jmd.view.sale.order</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_tree"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="after">
+					<field name="nombre_corto" />
+				</xpath>
+			</field>
+		</record>
+			
+		<record id="sale_order_inherit_jmd_1" model="ir.ui.view">
+			<field name="name">sale.order.inherit.jmd.1</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_form"/>
+			<field name="arch" type="xml">
+				<!-- Contenido -->
+				<xpath expr="//button[@name='action_button_confirm']" position="attributes" >
+					<attribute name="groups">autorizar_cotizacion</attribute>
+				</xpath>		
+				<xpath expr="//field[@name='partner_id']" position="after">
+					<field name="tipo" />
+					<!-- <field name="budget" /> -->
+				</xpath>
+
+			    <xpath expr="//button[@name='cancel']" position="attributes">
+			    	<attribute name="string">Cancelar Cotizacion</attribute>
+			    </xpath>
+			    
+			    <xpath expr="//button[@name='cancel']" position="after">
+					<button type="object" string="Confirmar Orden" name="confirmar" attrs="{'invisible': [('confirmada', '=', True)]}"/>
+					<button type="object" string="Lista para facturar" name="facturar" attrs="{'invisible': ['|', ('confirmada', '=', False), ('a_facturar', '=', True)]}" />
+				</xpath>				
+				
+				<xpath expr="//field[@name='client_order_ref']" position="replace">
+						<field name="nombre_corto" help="Nombre corto del proyecto" required="True"/>
+						<field name="tipo_levantamiento" required="True" />
+						<!-- <field name="cuotas" /> -->
+						<field name="odt" domain="[('nombre_corto', '=', nombre_corto)]"/>
+						<field name="creado" />	
+						<field name="confirmada" readonly="True" />
+						<field name="a_facturar" readonly="True"  />
+				</xpath>
+				
+				<xpath expr="//field[@name='user_id']" position="after">
+					<field name="director" />
+				</xpath>
+				
+				<xpath expr="//field[@name='name']" position="after">	
+					<button name="addversion" string="Crear nueva versión" type="object"/>
+					<!-- <button name="request_budget" string="Solicitar Presupuesto" type="object"/> -->
+					<!-- <button name="create_cuotas" string="Crear Cuotas" type="object"/> -->						
+				</xpath>
+				
+				<xpath expr="//page[@string='Order Lines']" position="after">
+					<page string="Propuestas" attrs="{'invisible': [('confirmada', '!=', False)]}">
+						<field name="propuesta_ids" >
+							<tree string="X" editable="bottom">
+								<field name="id_opcion" />
+								<field name="name" />
+								<field name="descripcion" />
+								<field name="cantidad" />
+								<field name="costo" />
+								<field name="total" />
+								<button name="convertir" string="Convertir" type="object" icon="gtk-yes" />
+							</tree>
+						</field>
+					</page>
+					
+					<page string="Objetivo">
+						<field name="objetivo" widget="html"/>
+						<field name="obj_img1" widget="image" options='{"size": [90, 90]}'/>
+						<field name="obj_img2" widget="image" options='{"size": [90, 90]}'/>
+						<field name="obj_img3" widget="image" options='{"size": [90, 90]}'/>
+						<field name="obj_img4" widget="image" options='{"size": [90, 90]}'/>
+						<field name="obj_img5" widget="image" options='{"size": [90, 90]}'/>
+					</page>
+					<page string="Metodologia">
+						<field name="metodologia" widget="html"/>
+						<field name="met_img1" filename="met_name1" widget="image"  options='{"size": [90, 90]}'/>
+						<field name="met_name1" invisible="True"/>
+						<field name="met_img2" widget="image" options='{"size": [90, 90]}' />
+						<field name="met_img3" widget="image" options='{"size": [90, 90]}'/>
+						<field name="met_img4" widget="image" options='{"size": [90, 90]}'/>
+						<field name="met_img5" widget="image" options='{"size": [90, 90]}'/>
+					</page>
+					<page string="Muestra">
+						<field name="tmuestra" widget="html" />
+					</page>
+					<page string="Tiempo">
+						<field name="ttiempos" widget="html" />
+					</page>
+					
+					<page string="Observaciones">
+						<field name="observaciones" widget="html"/>
+					</page>
+
+					<page string="Responsabilidades de la Agencia">
+						<field name="resp" widget="html"/>					
+					</page>
+
+					<page string="Responsables del Proyecto">
+						<field name="rpoy" widget="html"/>
+					</page>
+					
+					<page string="Entregables">
+						<field name="ent" widget="html"/>
+					</page>
+
+				</xpath>
+				
+			</field>
+		</record>
+		
+		<!-- Accion Ordenes confirmadas -->
+		<record model="ir.actions.act_window" id="sale_order_confirmed">
+			<field name="name">Proyectos Confirmados</field>
+			<field name="res_model">sale.order</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,graph</field>
+			<field name="domain">[('confirmada','=', True),('a_facturar', '=', False)]</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro
+					</p>
+			</field>
+		</record>
+		
+		<!-- Menu Ventas confirmadas -->
+		<menuitem id="sale_order_confirmed_menu" parent="estadistica_aplicada2.ventas" name="Proyectos Confirmados" action="sale_order_confirmed" />
+		
+		<!-- Accion Cotizacions -->
+		<record model="ir.actions.act_window" id="sale_order_unconfirmed">
+			<field name="name">Cotizaciones</field>
+			<field name="res_model">sale.order</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,graph</field>
+			<field name="domain">[('confirmada','=', False)]</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro
+					</p>
+			</field>
+		</record>
+		
+		<!-- Menu Ventas confirmadas -->
+		<menuitem id="sale_order_unconfirmed_menu" parent="estadistica_aplicada2.ventas" name="Cotizaciones" action="sale_order_unconfirmed" />
+		
+		<!-- Accion A Facturar -->
+		<record model="ir.actions.act_window" id="sale_order_invoice">
+			<field name="name">Pedidos a Facturar</field>
+			<field name="res_model">sale.order</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,graph</field>
+			<field name="domain">[('confirmada','=', True), ('a_facturar', '=', True)]</field>
+			<field name="help" type="html">
+					<p class="oe_view_nocontent_create">
+						Haga clic aquí para crear un nuevo registro
+					</p>
+			</field>
+		</record>
+		
+		<!-- Menu Ventas confirmadas -->
+		<menuitem id="sale_order_invioce_menu" parent="estadistica_aplicada2.ventas" name="A Facturar" action="sale_order_invoice" />
+		
+	</data>
+</openerp>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	<!-- 09/07/2014 (fur) Actividad EA_V1_1740_R1
+		(+) Creacion de accion para Otros mantenimientos: "Solicitud de mantenimiento"
+		(+) Creacion de formulario para Otros mantenimientos: "Solicitud de mantenimiento"
+	-->
+
+
+
+	<!-- Accion Solicitud de Mantenimiento -->
+	<record id="act_otros_mantenimientos" model="ir.actions.act_window">
+		<field name="name">Solicitud otros mantenimientos</field>
+		<field name="res_model">crm.helpdesk</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="view_id" ref="crm_helpdesk.crm_case_tree_view_helpdesk"/>
+		<field name="search_view_id" ref="crm_helpdesk.view_crm_case_helpdesk_filter"/>
+		<field name="context">{"search_default_user_id":uid}</field>
+		<field name="domain">[('tipo','=','mantenimiento')]</field>
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+			Click para crear una nueva solicitud. 
+			</p>
+		</field>
+	</record>
+
+	</data>
+</openerp>

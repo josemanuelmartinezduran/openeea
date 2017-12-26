@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Modificaciones a la vista	-->
+		<record id="account_inherit_jmd" model="ir.ui.view">
+			<field name="name">account.inherit.jmd</field>
+			<field name="model">account.account</field>
+			<field name="inherit_id" ref="account.view_account_form"/>
+			<field name="arch" type="xml">
+			  <xpath expr="//field[@name='balance']" position="after">
+			    <field name="sat" />
+			    <button name="setParents" string="Colocar Cuentas" type="object" />
+					<field name="balanza" />
+					<field name="resultados" />
+					<field name="balance_general" />
+				</xpath>		
+			</field>
+		</record>
+		
+		<!-- Agregando los reportes de las cuentas contables -->
+		<!-- -->
+				<!-- Modificaciones a la vista:	Lista de cuentas -->
+				<record id="jmd_accont_edit" model="ir.ui.view">
+				  <field name="name">jmd.account.view</field>
+				  <field name="model">account.account</field>
+				  <field name="inherit_id" ref="account.view_account_list"/>
+				  <field name="arch" type="xml">
+				    <xpath expr="//field[@name='code']" position="after">
+				      <field name="sat" />
+				    </xpath>
+				  </field>
+				</record>
+		
+		<!--  Busqueda -->
+		<record model="ir.ui.view" id="balanza_search">
+			<field name="name">balanza.search</field>
+			<field name="model">account.account</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Search">
+					<group expand="0" string="Group By...">
+					  <filter string="Empresa" icon="terp-partner" domain="[]" context="{'group_by':'company_id'}"/>
+					  <filter string="Codigo Agrupador SAT" domain="[]" context="{'group_by': 'sat'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+		
+	<record model="ir.actions.act_window" id="reporte_balanza">
+		<field name="name">Balanza de Comprobación</field>
+		<field name="view_id" ref=""/>
+		<field name="domain">[('balanza', '=', 'True')]</field>
+		<field name="res_model">account.account</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree</field>
+		<field name="search_view_id" ref="balanza_search"/>
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+				Debe cargar el catalogo de cuentas antes de generar la balanza
+			</p>
+		</field>
+	</record>
+	
+	
+		<record model="ir.actions.act_window" id="reporte_balance">
+		<field name="name">Balance General</field>
+		<field name="view_id" ref=""/>
+		<field name="domain">[('balance_general', '=', 'True')]</field>
+		<field name="res_model">account.account</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree</field>
+		<field name="search_view_id" ref="balanza_search"/>
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+				Debe cargar el catalogo de cuentas antes de generar la balanza
+			</p>
+		</field>
+	</record>
+	
+		<record model="ir.actions.act_window" id="reporte_resultados">
+		<field name="name">Estado de Resultados</field>
+		<field name="view_id" ref=""/>
+		<field name="domain">[('resultados', '=', 'True')]</field>
+		<field name="res_model">account.account</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree</field>
+		<field name="search_view_id" ref="balanza_search"/>
+		<field name="help" type="html">
+			<p class="oe_view_nocontent_create">
+				Debe cargar el catalogo de cuentas antes de generar la balanza
+			</p>
+		</field>
+	</record>
+	
+	<!-- Informes -->
+	<menuitem id="account_report-jmd" parent="account.menu_finance" name="Reportes" action="" groups="" sequence="4" />
+	<menuitem id="balanza_report-jmd" parent="account_report-jmd" name="Balance General " action="reporte_balance" groups="" sequence="" />
+	<menuitem id="balance_report-jmd" parent="account_report-jmd" name="Balanza de Comprobación" action="reporte_balanza" groups="" sequence="" />
+	<menuitem id="resultados_report-jmd" parent="account_report-jmd" name="Estado de Resultados" action="reporte_resultados" groups="" sequence="" />
+	<menuitem id="balanza-sat-jmd" parent="account_report-jmd" name="Balanza del SAT" action="reporte_resultados" groups="" sequence="" />
+	<menuitem id="condigos-agrupadores-jmd" parent="account_report-jmd" name="Codigos Agrupadores" action="reporte_resultados" groups="" sequence="" />
+	
+
+	<!--  Lista -->
+		<record model="ir.ui.view" id="move_line_jmd_view">
+			<field name="name">Movimientos</field>
+			<field name="model">account.move.line</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="Movimientos">
+					<field name="name" />
+					<field name="account_id" />
+					<field name="debit" />
+					<field name="credit" />
+					<field name="state" />
+					<field name="date" />
+					<field name="period_id" />
+				</tree>
+			</field>
+		</record>	
+	
+	<!-- Accion Movimientos Contables -->
+	<record model="ir.actions.act_window" id="move_line_action">
+		<field name="name">Movimientos</field>
+		<field name="view_id" ref="move_line_jmd_view"/>
+		<field name="res_model">account.move.line</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree</field>
+		<field name="help" type="html">
+				<p class="oe_view_nocontent_create">
+					No hay movimientos
+				</p>
+		</field>
+	</record>
+	
+	<!-- Movimientos -->
+	<menuitem id="jmd_account_move" parent="account.menu_finance_entries" name="Movimientos" action="move_line_action" />
+	
+	
+		
+	</data>
+</openerp>

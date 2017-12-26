@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+    <data>
+
+	
+		
+
+        <record model='ir.ui.view' id='view_editor_encuestas_formq'>
+            <field name='name'>encuestas.formq</field>
+            <field name='model'>editor_encuestas</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string="Editor de Encuestas" version="7.0">
+					<sheet>
+						<h1>
+							<h4>
+								<label for="name" />
+							</h4>
+							<field name="name" required="True" />
+						</h1>
+						<group>
+							<group string="Datos Generales">
+								<field name="plaza" />
+								<field name="cantidad" />
+								<field name="clave" />
+							</group>
+							<group string="Avance">
+								<field name="realizadas" />
+								<field name="restantes" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Cuotas">
+								<field name="cuota" />
+							</page>
+						</notebook>
+					</sheet>
+                </form>
+            </field>
+		</record>
+		
+		
+		<record id="editor_encuestas_action" model="ir.actions.act_window">
+			<field name="name">Editor de Encuestas</field>
+			<field name="res_model">editor_encuestas</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>    
+	
+        <record model='ir.ui.view' id='view_control_encuestas_form1'>
+            <field name='name'>control_encuestas.form1</field>
+            <field name='model'>control_encuestas</field>
+			
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Editor de Encuestas' version='7.0'>
+					<sheet>
+						<group col='1' string="Información de la Encuesta">
+							<field name='nombre_estudio'/>
+							<field name='responsable' string="Responsable"/>
+							<field name='plaza' />
+							<field name='encuesta' context="{'form_view_ref' : 'editor_encuestas.view_editor_encuestas_formq', 'tree_view_ref' : 'editor_encuestas.view_editor_encuestas_treeq'}" />
+						</group>
+					</sheet>
+                </form>
+            </field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="client_form_action1">
+			<field name="name">client.form.action1</field>
+			<field name="res_model">control_encuestas</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="view_control_encuestas_form1"/>
+		</record>
+		
+	
+    </data>
+
+</openerp>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Modificaciones a la vista	-->
+		<record id="jmd_plaza_edit" model="ir.ui.view">
+			<field name="name">jmd.plaza.edit</field>
+			<field name="model">plaza</field>
+			<field name="inherit_id" ref="ea_jmos.plaza_view_jmos_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='nombre_estudio_id']" position="after">
+					<field name="cotizacion" />
+					<field name="odt" />
+				</xpath>
+				<xpath expr="//field[@name='tipo']" position="after">
+					<field name="codigo" string="Codigo de Nómina"/>
+					<field name="nombre_corto" readonly="True" />
+				</xpath>
+	
+			</field>
+		</record>
+		
+		<!-- Modificaciones a la vista	-->
+		<record id="jmd_plaza_view" model="ir.ui.view">
+			<field name="name">jmd.plaza.view</field>
+			<field name="model">plaza</field>
+			<field name="inherit_id" ref="ea_jmos.plaza_view_jmos_tree"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='nombre_estudio_id']" position="after">
+					<field name="nombre_corto" />
+					<field name="codigo" />
+				</xpath>		
+			</field>
+		</record>
+		
+		<!-- Modificaciones a la vista:	Modificaiones a la vista de Busqueda -->
+		<record id="plaza_search" model="ir.ui.view">
+			<field name="name">plaza.search</field>
+			<field name="model">plaza</field>
+			<field name="inherit_id" ref="ea_jmos.plaza_view_jmos_search"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="before">
+					<field name="codigo" />
+					<field name="nombre_corto" />
+					<filter string="Nombre Corto" name="nombre_corto" icon="terp-accesories-archiver" domain="[]" context="{'group_by': 'nombre_corto'}" />
+				</xpath>
+				    
+			</field>
+		</record>
+		
+		<!-- Modificaciones a la vista:	Calendario de Devoluciones -->
+		<record id="picking_calendar_jmd" model="ir.ui.view">
+			<field name="name">picking.calendar.inherit</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.stock_picking_calendar"/>
+			<field name="arch" type="xml">
+				<xpath expr="//calendar" position="attributes">
+					<attribute name="date_stop">devolucion</attribute>
+				</xpath>
+			</field>
+		</record>	
+	</data>
+</openerp>
