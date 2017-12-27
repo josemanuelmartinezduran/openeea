@@ -111,10 +111,11 @@
 		
 		<!-- Accion Detalle de Costo -->
 		<record model="ir.actions.act_window" id="ea_costo_detail_actn">
-			<field name="name">ea.costo.detal.actn</field>
+			<field name="name">Detalle de Costos</field>
 			<field name="res_model">ea.costo.detail</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="ea_costo_detail_search"/>
 			<field name="help" type="html">
 					<p class="oe_view_nocontent_create">
 						Haga clic aquí para crear un nuevo registro

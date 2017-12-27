@@ -19,12 +19,39 @@
 			parent="menu_estudios_proyectos" sequence="2"
 			action="project.open_view_project_proyecto" groups="ea_jmd.ver_proyecto" />
 
-		<!-- Vista formualrio de proyectos -->
-		<record id="edit_project_jmd" model="ir.ui.view">
-			<field name="name">edit.project.jmd</field>
+		<!-- Modificaciones a la vista: Formulario de Proyectos -->
+		<record id="project_form_jmd" model="ir.ui.view">
+			<field name="name">project.form.jmd</field>
 			<field name="model">project.project</field>
 			<field name="inherit_id" ref="project.edit_project" />
 			<field name="arch" type="xml">
+				<xpath expr="//header" position="inside">
+					<button name="update" string="Actualizar Proyecto" type="object"
+						groups="base.group_no_one" />
+					<button name="update_all" string="Actualizar Todos los Proyectos"
+						type="object" groups="base.group_no_one" />
+				</xpath>
+				
+				<xpath expr="//field[@name='partner_id']" position="after">
+					<field name="plan_tabulacion" filename="nplan_tabulacion"
+						attrs="{'invisible': [('etapa','!=', 'proyecto')]}" />
+					<field name="nplan_tabulacion" invisible="True" />
+					<field name="fecha_tabulacion" />
+					<field name="plan_analisis" filename="nplan_analisis"
+						attrs="{'invisible': [('etapa','!=', 'proyecto')]}" />
+					<field name="nplan_analisis" invisible="True" />
+					<field name="fecha_analisis" attrs="{'invisible': [('etapa','!=', 'proyecto')]}" />
+					<field name="fases" />
+				</xpath>
+				
+				<xpath expr="//field[@name='user_id']" position="replace">
+					<field name="responsible_id" />
+					<field name="planeacion" domain="[('claveproyecto', '=', nombre_corto)]" attrs="{'invisible': [('etapa','!=', 'proyecto')]}" />
+					<field name="cuotas" domain="[('nombre_corto', '=', nombre_corto)]" attrs="{'invisible': [('etapa','!=', 'proyecto')]}" />
+					<field name="kick_off" attrs="{'invisible': [('etapa', '!=', 'arranques')]}" />
+					<field name="levantamiento" attrs="{'invisible': [('etapa','!=', 'proyecto')]}" />
+				</xpath>
+
 				<xpath expr="//notebook" position="inside">
 					<page string="Información General">
 						<group>
@@ -35,63 +62,46 @@
 								<field name="inicio_procesamiento" />
 								<field name="inicio_analisis" />
 								<field name="inicio_entrega" />
-								<field name="entrevistas_plan" />
-								<field name="porcentaje_realizado" />
 							</group>
 							<group string="Costos">
 								<field name="presupuesto" />
 								<field name="solicitudes" />
+								<field name="monto_comprobacion" />
 								<field name="comprobado" />
-								<field name="caja_chica" />
+								<field name="vales" />
+								<field name="comprobacion_vales" />
 								<field name="nomina" />
+								<field name="nomina_oficina" />
 								<field name="sea" />
 								<field name="compras" />
+								<field name="total_gastos" />
 								<field name="porcentaje_ejecutado" />
-								<field name="ejecutado" />
 							</group>
 						</group>
 						<separator />
 						<group>
-							<group string="Planeación">
+							<group string="Entrevistas">
 								<field name="entrevistas_plan" />
 								<field name="entrevistas_hechas" />
-
+								<field name="porcentaje_realizado" />
+								<field name="fecha_real_inicio" />
+								<field name="fecha_real_fin" />
+								<field name="entrevistas_gea" />
+								<field name="entrevistas_sea" />
 							</group>
 							<group string="Otros">
 								<field name="demografico" />
+								<field name="produtividad_estimada" />
+								<field name="productividad_real_sea" />
+								<field name="productividad_real_gea" />
+								<field name="promedio_suervisores" />
+								<field name="promedio_investigadores" />
 							</group>
 						</group>
 					</page>
-				</xpath>
-
-				<xpath expr="//field[@name='user_id']" position="replace">
-					<field name="responsible_id" />
-				</xpath>
-
-				<xpath expr="//header" position="inside">
-					<button name="update" string="Actualizar Proyecto" type="object"
-						groups="base.view_groups_form" />
-					<button name="update_all" string="Actualizar Todos los Proyectos"
-						type="object" groups="base.view_groups_form" />
-				</xpath>
-
-				<xpath expr="//field[@name='name']" position="after">
-					<field name="nombre_corto" placeholder="Nombre Corto"
-						required="True" />
-					<field name="clave" placeholder="Clave del Estudio"
-						invisible="True" />
-				</xpath>
-
-				<xpath expr="//field[@name='responsible_id']" position="after">
-					<field name="planeacion" attrs="{'invisible': [('etapa','!=', 'proyecto')]}" />
-					<field name="cuotas" attrs="{'invisible': [('etapa','!=', 'proyecto')]}" />
-					<field name="kick_off" attrs="{'invisible': [('etapa', '!=', 'arranques')]}" />
-					<field name="levantamiento" attrs="{'invisible': [('etapa','!=', 'proyecto')]}" />
-					<field name="comentarios" attrs="{'invisible': [('etapa','!=', 'proyecto')]}" />
-
-				</xpath>
-
-				<xpath expr="//page[@string='Team']" position="after">
+					<page string="Comentarios" attrs="{'invisible': [('etapa','!=', 'proyecto')]}">
+						<field name="comentarios" widget="html" />
+					</page>
 					<page string="Flashes">
 						<field name="flash_ids">
 							<tree string="x" editable="bottom">
@@ -104,27 +114,27 @@
 						<field name="extra_ids" />
 					</page>
 				</xpath>
-
+				
 				<xpath expr="//field[@name='privacy_visibility']" position="attributes">
-					<attribute name="invisibe">True</attribute>
+					<attribute name="invisible">True</attribute>
 				</xpath>
 
-				<xpath expr="//field[@name='partner_id']" position="attributes">
-					<attribute name="string">Cliente</attribute>
+				<xpath expr="//page[@name='team']" position="attributes">
+					<attribute name="invisible">True</attribute>
 				</xpath>
 
-				<xpath expr="//field[@name='partner_id']" position="after">
-					<field name="plan_tabulacion" filename="nplan_tabulacion"
-						attrs="{'invisible': [('etapa','!=', 'proyecto')]}" />
-					<field name="nplan_tabulacion" invisible="True" />
-					<field name="fecha_tabulacion" />
-					<field name="plan_analisis" filename="nplan_analisis"
-						attrs="{'invisible': [('etapa','!=', 'proyecto')]}" />
-					<field name="nplan_analisis" invisible="True" />
-					<field name="fecha_analisis" attrs="{'invisible': [('etapa','!=', 'proyecto')]}" />
-					<field name="fases" />
+				<xpath expr="//page[@string='Other Info']" position="attributes">
+					<attribute name="invisible">True</attribute>
 				</xpath>
 
+				<xpath expr="//page[@name='project_stages']" position="attributes">
+					<attribute name="invisible">True</attribute>
+				</xpath>
+
+				<xpath expr="//field[@name='name']" position="after">
+					<field name="nombre_corto" placeholder="Nombre Corto"
+						required="True" />
+				</xpath>
 			</field>
 		</record>
 

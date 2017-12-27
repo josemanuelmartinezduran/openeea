@@ -28,10 +28,7 @@
 				</div>
 			</xpath>
 			<xpath expr="//field[@name='partner_id']" position="attributes">
-				<attribute name="string">Empresa</attribute>
-			</xpath>
-			<xpath expr="//field[@name='partner_id']" position="after">
-				<field name="clave_proyecto"/>
+				<attribute name="string">Cliente</attribute>
 			</xpath>
 		</field>
 	</record>

@@ -285,7 +285,7 @@
 					<field name="proyecto" string="Clave" />
 					<field name="nombre_corto" />
 					<field name="motivo" />
-					<field name="monto" />
+					<field name="monto" sum="total"/>
 					<field name="requiere_vales" />
 					<!-- <field name="total_vales" readonly="True" /> -->
 					<!-- <field name="total_solicitud" />

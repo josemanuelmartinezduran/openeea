@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Busqueda OdT -->
+		<record model="ir.ui.view" id="odt_search">
+			<field name="name">odt.search</field>
+			<field name="model">ea.project_wizard</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Buscar">
+					<field name="nombre_corto" />
+					<field name="name" />
+					<field name="executive_id" />
+					<field name="campo_responsible_id" string="Coordinador" />
+					<group expand="0" string="Agrupar por...">
+						<filter string="Ejecutivo" icon="terp-partner"
+							context="{'group_by':'executive_id'}" />
+						<filter string="Coordinador" icon="terp-partner"
+							context="{'group_by':'campo_responsible_id'}" />
+						<filter string="Jefe de Célula" icon="terp-partner"
+							context="{'group_by':'arranques_resposnible_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<!-- Accion ODT -->
+		<record model="ir.actions.act_window" id="odt_actn">
+			<field name="name">Orden de Trabajo</field>
+			<field name="res_model">ea.project_wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="odt_search" />
+			<field name="help" type="html">
+				1
+				<p class="oe_view_nocontent_create">
+					Haga clic aquí para crear un nuevo registro
+				</p>
+			</field>
+		</record>
+
+		<!-- Orden de Trabajo Ejecutivos de Cuenta -->
+		<menuitem id="ea_odt_ec" parent="ea_jmd.menu_ejecutivos_encuestas"
+			name="Orden de Trabajo" action="odt_actn" sequence="3" />
+
+		<!-- -->
+
+		<menuitem id="ea_odt_es" parent="ea_jmd.menu_estudios_proyectos"
+			name="Orden de Trabajo" action="odt_actn" sequence="3" />
+
+
+		<!-- Ventana de creación de proyectos antes wizard -->
+		<record model="ir.ui.view" id="wiz_project_jmd">
+			<field name="name">wiz.project.jmd</field>
+			<field name="model">ea.project_wizard</field>
+			<field name="type">form</field>
+			<field name="priority" eval="16" />
+			<field name="arch" type="xml">
+				<form string="Alta de proyecto" version="7.0">
+					<header>
+						<button name="create_project" string="Crear Proyecto" type="object"
+							class="oe_highlight" attrs="{'invisible': [('creado', '=', True)]}" />
+						o
+						<button string="Cancelar" class="oe_link" special="cancel" />
+					</header>
+
+					<sheet>
+
+						<h1>
+							<label for="name" string="Clave">Clave</label>
+							<field name="name" placeholder="Clave del proyecto"
+								required="True" />
+							<label for="nombre_corto">Nombre Corto</label>
+							<field name="nombre_corto" placeholder="Nombre Corto"
+								required="True" />
+							<label for="executive_id">Ejecutivo</label>
+							<field name="executive_id" placeholder="Ejecutivo"
+								required="True" />
+							<field name="ejnombre" invisible="True" />
+							<label for="cotizacion_id" string="Cotización">Cotización/Planeación
+							</label>
+							<field name="cotizacion_id" on_change="on_change_cotizacion(cotizacion_id)" />
+						</h1>
+
+						<group>
+							<group string="Datos Generales">
+								<field name="creado" invisible="True" />
+								<field name="date_start" />
+								<field name="date_end" />
+								<field name="fecha_capacitacion" />
+								<field name="planeacion" domain="[('claveproyecto', '=', nombre_corto)]" />
+								<field name="cuotas" domain="[('nombre_corto', '=', nombre_corto)]" />
+								<field name="fecha_tabulacion" />
+								<field name="fecha_analisis" />
+								<field name="descripcion" />
+								<field name="fecha_expedicion" />
+								<field name="version" />
+								<field name="demografico" />
+								<field name="levantamiento" />
+								<field name="duracion" />
+							</group>
+							<group string="Kick Off">
+								<field name="arranques_date_start" string="Fecha" />
+								<field name="arranques_date_end" invisible="True" />
+							</group>
+						</group>
+						<group>
+							<group string="Diseño" invisible="True">
+								<field name="dg_date_start" string="Fecha" invisible="True" />
+								<field name="dg_date_end" invisible="True" />
+								<field name="dg_responsible_id" invisible="True" />
+								<field name="dname" invisible="True" />
+							</group>
+							<group string="Supervision de Oficina" invisible="True">
+								<field name="so_date_start" string="Fecha" invisible="True" />
+								<field name="so_date_end" invisible="True" />
+								<field name="so_responsible_id" invisible="True" />
+								<field name="sname" invisible="True" />
+							</group>
+						</group>
+						<group>
+							<group string="Campo">
+								<field name="campo_date_start" />
+								<field name="campo_date_end" />
+								<field name="campo_responsible_id" string="Responsable de Campo CC" />
+								<field name="cname" string="Nombre" />
+								<field name="arranques_responsible_id" string="Responsable de Campo JC" />
+								<field name="aname" string="Nombre" invisible="True" />
+								<field name="no_campo" />
+							</group>
+							<group string="Procesos Intermedios">
+								<field name="pi_date_start" />
+								<field name="pi_date_end" />
+								<field name="pi_responsible_id" />
+								<field name="pname" invisible="True" />
+								<field name="no_pi" />
+							</group>
+						</group>
+						<group>
+							<group string="Procesamiento">
+								<field name="procesamiento_date_start" />
+								<field name="procesamiento_date_end" />
+								<field name="procesamiento_responsible_id" invisible="True" />
+								<field name="prname" invisible="True" />
+								<field name="no_procesamiento" />
+							</group>
+							<group string="Análisis">
+								<field name="analisis_date_start" />
+								<field name="analisis_date_end" />
+								<field name="analisis_responsible_id" invisible="True" />
+								<field name="anname" invisible="True" />
+								<field name="no_analisis" />
+							</group>
+						</group>
+						<group>
+							<group string="Entrega">
+								<field name="entrega_date_start" string="Fecha" />
+								<field name="entrega_date_end" invisible="True" />
+								<field name="entrega_responsible_id" invisible="True" />
+								<field name="ename" invisible="True" />
+							</group>
+							<group string="Flash" invisible="True">
+								<field name="has_flash" />
+								<field name="flash_date" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Metodología">
+								<field name="metodologia" widget="html" />
+							</page>
+							<page string="Objetivo">
+								<field name="objetivo" widget="html" />
+							</page>
+							<page string="Manejo de Producto">
+								<field name="manejo" required="True" widget="html" />
+							</page>
+							<page string="Observaciones">
+								<field name="observaciones" widget="html" />
+							</page>
+
+							<page string="Tiempo">
+								<field name="ttiempos" widget="html" />
+							</page>
+
+							<page string="Muestra">
+								<field name="tmuestra" widget="html" />
+							</page>
+							<page string="Información Adicional">
+								<field name="adicional" widget="html" />
+							</page>
+							<page string="Flashes">
+								<field name="flash_ids">
+									<tree string="X" editable="bottom">
+										<field name="name" />
+										<field name="fecha" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers" />
+						<field name="message_ids" widget="mail_thread" />
+					</div>
+
+				</form>
+			</field>
+		</record>
+
+		<!-- Lista -->
+		<record model="ir.ui.view" id="project_wizard_view">
+			<field name="name">project.wizard.view</field>
+			<field name="model">ea.project_wizard</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="16" />
+			<field name="arch" type="xml">
+				<tree string="X" toolbar="1">
+					<field name="name" string="Clave del Proyecto" />
+					<field name="nombre_corto" />
+					<field name="executive_id" />
+					<field name="campo_responsible_id" string="Coordinador" />
+					<field name="arranques_responsible_id" string="Jefe de Célula" />
+				</tree>
+			</field>
+		</record>
+	</data>
+</openerp>

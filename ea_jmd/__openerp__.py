@@ -85,7 +85,7 @@
         'view/bank_view.xml', 
         'view/costo_view.xml',
         'view/hollyday_view.xml',
-        'wizard/project_wizard.xml',
+        'view/odt_view.xml',
         'wizard/cruces_wizard.xml',
         'workflow/encuesta_workflow.xml',
         'workflow/gasto_workflow.xml',

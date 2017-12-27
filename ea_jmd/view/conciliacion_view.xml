@@ -46,7 +46,7 @@
 						</h1>
 						<group>
 							<group>
-								<field name="proyecto_id" />
+								<field name="proyecto_id" domain="[('etapa', '=', 'proyecto')]"/>
 								<field name="nombre_corto" />
 							</group>
 							<group>

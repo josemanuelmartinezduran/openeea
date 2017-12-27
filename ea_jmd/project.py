@@ -26,7 +26,13 @@ class jmdproject(osv.Model):
 
     def update(self, cr, uid, ids, context=None):
         print("-----------------_")
+        #Totales
+        total_gasto = 0.0
         for i in self.browse(cr, uid, ids, context=None):
+            #Presupuesto
+            if i.planeacion:
+                self.write(cr, uid, [i.id], {'presupuesto': i.planeacion.total})
+            
             #Total de entrevistas
             entre = 0
             rentre = 0
@@ -40,43 +46,78 @@ class jmdproject(osv.Model):
                 print("Sin Datos de Entevitas")
             self.write(cr, uid, [i.id], {'entrevistas_plan': entre,
                 'entrevistas_hechas': rentre})
-            dinero = 0.0
+            
+            #Soicitudes, comprobaciones y vales
             gdinero = 0.0
-            try:
-                if i.planeacion:
-                    dinero = i.planeacion.total
-
-            except:
-                print("Sin Datos de Cuotas")
+            vales = 0.0
+            comprobado = 0.0
+            en_comprobacion = 0.0
+            comprobacion_vales = 0.0
             solicitud_obj = self.pool.get("ea_solicitud")
-            for sol in solicitud_obj.browse(cr, uid, solicitud_obj.search(cr, uid, [('proyecto', '=', i.id)])):
-                gdinero += sol.total_solicitud
-            self.write(cr, uid, [i.id], {'presupuesto': dinero,
-                'solicitudes': gdinero})
+            for sol in solicitud_obj.browse(cr, uid, solicitud_obj.search(cr, uid, [('nombre_corto', '=', i.nombre_corto), ('state', 'in', ['contabilidad', 'gac'])])):
+                vales += sol.total_vales
+                gdinero += sol.monto
+                for c in sol.gasto_ids:
+                    if c.state in ['contabilidad', 'aprobado']:
+                        comprobado += c.total
+                        comprobacion_vales += c.total_comprobado_vales
+                    if c.state in ['capturado']:
+                        en_comprobacion += c.total_campo
+                    if c.state in ['enviado', 'comprobaciones']:
+                        en_comprobacion += c.total_comprobaciones
+            self.write(cr, uid, [i.id], {'solicitudes': gdinero, 'vales': vales, 'comprobado': comprobado, 
+                                         'monto_comprobacion': en_comprobacion, 'comprobacion_vales': comprobacion_vales})
+            total_gasto += comprobado + en_comprobacion + comprobacion_vales
+            
+            #Gastos de caja chica
+            gcaja = 0
+            caja_obj = self.pool.get("account.bank.statement")
+            for caja in caja_obj.browse(cr, uid, caja_obj.search(cr, uid, [('proyecto_id', '=', i.id)])):
+                if caja.total_entry_encoding < 0:
+                    gcaja += (caja.total_entry_encoding * -1)
+                    self.write(cr,  uid,  [i.id],  {'caja_chica': gcaja})
+            total_gasto += gcaja
+            
+            #Gastos de nómina
+            gnomina = 0.0
+            nomina_obj = self.pool.get("hr.bonos")
+            for bono in nomina_obj.browse(cr, uid, nomina_obj.search(cr, uid, [('proyecto_id', '=', i.id)])):
+                if bono.tipo == "monto":
+                    gnomina += bono.monto
+                elif bono.tipo == "dias":
+                    gnomina += (bono.dias * bono.empleado.salario_diario)
+                self.write(cr,  uid,  [i.id],  {'nomina': gnomina})
+            total_gasto += gnomina
+            
+            #Distribución de costos
+            nomina = 0.0
+            for c in self.pool.get("ea.costo.detail").browse(cr, uid, self.pool.get("ea.costo.detail").search(
+                cr, uid, [('name', '=', i.id)])):
+                nomina += c.monto
+                self.write(cr, uid, [i.id], {'nomina_oficina': nomina})
+            total_gasto += nomina
+            
             #Gastos de purchase order
             gorder = 0
             order_obj = self.pool.get("purchase.order")
             for order in order_obj.browse(cr, uid, order_obj.search(cr, uid, [('proyecto', '=', i.id)])):
                 gorder += order.amount_untaxed
                 self.write(cr,  uid,  [i.id],  {'compras': gorder})
-            #Gastos de nómina
-            gnomina = 0
-            nomina_obj = self.pool.get("hr.bonos")
-            for bono in nomina_obj.browse(cr, uid, nomina_obj.search(cr, uid, [('proyecto_id', '=', i.id)])):
-                gnomina += bono.monto
-                self.write(cr,  uid,  [i.id],  {'nomina': gnomina})
-            #Gastos de caja chica
-            gcaja = 0
-            caja_obj = self.pool.get("account.bank.statement")
-            for caja in caja_obj.browse(cr, uid, caja_obj.search(cr, uid, [('proyecto_id', '=', i.id)])):
-                gcaja += (caja.total_entry_encoding * -1)
-                self.write(cr,  uid,  [i.id],  {'caja_chica': gcaja})
+            total_gasto += gorder
+            
             #Gastos SEA
-            gsea = 0
+            gsea = 0.0
             sea_obj = self.pool.get("ea.conciliacion")
             for sea in sea_obj.browse(cr, uid, sea_obj.search(cr, uid, [('proyecto_id', '=', i.id)])):
-                gsea += sea.monto_facturado
-                self.write(cr,  uid,  [i.id],  {'sea': gsea})
+                for f in sea.factura_ids:
+                    gsea += f.monto
+                    self.write(cr,  uid,  [i.id],  {'sea': gsea})
+            total_gasto += gsea
+            
+            #Totales
+            porcentaje = ((total_gasto / i.planeacion.total) * 100)
+            self.write(cr, uid, [i.id], {'total_gastos': total_gasto, 'porcentaje_ejecutado': porcentaje})
+            
             #Leyendo la odt
             odt = self.pool.get("ea.project_wizard")
             print("============================")
@@ -87,8 +128,10 @@ class jmdproject(osv.Model):
                 print("Odt Encontrada")
                 #Colocando las fechas
                 self.write(cr, uid, [i.id],
-                           {'inicio_campo': j.campo_date_start,
+                           {'partner_id': j.cotizacion_id.partner_id.id,
+                            'inicio_campo': j.campo_date_start,
                             'fin_campo': j.campo_date_end,
+                            'levantamiento': j.levantamiento,
                             'inicio_pi': j.pi_date_end,
                             'inicio_procesamiento': j.procesamiento_date_end,
                             'inicio_analisis': j.analisis_date_end,
@@ -155,14 +198,29 @@ class jmdproject(osv.Model):
         'levantamiento': fields.char("Tipo de Levantamiento"),
         'flash_ids': fields.one2many("ea.flash", "project_id", string="Flashes"),
         'extra_ids': fields.one2many("project.task", "project_extra_id", string="Extras"), 
-        'solicitudes': fields.float("Monto en Solicitudes"), 
+        'solicitudes': fields.float("Monto en Solicitudes"),
+        'vales': fields.float("Vales Solicitados"), 
         'comprobado': fields.float("Monto Comprobado"), 
         "caja_chica": fields.float("Caja Chica"), 
-        "nomina": fields.float("Nomina"), 
+        "nomina": fields.float("Nomina Productividad"), 
         "sea": fields.float("Pago a SEA"), 
         "compras": fields.float("Compras de Estudio"), 
         "porcentaje_ejecutado": fields.float("Porcentaje Ejercido"), 
-        "porcentaje_realizado": fields.float("Porcentaje Realizado")
+        "porcentaje_realizado": fields.float("Porcentaje Realizado"),
+        "monto_comprobacion": fields.float("Monto por Comprobar"),
+        "comprobacion_vales": fields.float("Vales Comprobados"),
+        "nomina_oficina": fields.float("Nómina por Día"),
+        "total_gastos": fields.float("Total de Gastos"),
+        "fecha_real_inicio": fields.float("Fecha real de inicio"),
+        "fecha_real_fin": fields.float("Fecha real de fin"),
+        "entrevistas_gea": fields.float("Entrevistas GEA"),
+        "entrevistas_sea": fields.float("Entrevistas SEA"),
+        "produtividad_estimada": fields.float("Productividad estimada"),
+        "productividad_real_sea": fields.float("Productividad real SEA"),
+        "productividad_real_gea": fields.float("Productividad real GEA"),
+        "promedio_suervisores": fields.float("Promedio de supervisores"),
+        "promedio_investigadores": fields.float("Promedio investigadores"),
+        
         }
 
 

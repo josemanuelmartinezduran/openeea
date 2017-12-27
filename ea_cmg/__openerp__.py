@@ -43,7 +43,6 @@
         'Security/workflow_security.xml',
         'Security/ir.model.access.csv',
         'View/cambios_etiquetas_estudios_proyectos.xml',
-        'View/cambio_etiquetas_tree_etapas_pc.xml',
         'View/menu_presentacion_cmg.xml',
         'Workflow/workflow_presentacion_cmg.xml',
         'View/presentacion_view_cmg.xml',
