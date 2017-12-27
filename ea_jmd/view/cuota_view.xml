@@ -44,6 +44,7 @@
 								<group string="Proyecto">
 									<field name="cotizacion_id" on_change="on_change_setname(cotizacion_id)" />
 									<field name="odt_id" />
+									<field name="realizadas" />
 								</group>
 							</group>
 							<notebook>

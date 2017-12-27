@@ -33,20 +33,6 @@ class jmdproject(osv.Model):
             if i.planeacion:
                 self.write(cr, uid, [i.id], {'presupuesto': i.planeacion.total})
             
-            #Total de entrevistas
-            entre = 0
-            rentre = 0
-            try:
-                if i.cuotas:
-                    for k in i.cuotas.tiraje:
-                        entre += k.cantidad
-                        if k.realizadas:
-                            rentre += k.realizadas.count()
-            except:
-                print("Sin Datos de Entevitas")
-            self.write(cr, uid, [i.id], {'entrevistas_plan': entre,
-                'entrevistas_hechas': rentre})
-            
             #Soicitudes, comprobaciones y vales
             gdinero = 0.0
             vales = 0.0
@@ -118,6 +104,54 @@ class jmdproject(osv.Model):
             porcentaje = ((total_gasto / i.planeacion.total) * 100)
             self.write(cr, uid, [i.id], {'total_gastos': total_gasto, 'porcentaje_ejecutado': porcentaje})
             
+            #Cuotas, supervision y entrevistas
+            entrevistas_p = 0
+            entrevistas = 0
+            gea = 0
+            sea = 0
+            scampo = 0
+            sdirectas = 0
+            sregreso = 0
+            soficina = 0
+            if i.cuotas:
+                for t in i.cuotas.tiraje:
+                    entrevistas_p += t.cantidad
+                    entrevistas += len(t.realizadas)
+                    #scampo += t.count_supervisadas
+                    #sdirectas += t.count_supervisadasd
+                    #sregreso += t.count_supervisadasr
+                    #soficina += t.count_osupervisadas
+                    for r in t.realizadas:
+                        if r.empleado.seagea == "gea":
+                            gea += 1
+                        elif r.empleado.seagea == "sea":
+                            sea += 1
+            porcentaje = ((float(entrevistas) / entrevistas_p) * 100)
+            #supervision = "Supervisadas en campo: %d \n\r Supervisión directa %d \n\r Supervisión de Regreso %d \n\r Supervisión de Oficina %d" % (scampo, sdirectas, sregreso, soficina)
+            
+            #Días hombre
+            dias_hombre = 0
+            cr.execute("SELECT DISTINCT(fecha) as value FROM ea_avance WHERE proyecto="+str(i.id))
+            dias_hombre = len(cr.fetchall())
+            prod_sea = sea / float(dias_hombre)
+            prod_gea = gea / float(dias_hombre)
+            
+            #Incidencias
+            cr.execute("SELECT SUM(cantidad) as value FROM ea_incidencia WHERE proyecto_id="+str(i.id))
+            for res in cr.fetchall():
+                total_incidencias = int(res[0])
+            
+            total_contactos = entrevistas + total_incidencias
+            contactos_entrevista = (entrevistas + total_incidencias)/ float(entrevistas)
+            
+            self.write(cr, uid, [i.id], {'entrevistas_plan': entrevistas_p,
+                'entrevistas_hechas': entrevistas, 'porcentaje_realizado': porcentaje,
+                'entrevistas_gea': gea, 'entrevistas_sea': sea, 'dias_hombre': dias_hombre,
+                'productividad_real_sea': prod_sea, 'productividad_real_gea': prod_gea,
+                'contactos_entrevista': contactos_entrevista, 'total_contactos': total_contactos})
+            
+                        
+            
             #Leyendo la odt
             odt = self.pool.get("ea.project_wizard")
             print("============================")
@@ -135,7 +169,8 @@ class jmdproject(osv.Model):
                             'inicio_pi': j.pi_date_end,
                             'inicio_procesamiento': j.procesamiento_date_end,
                             'inicio_analisis': j.analisis_date_end,
-                            'inicio_entrega': j.entrega_date_start,})
+                            'inicio_entrega': j.entrega_date_start,
+                            'demografico': j.demografico,})
             etapa = "0no_definido"
             if (i.fases == "8especial"):
                 etapa = "8especial"
@@ -211,15 +246,21 @@ class jmdproject(osv.Model):
         "comprobacion_vales": fields.float("Vales Comprobados"),
         "nomina_oficina": fields.float("Nómina por Día"),
         "total_gastos": fields.float("Total de Gastos"),
-        "fecha_real_inicio": fields.float("Fecha real de inicio"),
-        "fecha_real_fin": fields.float("Fecha real de fin"),
-        "entrevistas_gea": fields.float("Entrevistas GEA"),
-        "entrevistas_sea": fields.float("Entrevistas SEA"),
+        "fecha_real_inicio": fields.date("Fecha real de inicio"),
+        "fecha_real_fin": fields.date("Fecha real de fin"),
+        "entrevistas_gea": fields.integer("Entrevistas GEA"),
+        "entrevistas_sea": fields.integer("Entrevistas SEA"),
+        "dias_hombre": fields.integer("Días Hombre"),
         "produtividad_estimada": fields.float("Productividad estimada"),
         "productividad_real_sea": fields.float("Productividad real SEA"),
         "productividad_real_gea": fields.float("Productividad real GEA"),
-        "promedio_suervisores": fields.float("Promedio de supervisores"),
-        "promedio_investigadores": fields.float("Promedio investigadores"),
+        "supervisores_gea": fields.float("Supervisores GEA"),
+        "supervisores_sea": fields.float("Supervisores SEA"),
+        "investigadores_sea": fields.float("Investigadores SEA"),
+        "investigadores_gea": fields.float("Investigadores GEA"),
+        "contactos_entrevista": fields.float("Contactos por Entrevista"),
+        "total_contactos": fields.integer("Total de Contactos"),
+        "tipo_supervision": fields.text("Tipo de Supervisión"),
         
         }
 

@@ -56,48 +56,53 @@
 					<page string="Información General">
 						<group>
 							<group string="Fechas">
-								<field name="inicio_campo" />
-								<field name="fin_campo" />
-								<field name="inicio_pi" />
-								<field name="inicio_procesamiento" />
-								<field name="inicio_analisis" />
-								<field name="inicio_entrega" />
+								<field name="inicio_campo" readonly="True"/>
+								<field name="fin_campo" readonly="True"/>
+								<field name="inicio_pi" readonly="True" />
+								<field name="inicio_procesamiento" readonly="True" />
+								<field name="inicio_analisis" readonly="True" />
+								<field name="inicio_entrega" readonly="True" />
 							</group>
 							<group string="Costos">
-								<field name="presupuesto" />
-								<field name="solicitudes" />
-								<field name="monto_comprobacion" />
-								<field name="comprobado" />
-								<field name="vales" />
-								<field name="comprobacion_vales" />
-								<field name="nomina" />
-								<field name="nomina_oficina" />
-								<field name="sea" />
-								<field name="compras" />
-								<field name="total_gastos" />
-								<field name="porcentaje_ejecutado" />
+								<field name="presupuesto" readonly="True" />
+								<field name="solicitudes" readonly="True" />
+								<field name="monto_comprobacion" readonly="True" />
+								<field name="comprobado" readonly="True" />
+								<field name="vales" readonly="True" />
+								<field name="comprobacion_vales" readonly="True" />
+								<field name="nomina" readonly="True" />
+								<field name="nomina_oficina" readonly="True" />
+								<field name="sea" readonly="True" />
+								<field name="compras" readonly="True" />
+								<field name="total_gastos" readonly="True" />
+								<field name="porcentaje_ejecutado" readonly="True" />
 							</group>
 						</group>
 						<separator />
 						<group>
 							<group string="Entrevistas">
-								<field name="entrevistas_plan" />
-								<field name="entrevistas_hechas" />
-								<field name="porcentaje_realizado" />
-								<field name="fecha_real_inicio" />
-								<field name="fecha_real_fin" />
-								<field name="entrevistas_gea" />
-								<field name="entrevistas_sea" />
+								<field name="entrevistas_plan" readonly="True" />
+								<field name="entrevistas_hechas" readonly="True" />
+								<field name="porcentaje_realizado" readonly="True" />
+								<field name="fecha_real_inicio"  />
+								<field name="fecha_real_fin"  />
+								<field name="entrevistas_gea" readonly="True" />
+								<field name="entrevistas_sea" readonly="True" />
 							</group>
 							<group string="Otros">
-								<field name="demografico" />
+								<field name="demografico" readonly="True" />
 								<field name="produtividad_estimada" />
-								<field name="productividad_real_sea" />
-								<field name="productividad_real_gea" />
-								<field name="promedio_suervisores" />
-								<field name="promedio_investigadores" />
+								<field name="dias_hombre" readonly="True" />
+								<field name="productividad_real_sea" readonly="True" />
+								<field name="productividad_real_gea" readonly="True" />
+								<field name="supervisores_gea" readonly="True" />
+								<field name="supervisores_sea" readonly="True" />
+								<field name="investigadores_sea" readonly="True" />
+								<field name="investigadores_gea" readonly="True" />
+								<field name="total_contactos" readonly="True" />
+								<field name="contactos_entrevista" readonly="True" />
 							</group>
-						</group>
+						</group>						
 					</page>
 					<page string="Comentarios" attrs="{'invisible': [('etapa','!=', 'proyecto')]}">
 						<field name="comentarios" widget="html" />
@@ -442,51 +447,6 @@
 						Fecha de Entrega
 						<field name="inicio_entrega" />
 					</h4>
-					<hr />
-					<h3>Entrevistas</h3>
-					<h4>Entrevistas Planeadas </h4>
-					<field name="entrevistas_plan" />
-					<br />
-					<h4>Entrevistas Realizadas </h4>
-					<field name="entrevistas_hechas" />
-					<br />
-					<h3> Costos del Estudio </h3>
-					<h4>Monto en Solicitudes </h4>
-					<field name="solicitudes" />
-					<br />
-					<h4>Monto en Comprobado </h4>
-					<field name="comprobado" />
-					<br />
-					<h4>Monto en Caja Chica </h4>
-					<field name="caja_chica" />
-					<br />
-					<h4>Nómina GEA </h4>
-					<field name="nomina" />
-					<br />
-					<h4>Pago a SEA </h4>
-					<field name="sea" />
-					<br />
-					<h4>Compras de Estudio </h4>
-					<field name="compras" />
-					<br />
-					<h3> Totales </h3>
-					<h4>Monto Presupuestado </h4>
-					<field name="presupuesto" />
-					<br />
-					<h4>Total Ejercido </h4>
-					<field name="ejecutado" />
-					<br />
-					<h4>Porcentaje Ejercido </h4>
-					<field name="porcentaje_ejecutado" />
-					<br />
-					<h4>Total de Entrevistas </h4>
-					<field name="entrevistas_plan" />
-					<br />
-					<h4>Porcentaje de Entrevistas Realizadas </h4>
-					<field name="porcentaje_realizado" />
-					<br />
-					<hr />
-					<h3> Flashes </h3>
 				</xpath>
 
 				<xpath expr="//div[@class='oe_kanban_project_list']" position="replace">

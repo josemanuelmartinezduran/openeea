@@ -49,6 +49,15 @@ class jmdcuotas(osv.Model):
     def action_autorizado(self, cr, uid, ids):
         self.write(cr, uid, ids, {'state': 'autorizado'})
         return True
+    
+    def compute_realizadas(self, cr, uid, ids, fieldname, args, context=None):
+        ret = {}
+        total = 0
+        for i in self.browse(cr, uid, ids, context):
+            for j in i.tiraje:
+                total += len(j.realizadas)
+            ret[i.id] = total
+        return ret
 
     _columns = {
             'name': fields.char(string="Nombre Corto del Proyecto", size=40),
@@ -64,6 +73,8 @@ class jmdcuotas(osv.Model):
                 'Autorizado')], "Estado", readonly=True),
             'odt_id': fields.many2one("ea.project_wizard", "Orden de trabajo"),
             'cotizacion_id': fields.many2one("sale.order", "Cotización"),
+            'realizadas': fields.function(compute_realizadas, string="Entrevistas Realizadas",
+                                          type="integer", store=False),
             'tiraje': fields.one2many("ea.tiraje", "relation_id",
                     string="Cantidad de Entrevistas"),
             'plaza_id': fields.many2one("plaza", "Plaza"),

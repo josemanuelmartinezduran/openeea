@@ -52,7 +52,7 @@
 						</h1>
 						<group>
 							<group string="Cuestionario">
-							  <field name="cuestionario" />
+							  <field name="cuestionario" domain="[('proyecto','=',proyecto_id)]" />
 							  <field name="tipo" />
 								<field name="filtro" />
 								<field name="fecha" />
@@ -60,7 +60,7 @@
 							</group>
 							<group string="Incidencia">
 								<field name="cantidad" />
-								<field name="proyecto_id" />
+								<field name="proyecto_id" domain="[('etapa','=','proyecto')]"/>
 								<field name="nombrecorto_rel" />
 							</group>
 						</group>
