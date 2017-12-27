@@ -20,7 +20,7 @@
 			action="project.open_view_project_proyecto" groups="ea_jmd.ver_proyecto" />
 
 		<!-- Modificaciones a la vista: Formulario de Proyectos -->
-		<!-- <record id="project_form_jmd" model="ir.ui.view">
+		<record id="project_form_jmd" model="ir.ui.view">
 			<field name="name">project.form.jmd</field>
 			<field name="model">project.project</field>
 			<field name="inherit_id" ref="project.edit_project" />
@@ -141,7 +141,7 @@
 						required="True" />
 				</xpath>
 			</field>
-		</record> -->
+		</record>
 
 
 		<!-- Vista tree de proyectos -->
