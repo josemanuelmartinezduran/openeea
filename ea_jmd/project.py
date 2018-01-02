@@ -101,7 +101,9 @@ class jmdproject(osv.Model):
             total_gasto += gsea
             
             #Totales
-            porcentaje = ((total_gasto / i.planeacion.total) * 100)
+            porcentaje = 0
+            if i.planeacion and (i.planeacion.total > 0):
+                porcentaje = ((total_gasto / i.planeacion.total) * 100)
             self.write(cr, uid, [i.id], {'total_gastos': total_gasto, 'porcentaje_ejecutado': porcentaje})
             
             #Cuotas, supervision y entrevistas
@@ -126,23 +128,36 @@ class jmdproject(osv.Model):
                             gea += 1
                         elif r.empleado.seagea == "sea":
                             sea += 1
-            porcentaje = ((float(entrevistas) / entrevistas_p) * 100)
+            porcentaje = 0
+            if entrevistas_p > 0:
+                porcentaje = ((float(entrevistas) / entrevistas_p) * 100)
             #supervision = "Supervisadas en campo: %d \n\r Supervisión directa %d \n\r Supervisión de Regreso %d \n\r Supervisión de Oficina %d" % (scampo, sdirectas, sregreso, soficina)
             
             #Días hombre
             dias_hombre = 0
             cr.execute("SELECT DISTINCT(fecha) as value FROM ea_avance WHERE proyecto="+str(i.id))
+            dias_hombre = 0
             dias_hombre = len(cr.fetchall())
-            prod_sea = sea / float(dias_hombre)
-            prod_gea = gea / float(dias_hombre)
+            prod_sea = 0
+            prod_gea = 0
+            if dias_hombre > 0:
+                prod_sea = sea / float(dias_hombre)
+                prod_gea = gea / float(dias_hombre)
             
             #Incidencias
             cr.execute("SELECT SUM(cantidad) as value FROM ea_incidencia WHERE proyecto_id="+str(i.id))
+            total_incidencias = 0
             for res in cr.fetchall():
-                total_incidencias = int(res[0])
+                try:
+                    total_incidencias = int(res[0])
+                except:
+                    total_incidencias = 0
             
             total_contactos = entrevistas + total_incidencias
-            contactos_entrevista = (entrevistas + total_incidencias)/ float(entrevistas)
+            
+            contactos_entrevista = 0
+            if entrevistas > 0:
+                contactos_entrevista = (entrevistas + total_incidencias)/ float(entrevistas)
             
             self.write(cr, uid, [i.id], {'entrevistas_plan': entrevistas_p,
                 'entrevistas_hechas': entrevistas, 'porcentaje_realizado': porcentaje,
@@ -165,6 +180,9 @@ class jmdproject(osv.Model):
                            {'partner_id': j.cotizacion_id.partner_id.id,
                             'inicio_campo': j.campo_date_start,
                             'fin_campo': j.campo_date_end,
+                            'responsible_id': j.executive_id.id,
+                            'planeacion': j.planeacion.id,
+                            'cuotas': j.cuotas.id,
                             'levantamiento': j.levantamiento,
                             'inicio_pi': j.pi_date_end,
                             'inicio_procesamiento': j.procesamiento_date_end,
