@@ -91,10 +91,11 @@
 							</group>
 							<group string="Otros">
 								<field name="demografico" readonly="True" />
-								<field name="produtividad_estimada" />
+								<field name="produtividad_estimada_gea" readonly="True"/>
+								<field name="produtividad_estimada_sea" readonly="True"/>
 								<field name="dias_hombre" readonly="True" />
-								<field name="productividad_real_sea" readonly="True" />
 								<field name="productividad_real_gea" readonly="True" />
+								<field name="productividad_real_sea" readonly="True" />
 								<field name="supervisores_gea" readonly="True" />
 								<field name="supervisores_sea" readonly="True" />
 								<field name="investigadores_sea" readonly="True" />

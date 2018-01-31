@@ -87,6 +87,10 @@ class jmdavance(osv.Model):
 
     def generate_payroll(self, cr, uid, ids, context=None):        
         ret = {}
+        inv_gea = 0
+        inv_sea = 0
+        sup_gea = 0
+        sup_sea = 0
         nomina_obj = self.pool.get("avance.payroll")
         excepcion_obj = self.pool.get("hr.exception")
         for i in self.browse(cr, uid, ids, context):
@@ -174,6 +178,10 @@ class jmdavance(osv.Model):
                                             + str(total))
                     #Escribiendo la nómina del empleado
                     print("La prouctividad es de -------------------------------- " + str(total))
+                    if j.empleado.seagea == "sea":
+                        inv_sea += 1
+                    else:
+                        inv_gea += 1
                     nomina_obj.create(cr, uid, {
                             'empleado_id': j.empleado.id,
                             'productividad': total,
@@ -258,6 +266,10 @@ class jmdavance(osv.Model):
                                         print("Sumando " + str(s.monto) + " a "
                                             + str(total))
                     #Escribiendo la nómina del empleado
+                    if j.supervisor.seagea == "sea":
+                        sup_sea += 1
+                    else:
+                        sup_gea += 1
                     nomina_obj.create(cr, uid, {
                             'empleado_id': j.supervisor.id,
                             'productividad': total,
@@ -515,7 +527,11 @@ class jmdavance(osv.Model):
             'enviada': fields.boolean("Enviada"),
             'tablets': fields.boolean("Tablets"),
             'folio': fields.char("Folio"),
-            'costo_ids': fields.many2many("hr.employee",  string="Cargar costos")
+            'costo_ids': fields.many2many("hr.employee",  string="Cargar costos"),
+            'inv_sea': fields.integer("Investigadores SEA"),
+            'inv_gea': fields.integer("Investigadores GEA"),
+            'sup_gea': fields.integer("Supervisores GEA"),
+            'sup_sea': fields.integer("Suérvisores SEA")
         }
 
     _defaults = {

@@ -68,7 +68,9 @@ class jmdpresupuestos(osv.Model):
             string="Total sugerido", type="float", digits=(9, 2)),
         'deposito_ids': fields.one2many("ea_solicitud", "relation_presupuesto",
                 string="Depósitos"),
-        'aprobado': fields.boolean("Aprobado")
+        'aprobado': fields.boolean("Aprobado"),
+        'productividad_estimada_gea': fields.float("Productividad estimada GEA"),
+        'productividad_estimada_sea': fields.float("Productividad estimada SEA")
     }
     _defaults = {
             'factor': 1.0

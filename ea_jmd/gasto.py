@@ -225,7 +225,7 @@ class jmdgastos(osv.Model):
             'solicitud_ids': fields.many2many("ea_solicitud", "gas2sol",
                 string="Depósitos"),
             'diferencia': fields.function(get_diferencia,
-                string="Diferencia", type="float"),
+                string="Diferencia", type="float", store=True),
             'numero_poliza': fields.char("Número de Póliza"),
             'total_deducible': fields.float("Total Deducible"),
             'total_no_deducible': fields.float("Total No Deducible"),

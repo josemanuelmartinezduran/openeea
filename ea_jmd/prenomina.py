@@ -21,6 +21,9 @@ class jmdprenomina(osv.Model):
         bonos_obj = self.pool.get("hr.bonos")
         descuento_obj = self.pool.get("hr.descuentos")
         dias_nomina = 15
+        domingos = 0
+        domingos_descontados = 0.0
+        domingos_pagados = 0.0
         for i in self.browse(cr, uid, ids, context):
             #Calculando los días de la nómina
             start_date = i.inicio
@@ -39,6 +42,14 @@ class jmdprenomina(osv.Model):
             dias_nomina = dias
             #Revisando si tiene 3 domingos
             dia_semana = fechai.weekday()
+            siete = int(dias_nomina / 7)
+            domingos = siete
+            modsiete = dias_nomina % 7
+            probabilidad = siete
+            if (modsiete > 0):
+                probabilidad += 1
+            if (dia_semana + modsiete) >= 8:
+                domingos += 1  #1 -7 2- 6  7
             for e in empleado.browse(cr, uid, empleado.search(cr, uid, ['|',  ('sec_company', '=', i.enterprise_id.id),  ('enterprise_id', '=', i.enterprise_id.id)])):
                 if e.cnomina.id != i.oficina.id:
                     print("Saltando a " + str(e.name))
@@ -107,6 +118,7 @@ class jmdprenomina(osv.Model):
                         if h.holiday_status_id.name != "VACACIONES":
                             if dias > 0:
                                 dias = dias * factor_dia
+                                domingos_pagados += dias
                                 print(dias)
                                 print("Tipo de ausencia")
                                 print((h.holiday_status_id.name))
@@ -116,6 +128,7 @@ class jmdprenomina(osv.Model):
                                 dias = dias * factor_dia
                                 monto_d = dias * e.salario_diario
                                 monto += monto_d
+                                domingos_pagados += dias
                                 #Prima
                                 lista_detalles.append((str(vinicio),
                                     str("Vacaciones " + str(vinicio)
@@ -183,6 +196,7 @@ class jmdprenomina(osv.Model):
                             if dias > 0:
                                 vacaciones += dias
                                 monto_d = dias * e.salario_diario
+                                domingos_pagados = domingos
                                 dias_pago += dias
                                 lista_detalles.append((str(vinicio),
                                                        str("Vacaciones " + str(vinicio)
@@ -197,6 +211,7 @@ class jmdprenomina(osv.Model):
                                 str(dias), str(prima))) '''
                         elif h.holiday_status_id.name == "INCAPACIDAD":
                             incapacidad += dias
+                            domingos_descontados += dias
                             monto_d = dias * e.salario_diario
                             dias_pago += dias
                             lista_detalles.append((str(vinicio),
@@ -327,6 +342,8 @@ class jmdprenomina(osv.Model):
                     'total_dias': dias_pago,
                     'vacaciones': vacaciones,
                     'incapacidad': incapacidad,
+                    'domingo_pagado': domingos_pagados,
+                    'domingo_descontado': domingos_descontados,
                     'faltas': inasistencias,
                     'empresa': e.enterprise_id.name,
                     'descuentos': descuentos,
@@ -439,6 +456,8 @@ class jmdprenominalinea(osv.Model):
             'es_campo': fields.related("empleado", "es_campo",
                 type="boolean", string="Es Campo", readonly=True,
                 store=True),
+            'domingo_pagado': fields.float("Domingos otorgados"),
+            'domingo_descontado': fields.float("Domingo descontado")
         }
 
 

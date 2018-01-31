@@ -66,6 +66,10 @@
 								<field name="proyecto_id" invisible="1" />
 								<field name="calendarizacion" filename="cal_name" invisible="True" />
 								<field name="cal_name" invisible="True" />
+								<field name="inv_gea" readonly="True"/>
+								<field name="inv_sea" readonly="True"/>
+								<field name="sup_gea" readonly="True"/>
+								<field name="sup_sea" readonly="True"/>
 							</group>
 						</group>
 						<separator string="Otros Datos" />

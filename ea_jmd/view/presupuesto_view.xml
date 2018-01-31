@@ -72,6 +72,8 @@
 						<field name="aprobado" readonly="True"/>
 					</group>
 					<group>
+						<field name="productividad_estimada_gea" />
+						<field name="productividad_estimada_sea" />
 						<field name="total" attrs="{'readonly':[('aprobado', '=', True)]}"/>
 						<field name="factor" attrs="{'readonly':[('aprobado', '=', True)]}" />
 						<field name="total_sugerido" attrs="{'readonly':[('aprobado', '=', True)]}" />

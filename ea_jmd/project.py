@@ -20,7 +20,7 @@ class jmdproject(osv.Model):
         return ret
 
     def update_all(self, cr, uid, ids, context=None):
-        for i in self.browse(cr, uid, self.search(cr, uid, []), context=None):
+        for i in self.browse(cr, uid, self.search(cr, uid, [('etapa', '=', 'proyecto')]), context=None):
             print("Actualizando " + str(i.name))
             i.update(context)
 
@@ -31,7 +31,9 @@ class jmdproject(osv.Model):
         for i in self.browse(cr, uid, ids, context=None):
             #Presupuesto
             if i.planeacion:
-                self.write(cr, uid, [i.id], {'presupuesto': i.planeacion.total})
+                self.write(cr, uid, [i.id], {'presupuesto': i.planeacion.total,
+                                             'productividad_estimada_gea': i.planeacion.productividad_estimada_gea,
+                                             'productividad_estimada_sea': i.planeacion.productividad_estimada_sea})
             
             #Soicitudes, comprobaciones y vales
             gdinero = 0.0
@@ -40,17 +42,19 @@ class jmdproject(osv.Model):
             en_comprobacion = 0.0
             comprobacion_vales = 0.0
             solicitud_obj = self.pool.get("ea_solicitud")
+            # @todo leer de las comprobaciones no de las solicitudes
+            comp_obj = self.pool.get("ea.gasto")
             for sol in solicitud_obj.browse(cr, uid, solicitud_obj.search(cr, uid, [('nombre_corto', '=', i.nombre_corto), ('state', 'in', ['contabilidad', 'gac'])])):
                 vales += sol.total_vales
                 gdinero += sol.monto
-                for c in sol.gasto_ids:
-                    if c.state in ['contabilidad', 'aprobado']:
-                        comprobado += c.total
-                        comprobacion_vales += c.total_comprobado_vales
-                    if c.state in ['capturado']:
-                        en_comprobacion += c.total_campo
-                    if c.state in ['enviado', 'comprobaciones']:
-                        en_comprobacion += c.total_comprobaciones
+            for c in comp_obj.browse(cr, uid, comp_obj.search(cr, uid, [('nombre_corto', '=', i.nombre_corto)])):
+                if c.state in ['contabilidad', 'aprobado']:
+                    comprobado += c.total
+                    comprobacion_vales += c.total_comprobado_vales
+                if c.state in ['capturado']:
+                    en_comprobacion += c.total_campo
+                if c.state in ['enviado', 'comprobaciones']:
+                    en_comprobacion += c.total_comprobaciones
             self.write(cr, uid, [i.id], {'solicitudes': gdinero, 'vales': vales, 'comprobado': comprobado, 
                                          'monto_comprobacion': en_comprobacion, 'comprobacion_vales': comprobacion_vales})
             total_gasto += comprobado + en_comprobacion + comprobacion_vales
@@ -133,6 +137,40 @@ class jmdproject(osv.Model):
                 porcentaje = ((float(entrevistas) / entrevistas_p) * 100)
             #supervision = "Supervisadas en campo: %d \n\r Supervisión directa %d \n\r Supervisión de Regreso %d \n\r Supervisión de Oficina %d" % (scampo, sdirectas, sregreso, soficina)
             
+            #Investigadores y supervisores
+            cr.execute("SELECT AVG(inv_sea) as value FROM ea_avance WHERE proyecto="+str(i.id))
+            inv_sea = 0
+            for res in cr.fetchall():
+                try:
+                    inv_sea = float(res[0])
+                except:
+                    inv_sea = 0
+
+            cr.execute("SELECT AVG(inv_gea) as value FROM ea_avance WHERE proyecto="+str(i.id))
+            inv_gea = 0
+            for res in cr.fetchall():
+                try:
+                    inv_gea = float(res[0])
+                except:
+                    inv_gea = 0
+
+            cr.execute("SELECT AVG(sup_sea) as value FROM ea_avance WHERE proyecto="+str(i.id))
+            sup_sea = 0
+            for res in cr.fetchall():
+                try:
+                    sup_sea = float(res[0])
+                except:
+                    sup_sea = 0
+                    
+            cr.execute("SELECT AVG(sup_gea) as value FROM ea_avance WHERE proyecto="+str(i.id))
+            sup_gea = 0
+            for res in cr.fetchall():
+                try:
+                    sup_gea = float(res[0])
+                except:
+                    sup_gea = 0
+                    
+                
             #Días hombre
             dias_hombre = 0
             cr.execute("SELECT DISTINCT(fecha) as value FROM ea_avance WHERE proyecto="+str(i.id))
@@ -143,6 +181,10 @@ class jmdproject(osv.Model):
             if dias_hombre > 0:
                 prod_sea = sea / float(dias_hombre)
                 prod_gea = gea / float(dias_hombre)
+            if inv_sea > 0:
+                prod_sea /= inv_sea
+            if inv_gea > 0:
+                prod_gea /= inv_gea
             
             #Incidencias
             cr.execute("SELECT SUM(cantidad) as value FROM ea_incidencia WHERE proyecto_id="+str(i.id))
@@ -162,6 +204,8 @@ class jmdproject(osv.Model):
             self.write(cr, uid, [i.id], {'entrevistas_plan': entrevistas_p,
                 'entrevistas_hechas': entrevistas, 'porcentaje_realizado': porcentaje,
                 'entrevistas_gea': gea, 'entrevistas_sea': sea, 'dias_hombre': dias_hombre,
+                'investigadores_gea': inv_gea, 'investigadores_sea': inv_sea, 
+                'supervisores_gea': sup_gea, 'supervisores_sea': sup_sea,
                 'productividad_real_sea': prod_sea, 'productividad_real_gea': prod_gea,
                 'contactos_entrevista': contactos_entrevista, 'total_contactos': total_contactos})
             
@@ -176,7 +220,8 @@ class jmdproject(osv.Model):
             for j in odt.browse(cr, uid, odt.search(cr, uid, [('name', '=', i.name)])):
                 print("Odt Encontrada")
                 #Colocando las fechas
-                self.write(cr, uid, [i.id],
+                try:
+                    self.write(cr, uid, [i.id],
                            {'partner_id': j.cotizacion_id.partner_id.id,
                             'inicio_campo': j.campo_date_start,
                             'fin_campo': j.campo_date_end,
@@ -189,6 +234,8 @@ class jmdproject(osv.Model):
                             'inicio_analisis': j.analisis_date_end,
                             'inicio_entrega': j.entrega_date_start,
                             'demografico': j.demografico,})
+                except:
+                    print("Error")
             etapa = "0no_definido"
             if (i.fases == "8especial"):
                 etapa = "8especial"
@@ -269,7 +316,8 @@ class jmdproject(osv.Model):
         "entrevistas_gea": fields.integer("Entrevistas GEA"),
         "entrevistas_sea": fields.integer("Entrevistas SEA"),
         "dias_hombre": fields.integer("Días Hombre"),
-        "produtividad_estimada": fields.float("Productividad estimada"),
+        "produtividad_estimada_gea": fields.float("Productividad estimada GEA"),
+        "produtividad_estimada_sea": fields.float("Productividad estimada SEA"),
         "productividad_real_sea": fields.float("Productividad real SEA"),
         "productividad_real_gea": fields.float("Productividad real GEA"),
         "supervisores_gea": fields.float("Supervisores GEA"),
