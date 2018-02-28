@@ -6,3 +6,10 @@ class jmdbank (osv.Model):
     _columns = {
             'proyecto_id': fields.many2one("project.project",  string="Proyecto")
         }
+
+
+class jmdbank (osv.Model):
+    _inherit = "account.bank.statement.line"
+    _columns = {
+            'proyecto_id': fields.many2one("project.project",  string="Proyecto")
+        }

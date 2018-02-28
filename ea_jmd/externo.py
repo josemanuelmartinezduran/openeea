@@ -11,5 +11,5 @@ class jmdbonos(osv.Model):
             'aplicacion': fields.selection([('input.php','Tablets'), ('input2.php', 'Proveedores'),
                 ('cati.php', 'Cati')], string="Aplicación"),
             'sea_id': fields.many2one("res.partner", string="Nombre del SEA"),
-            'responsable_sea': fields.char("Reponsable SEA")
+            'responsable_sea': fields.many2one("hr.employee",string="Reponsable SEA")
         }

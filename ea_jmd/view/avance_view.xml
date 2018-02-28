@@ -717,6 +717,7 @@
 				<search string="Search">
 					<field name="nombre_corto" />
 					<field name="project_name" />
+					<field name="concepto" />
 					<field name="folio" string="Folio" />
 					<field name="plaza_name" />
 					<field name="supervisor" />
@@ -726,6 +727,7 @@
 						<filter icon="terp-document-new" name="Efectivas" string="Efectivas" domain="[('rechazada','=',False), ('stand_by', '=', False)]" help=""/>
 					<group expand="0" string="Group By...">
 						<filter string="Proyecto" icon="terp-partner" domain="[]" context="{'group_by':'project_name'}"/>
+						<filter string="Pago Entrevista" icon="terp-partner" domain="[]" context="{'group_by':'concepto'}"/>
 						<filter string="Plaza" icon="terp-partner" domain="[]" context="{'group_by':'plaza_name'}"/>
 						<filter string="Fecha" icon="terp-partner" domain="[]" context="{'group_by':'fecha'}"/>
 						<filter string="Supervisor" icon="terp-partner" domain="[]" context="{'group_by':'supervisor'}"/>
@@ -745,6 +747,7 @@
 				<tree string="" toolbar="1" colors="">
 					<field name="nombre_corto" />
 					<field name="project_name" />
+					<field name="concepto" />
 					<field name="plaza_name" />
 					<field name="fecha" />
 					<field name="cuota_ids" />

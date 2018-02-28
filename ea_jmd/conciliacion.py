@@ -20,29 +20,45 @@ class jmdconcliacion(osv.Model):
                 realizadas_obj.unlink(cr, uid, [k.id])
             for k in i.solicitadas_ids:
                 solicitadas_obj.unlink(cr, uid, [k.id])
+            facturado = 0.0
+            solicitadas = 0
+            canceladas = 0
+            realizadas = 0
             #Buscamos las facturas de provedor
-            for j in inv_obj.browse(cr, uid, inv_obj.search(cr, uid, [('partner_id', '=', i.name.id)])):
+            for j in inv_obj.browse(cr, uid, inv_obj.search(cr, uid, [('partner_id', '=', i.name.id), ('proyecto_id', '=', i.proyecto_id.id)])):
+                facturado += j.amount_total
                 facturas_obj.create(cr, uid, {
                     'name': j.name,
                     'fecha': j.date_invoice,
                     'monto': j.amount_total,
                     'conciliacion_id': i.id})
             #Entrevistas solicitadas
-            for j in acuerdo_obj.browse(cr, uid, acuerdo_obj.search(cr, uid, [('partner_id', '=', i.name.id)])):
+            for j in acuerdo_obj.browse(cr, uid, acuerdo_obj.search(cr, uid, [('partner_id', '=', i.name.id), ('proyecto_id', '=', i.proyecto_id.id)])):
+                solicitadas += j.cantidad
                 solicitadas_obj.create(cr, uid, {
                     'name': j.name,
                     'cantidad': j.cantidad,
                     'conciliacion_id': i.id})
             #Entrevistas realizadas
-            for j in avance_obj.browse(cr, uid, avance_obj.search(cr, uid, [('codigo_sea', '=', i.name.id)])):
+            for j in avance_obj.browse(cr, uid, avance_obj.search(cr, uid, [('codigo_sea', '=', i.name.id), ('proyecto', '=', i.proyecto_id.id)])):
                 conteo = 0
                 for k in j.cuota:
+                    if j.rechazada:
+                        canceladas += 1
+                        continue
                     conteo += 1
+                    realizadas += 1
                 realizadas_obj.create(cr, uid, {
-                    'name': j.name,
+                    'name': j.folio,
                     'cantidad': conteo,
                     'fecha': j.fecha,
                     'conciliacion_id': i.id})
+            self.write(cr, uid, [i.id], {
+                'facturado': facturado,
+                'solicitadas': solicitadas,
+                'canceladas': canceladas,
+                'realizadas': realizadas
+                })
 
 
     _columns = {
@@ -58,6 +74,7 @@ class jmdconcliacion(osv.Model):
         'diferencia': fields.integer("Diferencia"),
         'solicitadas': fields.integer("Entrevistas Solicitadas"),
         'realizadas': fields.integer("Entrevistas Realizadas"),
+        'canceladas': fields.integer("Entrevistas Canceladas"),
         'facturado': fields.float("Total Facturado"),
         'factura_ids': fields.one2many("ea.conciliacion.facturas", "conciliacion_id", string="Facturas"),
         'realizadas_ids': fields.one2many("ea.conciliacion.realizadas", "conciliacion_id", string="Realizadas"),
@@ -80,7 +97,7 @@ class jmdrealizadas(osv.Model):
     _name = "ea.conciliacion.realizadas"
     _inherit = "mail.thread"
     _columns = {
-        'name': fields.char("Numero de Reporte"),
+        'name': fields.char("Folio del Reporte"),
         'fecha': fields.date("Fecha"),
         'cantidad': fields.float("Cantidad"),
         'conciliacion_id': fields.many2one("ea.conciliacion", string="Conciliación"),

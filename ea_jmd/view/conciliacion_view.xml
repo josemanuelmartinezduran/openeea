@@ -50,6 +50,10 @@
 								<field name="nombre_corto" />
 							</group>
 							<group>
+								<field name="solicitadas" />
+								<field name="realizadas" />
+								<field name="canceladas" />
+								<field name="facturado" />
 							</group>
 						</group>
 						<notebook>
@@ -67,7 +71,7 @@
 									<tree string="X" editable="bottom">
 										<field name="name" />
 										<field name="fecha" />
-										<field name="cantidad" />
+										<field name="cantidad" sum="Total"/>
 									</tree>
 								</field>
 							</page>

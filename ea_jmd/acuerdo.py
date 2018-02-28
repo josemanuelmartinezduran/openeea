@@ -38,6 +38,7 @@ class jmdacuerdo(osv.Model):
         'equipos': fields.integer("Equipos a participar"),
         'suervisores': fields.integer("Supervisores"),
         'investigadores': fields.integer("Investigadores"),
+        'cuestionario_id': fields.many2one("ea.encuesta", string="Costos"),
         #Pagos
         'parcialidades': fields.integer("Número de Parcialidades"),
         'costo': fields.char("Costo por dispositivo móvil/internet"),

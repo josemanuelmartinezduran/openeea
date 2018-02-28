@@ -116,19 +116,23 @@
 				<form string="Solicitud" version="7.0">
 					<header>
 					<button string="Enviar" type="workflow" states="draft" name="signal_nuevo" />
-					<button string="Cancelar" type="workflow" states="draft" name="signal_cancelado" />
+					
+					<button string="Cancelar" type="workflow" states="new" name="signal_cancelando" groups="ea_jmd.comprobaciones" />
+					<button string="Reiniciar" type="workflow" states="new" name="signal_draft" groups="ea_jmd.comprobaciones"/>
+					<button string="Ok Comprobaciones" type="workflow" states="new" name="signal_gac" groups="ea_jmd.comprobaciones"/>
+					
+					<button string="Cancelar" type="workflow" states="contraloria" name="signal_gcancelando" groups="ea_jmd.autorizargasto" />
+					<button string="Ok GAC/DPYA" type="workflow" states="contraloria" name="signal_contraloria" groups="ea_jmd.autorizargasto" />
+					
 					<button string="Reiniciar" type="workflow" states="cancelado" name="signal_revive" groups="base.group_no_one"/>
-					<button string="Cancelar" type="workflow" states="draft" name="signal_cancelando" />
-					<button string="Cancelar" type="workflow" states="new" name="signal_ncancelando" />
-					<button string="Cancelar" type="workflow" states="contraliria" name="signal_gcancelando" />
-					<button string="Cancelar" type="workflow" states="gac" name="signal_ccancelando" />
-                	<button string="Ok Comprobaciones" type="workflow" states="new" name="signal_gac" groups="ea_jmd.comprobaciones"/>
-                	<button string="Reiniciar" type="workflow" states="new" name="signal_draft" groups="ea_jmd.comprobaciones"/>
-                	<button string="Ok GAC/DPYA" type="workflow" states="contraloria" name="signal_contraloria" groups="ea_jmd.autorizargasto"/>
+					
+					<button string="Cancelar" type="workflow" states="gac" name="signal_ccancelando" groups="ea_jmd.contralor" />
                 	<button string="Ok Contraloría" type="workflow" states="gac" groups="ea_jmd.contralor" name="signal_contabilidad" confirm="¿Aprobar deposito?" />
-                	<button string="Duplicar" name="duplicar" type="object" />
+                	
                 	<button string="Corregir" name="corregir" type="object" groups="base.group_no_one" />
-                	<button string="Corregir Todos" name="correct_all" type="object" groups="base.group_no_one" />	
+                	<button string="Corregir Todos" name="correct_all" type="object" groups="base.group_no_one" />
+                	
+                	<button string="Calcular" type="object" name="set_total" />	
                 	<field name="state" widget="statusbar" nolabel="1" />
 					</header>
 					<sheet>
@@ -145,19 +149,19 @@
 								<field name="fecha_limite" on_change="set_deposito(fecha_limite)" attrs="{'readonly': [('state', 'in', ['new', 'contraloria', 'gac', 'contabilidad'])]}" />
 								<field name="proyecto" domain="[('etapa', '=', 'proyecto')]" string="Clave del estudio" attrs="{'readonly': [('state', 'in', ['new', 'contraloria', 'gac', 'contabilidad'])]}"/>
 								<field name="nombre_corto" readonly="True" />
-								<field name="empresa" attrs="{'readonly': [('state', 'in', ['new', 'contraloria', 'gac', 'contabilidad'])]}" />
 								<field name="tipo" attrs="{'invisible': [('state', 'not in', ['contraloria', 'gac', 'contabilidad'])], 'readonly': [('state', 'in', ['draft', 'new', 'cancelado', 'gac', 'contabilidad'])]}"/>
-								<field name="solicitante_id" attrs="{'readonly': [('state', 'in', ['new', 'contraloria', 'gac', 'contabilidad'])]}"/>
+								<field name="solicitante_id" onchange="set_company(solicitante_id)" attrs="{'readonly': [('state', 'in', ['new', 'contraloria', 'gac', 'contabilidad'])]}"/>
 							</group>
 							<group string="Datos del Deposito/Entrega">
 								<field name="fecha_autorizacion" attrs="{'invisible': [('state', 'not in', ['contraloria', 'gac', 'contabilidad'])]}"/>
 								<field name="fecha_deposito" attrs="{'invisible': [('state', 'not in', ['contraloria', '', ''])], 'readonly': [('state', 'in', ['new', 'contraloria', 'contabilidad'])]}" />
-								<field name="total_vales" attrs="{'readonly': [('state', 'not in', ['contraloria', 'gac', 'contabilidad'])]}" />
-								<field name="monto" />
+								<field name="total_vales" attrs="{'readonly': [('state', 'in', ['contraloria', 'gac', 'contabilidad'])]}" />
+								<field name="monto" readonly="True" />
 								<field name="total_solicitud" readonly="True" />	
 								<field name="provincia_id" attrs="{'readonly': [('state', 'in', ['new', 'contraloria', 'gac', 'contabilidad'])]}"/>
 								<field name="plaza" domain="[('nombre_estudio_id', '=', proyecto)]" attrs="{'readonly': [('state', 'in', ['new', 'contraloria', 'gac', 'contabilidad'])]}"/>
 								<field name="responsable" on_change="set_bank(responsable)" attrs="{'readonly': [('state', 'in', ['new', 'contraloria', 'gac', 'contabilidad'])]}"/>
+								<field name="empresa" attrs="{'readonly': [('state', 'in', ['new', 'contraloria', 'gac', 'contabilidad'])]}" />
 								<field name="hora_alerta" readonly="True" />
 								<field name="autorizo_gac" readonly="True" />
 							</group>
@@ -181,7 +185,7 @@
 							<page string="Observaciones">
 								<field name="observaciones"/>
 							</page>
-							<page string="Vales" attrs="{'invisible': [('requiere_vales','!=', True)]}">
+							<page string="Vales" attrs="{'invisible': [('requiere_vales','!=', True)], 'readonly': [('state', 'in', ('contraloria', 'gac', 'contabilidad'))]}">
 								<field name="vales">
 									<tree editable="bottom">
 										<field name="name"/>

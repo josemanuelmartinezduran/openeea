@@ -119,8 +119,8 @@
 								<field name="tipo_contrato" />
 								<field name="tipo_pago" />
 								<field name="empresa" />
-								<field name="domingo_pagado" />
-								<field name="domingo_descontado" />
+								<!-- <field name="domingo_pagado" />
+								<field name="domingo_descontado" /> -->
 								<field name="salario_diario" invisible="True" />
 							</group>
 						</group>

@@ -488,4 +488,4 @@ class myclass(osv.Model):
                 string="Persona", type="char", store=True),
             "codigos_pago": fields.char("Codigos de Pago"),
             'linea_id': fields.many2one("hr.prenomina.linea", string="Linea")
-}
+        }

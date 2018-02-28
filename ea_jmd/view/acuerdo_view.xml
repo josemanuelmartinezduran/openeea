@@ -43,14 +43,15 @@
 						</h1>
 						<group>
 							<group>
-								<field name="proyecto_id" />
+								<field name="proyecto_id" domain="[('etapa', '=', 'proyecto')]" />
+								<field name="nombre_corto" readonly="True" />
 								<field name="partner_id" domain="[('es_sea', '=' ,True)]"/>
-								<field name="nombre_corto" />
 								<field name="fecha" />
 							</group>
 							<group>
 								<field name="parcialidades" />
-								<field name="precio_entrevista" />
+								<field name="cuestionario_id" domain="[('proyecto', '=', proyecto_id)]"/>
+								<field name="precio_entrevista" invisible="True"/>
 							</group>
 						</group>
 						<notebook>

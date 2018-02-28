@@ -25,5 +25,10 @@ class jmdinvoice(osv.Model):
             'tarjeta': fields.char("Ultimos 4 Dígitos"),
             'forma': fields.char("Forma de Pago"),
             'enviada': fields.boolean("Enviada"),
-            'compania_destino': fields.many2one("res.company")
+            'compania_destino': fields.many2one("res.company"),
+            'proyecto_id': fields.many2one("project.project", string="Proyecto"),
+            'numero_entrevistas': fields.integer("Número de Entrevistas"),
+            'factura_ok': fields.boolean("Factura Recibida"),
+            'nombre_corto': fields.related('proyecto_id', 'nombre_corto',
+                string="Nombre Corto", type="char"),
         }

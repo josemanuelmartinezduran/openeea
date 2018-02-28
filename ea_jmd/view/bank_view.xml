@@ -8,7 +8,11 @@
 			<field name="inherit_id" ref="account.view_bank_statement_form2"/>
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='journal_id']" position="after">
-					<field name="proyecto_id" />
+					<field name="proyecto_id" invisible="True"/>
+				</xpath>
+				
+				<xpath expr="//field[@name='analytic_account_id']" position="replace">
+					<field name="proyecto_id" domain="[('etapa', '=', 'proyecto')]" />
 				</xpath>
 			</field>
 		</record>

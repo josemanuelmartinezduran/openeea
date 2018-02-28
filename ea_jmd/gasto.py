@@ -27,7 +27,9 @@ class jmdgastos(osv.Model):
         return True
 
     def action_aprobado(self, cr, uid, ids):
-        self.write(cr, uid, ids, {'state': 'aprobado'})
+        self.write(cr, uid, ids, {
+            'state': 'aprobado',
+            'ok_contabilidad': time.strftime('%Y-%m-%d')})
         return True
 
     def action_enviado(self, cr, uid, ids):
@@ -55,6 +57,7 @@ class jmdgastos(osv.Model):
             total += i.reembolso
         ret[i.id] = total
         return ret
+            
     
     def put_monto(self, cr, uid, ids, context=None):
         monto = 0
@@ -111,9 +114,12 @@ class jmdgastos(osv.Model):
         ret[i.id] = total
         return ret
 
-    def copia_montos(self, cr, uid, ids, context=None):
+    def copiando_montos(self, cr, uid, ids, context=None):
         ret = {}
         for i in self.browse(cr, uid, ids, context):
+            self.write(cr, uid, [i.id], {
+                'vales_comprobaciones': i.vales_campo,
+                'total_comprobado_vales': i.vales_campo})
             for j in i.gasto_adepositar:
                 self.pool.get("ea.gasto.line.adepositar").write(cr, uid, [j.id], {
                     'monto': j.monto_campo,
@@ -151,6 +157,12 @@ class jmdgastos(osv.Model):
             if i.responsable and i.responsable.enterprise_id:
                 ret[i.id] = i.responsable.enterprise_id.name
         return ret
+    
+    def set_company(self, cr, uid, ids, args, context=None):
+        res = {}
+        for i in self.pool.get("hr.employee").browse(cr, uid, [args], context):
+            res['empresa_id'] = i.enterprise_id.id
+        return {'value': res}
 
     def get_diferencia(self, cr, uid, ids, fieldname, args, context=None):
         ret = {}
@@ -180,7 +192,7 @@ class jmdgastos(osv.Model):
     
     def copia_vales(self, cr, uid, ids, context=None):
         for i in self.browse(cr, uid, ids, context):
-            self.write(cr, uid, ids, {
+            self.write(cr, uid, [i.id], {
                 'vales_comprobaciones': i.vales_campo,
                 'total_comprobado_vales': i.vales.campo})
 
@@ -240,7 +252,9 @@ class jmdgastos(osv.Model):
             'es_vale': fields.boolean("Vales"),
             'es_dinero': fields.boolean("Dinero"),
             'plaza': fields.many2one("plaza", string="Plaza de Origen"),
-            'provincia_id': fields.many2one("ea.provincia", string="Plaza de Origen")
+            'empresa_id': fields.many2one("ea.enterprise", "Empresa"),
+            'provincia_id': fields.many2one("ea.provincia", string="Plaza de Origen"),
+            'fecha_ok_conta': fields.date("Fecha Ok Contabilidad")
         }
 
     _defaults = {

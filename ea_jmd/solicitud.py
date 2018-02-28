@@ -74,6 +74,7 @@ class account_solicitud(osv.Model):
             for j in i.gasto_ids:
                 if j.state in ["capturado", "enviado", "aprobado", "contabilidad", "comprobaciones"]:
                     ret[i.id] += j.total
+                    ret[i.id] += j.total_comprobado_vales
             if ret[i.id] >= i.total_solicitud:
                 self.write(cr, uid, [i.id], {
                             'comprobado': True})
@@ -212,9 +213,29 @@ class account_solicitud(osv.Model):
             i.corregir()
 
     def set_deposito(self, cr, uid, ids, args, context=None):
-        res = {}
+        res = {}         
         res['fecha_deposito'] = args
         return {'value': res}
+    
+    def set_company(self, cr, uid, ids, args, context=None):
+        res = {}
+        for i in self.pool.get("hr.employee").browse(cr, uid, [args], context):
+            res['empresa'] = i.enterprise_id.id
+        return {'value': res}
+    
+    def set_total(self, cr, uid, ids, context=None):
+        for i in self.browse(cr, uid, ids, context):
+            total = 0
+            for j in i.adepositar:
+                total = total + (j.pu * j.ct)
+            for j in i.nosedeposita:
+                total = total + (j.pu * j.ct)
+            for j in i.nominagea:
+                total = total + (j.pu * j.ct)
+            for j in i.otros:
+                total = total + (j.pu * j.ct)
+            self.write(cr, uid, [i.id], {'monto': total})
+        return
 
 
     _columns = {
@@ -319,7 +340,7 @@ class jmdvale(osv.Model):
             'name': fields.float(string="Denominación"),
             'cantidad': fields.integer("Cantidad"),
             'monto': fields.function(calculate_monto, string="Monto",
-                type="float", store=True),
+                type="float", store=False),
             'tipo': fields.selection([("Stock", "Stock"),
                     ("Comprado", "Comprado")], string="Tipo de Vale"),
             'relation': fields.many2one("purchase.moneyrequest"),

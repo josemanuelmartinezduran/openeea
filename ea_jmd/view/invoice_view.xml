@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		<!-- Modificaciones a la vista	-->
+		<!-- Modificaciones a la vista -->
 		<record id="jmd_inherit_invoice3" model="ir.ui.view">
 			<field name="name">jmd.inherit.invoice3</field>
 			<field name="model">account.invoice</field>
-			<field name="inherit_id" ref="estadistica_aplicada2.account_invoice_form_inherit"/>
+			<field name="inherit_id"
+				ref="estadistica_aplicada2.account_invoice_form_inherit" />
 			<field name="arch" type="xml">
 				<xpath expr="//page[@string='Invoice Lines']" position="after">
 					<page string="Datos Fiscales">
@@ -41,8 +42,23 @@
 							</group>
 						</group>
 					</page>
-				</xpath>		
+				</xpath>
 			</field>
-		</record>	
+		</record>
+
+		<!-- Modificaciones a la vista: Facturas de Proveedor -->
+		<record id="jmd_invoice_inh_form" model="ir.ui.view">
+			<field name="name">jmd.account.invioce.firm</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="account.invoice_supplier_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='origin']" position="after">
+					<field name="proyecto_id" domain="[('etapa', '=', 'proyecto')]" />
+					<field name="nombre_corto" />
+					<field name="numero_entrevistas" />
+					<field name="factura_ok" />
+				</xpath>
+			</field>
+		</record>
 	</data>
 </openerp>

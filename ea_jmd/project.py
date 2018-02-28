@@ -31,9 +31,9 @@ class jmdproject(osv.Model):
         for i in self.browse(cr, uid, ids, context=None):
             #Presupuesto
             if i.planeacion:
-                self.write(cr, uid, [i.id], {'presupuesto': i.planeacion.total,
-                                             'productividad_estimada_gea': i.planeacion.productividad_estimada_gea,
-                                             'productividad_estimada_sea': i.planeacion.productividad_estimada_sea})
+                self.write(cr, uid, [i.id], {'presupuesto': i.planeacion.total})
+                                             #'productividad_estimada_gea': i.planeacion.productividad_estimada_gea,
+                                             #'productividad_estimada_sea': i.planeacion.productividad_estimada_sea})
             
             #Soicitudes, comprobaciones y vales
             gdinero = 0.0
@@ -61,11 +61,10 @@ class jmdproject(osv.Model):
             
             #Gastos de caja chica
             gcaja = 0
-            caja_obj = self.pool.get("account.bank.statement")
+            caja_obj = self.pool.get("account.bank.statement.line")
             for caja in caja_obj.browse(cr, uid, caja_obj.search(cr, uid, [('proyecto_id', '=', i.id)])):
-                if caja.total_entry_encoding < 0:
-                    gcaja += (caja.total_entry_encoding * -1)
-                    self.write(cr,  uid,  [i.id],  {'caja_chica': gcaja})
+                gcaja = gcaja + caja.amount
+            self.write(cr, uid, [i.id], {'caja_chica': gcaja})   
             total_gasto += gcaja
             
             #Gastos de nómina
@@ -96,13 +95,41 @@ class jmdproject(osv.Model):
             total_gasto += gorder
             
             #Gastos SEA
-            gsea = 0.0
+            '''gsea = 0.0
             sea_obj = self.pool.get("ea.conciliacion")
             for sea in sea_obj.browse(cr, uid, sea_obj.search(cr, uid, [('proyecto_id', '=', i.id)])):
                 for f in sea.factura_ids:
                     gsea += f.monto
                     self.write(cr,  uid,  [i.id],  {'sea': gsea})
-            total_gasto += gsea
+            total_gasto += gsea'''
+            
+            #Gastos SEA Y conteos SEA y GEA
+            gsea = 0.0
+            sgea = 0
+            ssea = 0
+            igea = 0
+            isea = 0
+            rc_obj = self.pool.get("ea.avance")
+            for rc in rc_obj.browse(cr, uid, rc_obj.search(cr, uid, [('proyecto', '=', i.id)])):
+                print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                print("I found ya")
+                sgea += rc.sup_gea
+                ssea += rc.sup_sea
+                igea += rc.inv_gea
+                isea += rc.inv_sea
+                for n in rc.nominas:
+                    print("Si hay nomina")
+                    print(str(n.empleado_id.seagea))
+                    if n.empleado_id.seagea == 'sea':
+                        print("Sumando")
+                        print(n.productividad)
+                        gsea += n.productividad
+            print("Total")
+            print(gsea)
+            self.write(cr, uid, [i.id], {'supervisores_sea': ssea,
+                                         'supervisores_gea': sgea,
+                                         'investigadores_sea': isea,
+                                         'investigadores_gea': igea})
             
             #Totales
             porcentaje = 0
@@ -139,6 +166,7 @@ class jmdproject(osv.Model):
             
             #Investigadores y supervisores
             cr.execute("SELECT AVG(inv_sea) as value FROM ea_avance WHERE proyecto="+str(i.id))
+            #cr.execute("SELECT AVG(id) as value FROM ea_avance WHERE proyecto="+str(i.id))
             inv_sea = 0
             for res in cr.fetchall():
                 try:
@@ -201,7 +229,7 @@ class jmdproject(osv.Model):
             if entrevistas > 0:
                 contactos_entrevista = (entrevistas + total_incidencias)/ float(entrevistas)
             
-            self.write(cr, uid, [i.id], {'entrevistas_plan': entrevistas_p,
+            self.write(cr, uid, [i.id], {'entrevistas_plan': entrevistas_p, 'sea': gsea,
                 'entrevistas_hechas': entrevistas, 'porcentaje_realizado': porcentaje,
                 'entrevistas_gea': gea, 'entrevistas_sea': sea, 'dias_hombre': dias_hombre,
                 'investigadores_gea': inv_gea, 'investigadores_sea': inv_sea, 
@@ -315,7 +343,7 @@ class jmdproject(osv.Model):
         "fecha_real_fin": fields.date("Fecha real de fin"),
         "entrevistas_gea": fields.integer("Entrevistas GEA"),
         "entrevistas_sea": fields.integer("Entrevistas SEA"),
-        "dias_hombre": fields.integer("Días Hombre"),
+        "dias_hombre": fields.integer("Días Trabjados"),
         "produtividad_estimada_gea": fields.float("Productividad estimada GEA"),
         "produtividad_estimada_sea": fields.float("Productividad estimada SEA"),
         "productividad_real_sea": fields.float("Productividad real SEA"),
