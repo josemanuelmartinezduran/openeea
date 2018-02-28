@@ -107,7 +107,10 @@ class jmdprenomina(osv.Model):
                             restaFechas = vfin - fechai
                             dias = int(str(restaFechas).split(' ')[0]) + 1
                         diasdiff = vinicio - fechai
-                        diasd = float(str(diasdiff).split(' ')[0]) + 1
+                        try:
+                            diasd = float(str(diasdiff).split(' ')[0]) + 1
+                        except:
+                            continue
                         print((str(diasd)))
                         factor_dia = 1.1666
                         if (dia_semana == 6) and (diasd < 7):
